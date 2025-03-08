@@ -31,10 +31,7 @@ export default function ApplicationForm() {
     setFamilyMembers(updatedMembers);
   };
 
-  // const handleDeleteMember = (index) => {
-  //   const updatedMembers = familyMembers.filter((_, i) => i !== index);
-  //   setFamilyMembers(updatedMembers);
-  // };
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

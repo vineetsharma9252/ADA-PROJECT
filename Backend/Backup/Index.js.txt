@@ -1,0 +1,115 @@
+const cors = require('cors');
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const connectDB = require('./db/db');
+const User = require('./db/UserSchema');
+const bcrypt = require('bcrypt');
+
+const app = express();
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+
+require('dotenv').config();
+const secretKey = process.env.JWT_SECRET_KEY;
+
+app.post("/create", async (req, res) => {
+  const { firstName, email, password } = req.body;
+
+  try {
+    // Generate salt and hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user
+    const newUser = new User({ 
+      firstName, 
+      email, 
+      hash: hashedPassword // Store the hashed password
+    });
+
+    // Save the user to the database
+    const result = await newUser.save();
+
+    // Create JWT payload
+    const payload = { firstName, email };
+
+    // Generate JWT Token
+    const token = jwt.sign(payload, secretKey, { expiresIn: "1h" });
+
+    // Send the response
+    res.status(201).json({
+      message: "User registered successfully",
+      result,
+      token
+    });
+
+  } catch (error) {
+    console.error("Error during registration:", error);
+    res.status(500).json({ message: "Failed to register user" });
+  }
+});
+
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  console.log("Received login request:", { email, password });
+
+  // Validate input fields
+  if (!email || !password) {
+    console.log("Email or password missing");
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log("User not found:", email);
+      return res.status(401).json({ message: "Invalid email or user not found" });
+    }
+
+    console.log("User found:", user);
+
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(password, user.hash);
+    console.log("Password validation result:", isPasswordValid);
+
+    if (!isPasswordValid) {
+      console.log("Invalid password for user:", email);
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    // Generate JWT token
+    const payload = { email };
+    jwt.sign(payload, secretKey, { expiresIn: "1h" }, (err, token) => {
+      if (err) {
+        console.error("Error generating token:", err);
+        return res.status(500).json({ message: "Failed to generate token" });
+      }
+
+      console.log("Login successful for user:", email);
+      res.status(200).json({
+        message: "Login successful",
+        user: { email: user.email, firstName: user.firstName },
+        token,
+      });
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Login failed", error: error.message });
+  }
+});
+
+
+
+
+// Start the server
+app.listen(4500, () => {
+  console.log('Server is running on port 4500');
+});

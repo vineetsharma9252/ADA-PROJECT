@@ -1,0 +1,12 @@
+Add these inputs fields :
+    1. Income Group with options such as under 500000,  under 10000000 etc.
+    2. Plot with options
+    3. Category with option: 
+                    Option 1: General,
+                    Option 2: SC,
+                    Option 3: ST,
+                    Option 4: Other
+
+    4. Depended family member name, There mobile number, There Aadhar number fields with add button through this i can add family member 
+    5. Payment Amount with Pay now button 
+    6. Payment Receipt with print feature

@@ -3,24 +3,13 @@ import "./ApplicationForm.css";
 
 export default function ApplicationForm() {
   const [formData, setFormData] = useState({
-<<<<<<< HEAD
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    incomeGroup: 'Under 500,000', // Default value
-    plot: 'Plot A', // Example for other fields
-    category: 'General',
-    paymentAmount: '',
-
-
-=======
     firstName: "",
+    middleName: "",
     lastName: "",
-    incomeGroup: "Under 500,000", // Default value
-    plot: "Plot A", // Example for other fields
+    incomeGroup: "Under 500,000",
+    plot: "Plot A",
     category: "General",
     paymentAmount: "",
->>>>>>> 3147c88 (9March 3:05)
   });
 
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -35,16 +24,10 @@ export default function ApplicationForm() {
     setMember({ name: "", mobile: "", aadhar: "" });
   };
 
-  // Function to delete a member by index
   const handleDeleteMember = (index) => {
     const updatedMembers = familyMembers.filter((_, i) => i !== index);
     setFamilyMembers(updatedMembers);
   };
-
-  // const handleDeleteMember = (index) => {
-  //   const updatedMembers = familyMembers.filter((_, i) => i !== index);
-  //   setFamilyMembers(updatedMembers);
-  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,208 +35,96 @@ export default function ApplicationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const finalData = {
-      ...formData,
-      familyMembers: familyMembers,
-    };
-
+    const finalData = { ...formData, familyMembers };
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(finalData),
       });
-
       const responseData = await response.json();
-      // console.log("Backend Response:", responseData);  // 🛠 Debugging ke liye
-
       if (response.ok) {
-<<<<<<< HEAD
-        alert('Application submitted successfully!');
-        // console.log(responseData);
+        alert("Application submitted successfully!");
       } else {
-        alert(`Failed: ${responseData.message || 'Unknown error'}`);
+        alert(`Failed: ${responseData.message || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error while submitting:", error);
-      alert('An error occurred while submitting the application.');
-=======
-        const data = await response.json();
-        alert("Application submitted successfully!");
-        console.log(data); // Optional: Log the response
-      } else {
-        const errorData = await response.json();
-        alert(
-          `Failed to submit application: ${
-            errorData.message || "Unknown error"
-          }`
-        );
-      }
-    } catch (error) {
       alert("An error occurred while submitting the application.");
-      console.error(error);
->>>>>>> 3147c88 (9March 3:05)
     }
   };
 
   return (
-<<<<<<< HEAD
-
-    <div className=" flex flex-col items-center justify-center  min-h-screen bg-gray-100">
-    <div className="w-full text-center bg-gray-200 py-4 shadow-md">
-  <h2 className="text-2xl font-bold text-gray-800">Application Form for [Scheme Name]</h2>
-</div>
-
-
-
-      <form className=" bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-2 w-full max-w-[90%] ">
-=======
-    <div className="flex items-center justify-center min-h-screen  bg-gray-100 my-20">
-      <form className="w-full  max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4  ">
->>>>>>> 3147c88 (9March 3:05)
-        {/* Existing Fields */}
-        <div className="flex flex-wrap  -mx-3 mb-6">
-
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full text-center bg-gray-200 py-4 shadow-md">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Application Form for [Scheme Name]
+        </h2>
+      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-2 w-full max-w-2xl"
+      >
+        <div className="flex flex-wrap -mx-3 mb-6">
+          {["firstName", "middleName", "lastName"].map((field, index) => (
+            <div key={index} className="w-full md:w-1/2 px-3 mb-6">
+              <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                {field.replace(/([A-Z])/g, " $1").trim()}
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none"
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                type="text"
+                placeholder={field}
+              />
+            </div>
+          ))}
+        </div>
+        {["incomeGroup", "plot", "category"].map((field, index) => (
+          <div key={index} className="mb-4">
+            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+              {field.replace(/([A-Z])/g, " $1").trim()}
+            </label>
+            <select
+              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
+              name={field}
+              value={formData[field]}
+              onChange={handleChange}
             >
-              First Name
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none"
-              id="grid-first-name"
-              value={formData.firstName}
-              name="firstName"
-              onChange={handleChange}
-              type="text"
-              placeholder="Jane"
-            />
+              {field === "incomeGroup" &&
+                ["Under 500,000", "Under 1,000,000", "Above 1,000,000"].map(
+                  (option) => <option key={option}>{option}</option>
+                )}
+              {field === "plot" &&
+                ["Plot A", "Plot B", "Plot C"].map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              {field === "category" &&
+                ["General", "SC", "ST", "Other"].map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+            </select>
           </div>
-
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
-              Middle Name
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none"
-              id="grid-first-name"
-              value={formData.middleName}
-              name='middleName'
-              onChange={handleChange}
-              type="text"
-              placeholder="Smith"
-            />
-          </div>
-
-          <div className="w-full md:w-1/2 px-3">
-            <label
-              className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-last-name"
-            >
-              Last Name
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none"
-              id="grid-last-name"
-              value={formData.lastName}
-              name="lastName"
-              onChange={handleChange}
-              type="text"
-              placeholder="Doe"
-            />
-          </div>
-        </div>
-
-        {/* Income Group */}
-        <div className="mb-4">
-          <label
-            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="income-group"
-          >
-            Income Group
-          </label>
-          <select
-            className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
-            id="income-group"
-            value={formData.incomeGroup} // Bind to formData
-            name="incomeGroup" // Set the name for easier handling
-            onChange={handleChange} // Handle change
-          >
-            <option value="Under 500,000">Under 500,000</option>
-            <option value="Under 1,000,000">Under 1,000,000</option>
-            <option value="Above 1,000,000">Above 1,000,000</option>
-          </select>
-        </div>
-
-        {/* Plot */}
-        <div className="mb-4">
-          <label
-            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="plot"
-          >
-            Plot
-          </label>
-          <select
-            className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
-            id="plot"
-          >
-            <option>Plot A</option>
-            <option>Plot B</option>
-            <option>Plot C</option>
-          </select>
-        </div>
-
-        {/* Category */}
-        <div className="mb-4">
-          <label
-            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="category"
-          >
-            Category
-          </label>
-          <select
-            className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
-            id="category"
-          >
-            <option>General</option>
-            <option>SC</option>
-            <option>ST</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        {/* Family Member Section  */}
+        ))}
         <div className="mb-6">
           <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Dependent Family Members
           </h3>
           <div className="mb-3">
-            <input
-              className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2"
-              type="text"
-              placeholder="Member Name"
-              value={member.name}
-              onChange={(e) => setMember({ ...member, name: e.target.value })}
-            />
-            <input
-              className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2"
-              type="text"
-              placeholder="Mobile Number"
-              value={member.mobile}
-              onChange={(e) => setMember({ ...member, mobile: e.target.value })}
-            />
-            <input
-              className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-3"
-              type="text"
-              placeholder="Aadhar Number"
-              value={member.aadhar}
-              onChange={(e) => setMember({ ...member, aadhar: e.target.value })}
-            />
+            {["name", "mobile", "aadhar"].map((field) => (
+              <input
+                key={field}
+                className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2"
+                type="text"
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={member[field]}
+                onChange={(e) =>
+                  setMember({ ...member, [field]: e.target.value })
+                }
+              />
+            ))}
             <button
               type="button"
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -263,7 +134,7 @@ export default function ApplicationForm() {
             </button>
           </div>
           {familyMembers.length > 0 && (
-            <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2 text-gray-700">
+            <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2">
               {familyMembers.map((m, index) => (
                 <li
                   key={index}
@@ -276,48 +147,21 @@ export default function ApplicationForm() {
                   </div>
                   <button
                     type="button"
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
                     onClick={() => handleDeleteMember(index)}
                   >
-                    Delete
+                    Remove
                   </button>
                 </li>
               ))}
             </ul>
           )}
         </div>
-
-        {/* Payment Amount */}
-
-        <div>
-          <label
-            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="grid-first-name"
-          >
-            Enter your amount
-          </label>
-
-          <div className="flex justify-between items-center mb-2  ">
-            <input
-              className="block w-80 bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-1"
-              type="number"
-              placeholder="Enter amount... "
-              value={formData.paymentAmount}
-              onChange={handleChange}
-              name="paymentAmount"
-            />
-            <button className="ml-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mb-1 ">
-              Pay Now
-            </button>
-          </div>
-        </div>
-
         <button
-          type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2 "
-          onClick={handleSubmit}
+          type="submit"
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full"
         >
-          Submit your applicaion
+          Submit Application
         </button>
       </form>
     </div>

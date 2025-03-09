@@ -16,8 +16,9 @@ function App() {
       <NavBar />
       <Routes>
         {/* Redirect to login if user is registered */}
+        <Route path="/" element={<HomePage />} />
         <Route
-          path="/"
+          path="/register"
           element={
             token ? <Navigate to="/application-form" /> : <RegisterForm />
           }
@@ -28,7 +29,10 @@ function App() {
           path="/login"
           element={token ? <Navigate to="/application-form" /> : <SignInForm />}
         />
+<<<<<<< HEAD
         <Route path="about" element={<About />} />
+=======
+>>>>>>> 8786663dd1655381e549649da27d9b40a236064f
         <Route
           path="/login"
           element={token ? <Navigate to="/application-form" /> : <SignInForm />}

@@ -5,7 +5,7 @@ const About = memo(function About(props) {
   const { setIsAbout } = props;
   return (
     <div>
-      <div class="container_about my-4">
+      <div class="container_about my-20">
         <h2>About Ajmer Development Authority</h2>
         <p>
           The <strong>Ajmer Development Authority (ADA)</strong> was established

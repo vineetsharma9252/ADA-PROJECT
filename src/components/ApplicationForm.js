@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import './ApplicationForm.css';
-
+import React, { useState } from "react";
+import "./ApplicationForm.css";
 
 export default function ApplicationForm() {
   const [formData, setFormData] = useState({
+<<<<<<< HEAD
     firstName: '',
     middleName: '',
     lastName: '',
@@ -13,10 +13,18 @@ export default function ApplicationForm() {
     paymentAmount: '',
 
 
+=======
+    firstName: "",
+    lastName: "",
+    incomeGroup: "Under 500,000", // Default value
+    plot: "Plot A", // Example for other fields
+    category: "General",
+    paymentAmount: "",
+>>>>>>> 3147c88 (9March 3:05)
   });
 
   const [familyMembers, setFamilyMembers] = useState([]);
-  const [member, setMember] = useState({ name: '', mobile: '', aadhar: '' });
+  const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
 
   const handleAddMember = () => {
     if (!member.name || !member.mobile || !member.aadhar) {
@@ -24,7 +32,7 @@ export default function ApplicationForm() {
       return;
     }
     setFamilyMembers([...familyMembers, member]);
-    setMember({ name: '', mobile: '', aadhar: '' });
+    setMember({ name: "", mobile: "", aadhar: "" });
   };
 
   // Function to delete a member by index
@@ -51,10 +59,10 @@ export default function ApplicationForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:4500/api/applications', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4500/api/applications", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(finalData),
       });
@@ -63,6 +71,7 @@ export default function ApplicationForm() {
       // console.log("Backend Response:", responseData);  // 🛠 Debugging ke liye
 
       if (response.ok) {
+<<<<<<< HEAD
         alert('Application submitted successfully!');
         // console.log(responseData);
       } else {
@@ -71,11 +80,27 @@ export default function ApplicationForm() {
     } catch (error) {
       console.error("Error while submitting:", error);
       alert('An error occurred while submitting the application.');
+=======
+        const data = await response.json();
+        alert("Application submitted successfully!");
+        console.log(data); // Optional: Log the response
+      } else {
+        const errorData = await response.json();
+        alert(
+          `Failed to submit application: ${
+            errorData.message || "Unknown error"
+          }`
+        );
+      }
+    } catch (error) {
+      alert("An error occurred while submitting the application.");
+      console.error(error);
+>>>>>>> 3147c88 (9March 3:05)
     }
   };
 
-
   return (
+<<<<<<< HEAD
 
     <div className=" flex flex-col items-center justify-center  min-h-screen bg-gray-100">
     <div className="w-full text-center bg-gray-200 py-4 shadow-md">
@@ -85,18 +110,25 @@ export default function ApplicationForm() {
 
 
       <form className=" bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-2 w-full max-w-[90%] ">
+=======
+    <div className="flex items-center justify-center min-h-screen  bg-gray-100 my-20">
+      <form className="w-full  max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4  ">
+>>>>>>> 3147c88 (9March 3:05)
         {/* Existing Fields */}
         <div className="flex flex-wrap  -mx-3 mb-6">
 
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+            <label
+              className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="grid-first-name"
+            >
               First Name
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none"
               id="grid-first-name"
               value={formData.firstName}
-              name='firstName'
+              name="firstName"
               onChange={handleChange}
               type="text"
               placeholder="Jane"
@@ -119,14 +151,17 @@ export default function ApplicationForm() {
           </div>
 
           <div className="w-full md:w-1/2 px-3">
-            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+            <label
+              className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="grid-last-name"
+            >
               Last Name
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none"
               id="grid-last-name"
               value={formData.lastName}
-              name='lastName'
+              name="lastName"
               onChange={handleChange}
               type="text"
               placeholder="Doe"
@@ -157,10 +192,16 @@ export default function ApplicationForm() {
 
         {/* Plot */}
         <div className="mb-4">
-          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="plot">
+          <label
+            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="plot"
+          >
             Plot
           </label>
-          <select className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none" id="plot">
+          <select
+            className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
+            id="plot"
+          >
             <option>Plot A</option>
             <option>Plot B</option>
             <option>Plot C</option>
@@ -169,10 +210,16 @@ export default function ApplicationForm() {
 
         {/* Category */}
         <div className="mb-4">
-          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="category">
+          <label
+            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="category"
+          >
             Category
           </label>
-          <select className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none" id="category">
+          <select
+            className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
+            id="category"
+          >
             <option>General</option>
             <option>SC</option>
             <option>ST</option>
@@ -182,7 +229,9 @@ export default function ApplicationForm() {
 
         {/* Family Member Section  */}
         <div className="mb-6">
-          <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">Dependent Family Members</h3>
+          <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            Dependent Family Members
+          </h3>
           <div className="mb-3">
             <input
               className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2"
@@ -216,7 +265,10 @@ export default function ApplicationForm() {
           {familyMembers.length > 0 && (
             <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2 text-gray-700">
               {familyMembers.map((m, index) => (
-                <li key={index} className="flex justify-between items-center mb-2 p-2 border-b">
+                <li
+                  key={index}
+                  className="flex justify-between items-center mb-2 p-2 border-b"
+                >
                   <div>
                     <strong>Name:</strong> {m.name} <br />
                     <strong>Mobile:</strong> {m.mobile} <br />
@@ -238,7 +290,10 @@ export default function ApplicationForm() {
         {/* Payment Amount */}
 
         <div>
-          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+          <label
+            className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="grid-first-name"
+          >
             Enter your amount
           </label>
 
@@ -255,10 +310,7 @@ export default function ApplicationForm() {
               Pay Now
             </button>
           </div>
-
         </div>
-
-
 
         <button
           type="button"
@@ -267,7 +319,6 @@ export default function ApplicationForm() {
         >
           Submit your applicaion
         </button>
-
       </form>
     </div>
   );

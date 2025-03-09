@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import './App.css';
-import RegisterForm from './components/RegisterForm';
-import SignInForm from './components/SignInForm';
-import ApplicationForm from './components/ApplicationForm';
-import NavBar from './components/NavBar';
-import ForgotPassword from './components/ForgotPassword';
-import AboutUs from './components/AboutUs';
-
-=======
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
@@ -19,7 +7,7 @@ import ApplicationForm from "./components/ApplicationForm";
 import NavBar from "./components/NavBar";
 import ForgotPassword from "./components/ForgotPassword";
 import About from "./components/About";
->>>>>>> 37292aaa91bd0d3972ab1897a77bac497eac656a
+import HomePage from "./components/HomePage";
 function App() {
   const token = localStorage.getItem("Token"); // Check if the user is logged in
 
@@ -35,18 +23,20 @@ function App() {
           }
         />
         {/* Redirect to application form if user is logged in */}
-<<<<<<< HEAD
-        <Route path="/login" element={token ? <Navigate to="/application-form" /> : <SignInForm />} />
-        <Route path='about' element={ <AboutUs /> } />
-=======
+
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/application-form" /> : <SignInForm />}
+        />
+        <Route path="about" element={<AboutUs />} />
         <Route
           path="/login"
           element={token ? <Navigate to="/application-form" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
->>>>>>> 37292aaa91bd0d3972ab1897a77bac497eac656a
         <Route path="/application-form" element={<ApplicationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/Home" element={<HomePage />} />
       </Routes>
     </div>
   );

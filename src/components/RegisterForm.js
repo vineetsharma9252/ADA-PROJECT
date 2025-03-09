@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -8,8 +8,7 @@ const RegisterForm = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     email: "",
-    password: ""
-
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -46,7 +45,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 my-20">
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form
           className="space-y-6"
@@ -116,8 +115,6 @@ const RegisterForm = () => {
               />
             </div>
           </div>
-
-
 
           <div>
             <button

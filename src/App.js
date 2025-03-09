@@ -6,6 +6,7 @@ import SignInForm from './components/SignInForm';
 import ApplicationForm from './components/ApplicationForm';
 import NavBar from './components/NavBar';
 import ForgotPassword from './components/ForgotPassword';
+import AboutUs from './components/AboutUs';
 
 function App() {
   const token = localStorage.getItem("Token"); // Check if the user is logged in
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={token ? <Navigate to="/application-form" /> : <RegisterForm />} />
         {/* Redirect to application form if user is logged in */}
         <Route path="/login" element={token ? <Navigate to="/application-form" /> : <SignInForm />} />
+        <Route path='about' element={ <AboutUs /> } />
         <Route path="/application-form" element={<ApplicationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 

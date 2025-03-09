@@ -8,6 +8,7 @@ const FamilyMemberSchema = new mongoose.Schema({
 
 const ApplicationSchema = new mongoose.Schema({
   firstName: String,
+  middleName: String,
   lastName: String,
   incomeGroup: String,
   plot: String,

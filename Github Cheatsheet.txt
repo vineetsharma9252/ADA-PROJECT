@@ -1,0 +1,182 @@
+error: key does not contain a section: viveksharma112232
+PS H:\ada-project\New folder\ADA-PROJECT> git config --global "viveksharma112232"
+error: key does not contain a section: viveksharma112232
+PS H:\ada-project\New folder\ADA-PROJECT> git config --global user.22it57@ecajmer.ac.in 
+PS H:\ada-project\New folder\ADA-PROJECT> git credential reject https://github.com
+usage: git credential (fill|approve|reject)
+PS H:\ada-project\New folder\ADA-PROJECT> git add .
+PS H:\ada-project\New folder\ADA-PROJECT> git stataus 
+git: 'stataus' is not a git command. See 'git --help'.
+
+The most similar command is
+        status
+PS H:\ada-project\New folder\ADA-PROJECT> git status  
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "Initial COmmit "
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git remote -v        
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (fetch)
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (push)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main 
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+PS H:\ada-project\New folder\ADA-PROJECT> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "Initial COmmit "
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git remote -v
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (fetch)
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (push)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git remote -v
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (fetch)
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (push)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+fatal: unable to access 'https://github.com/vineetsharma9252/ADA-PROJECT.git/': The requested URL returned error: 4nothing to commit, working tree clean
+PS H:\ada-project\New folder\ADA-PROJECT> git remote -v
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (fetch)
+origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (push)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+fatal: unable to access 'https://github.com/vineetsharma9252/ADA-PROJECT.git/': The requested URL returned error: 4origin  https://github.com/vineetsharma9252/ADA-PROJECT.git (push)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+fatal: unable to access 'https://github.com/vineetsharma9252/ADA-PROJECT.git/': The requested URL returned error: 403
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+remote: Your account is suspended. Please visit https://support.github.com for more information.
+fatal: unable to access 'https://github.com/vineetsharma9252/ADA-PROJECT.git/': The requested URL returned error: 403
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+fatal: unable to access 'https://github.com/vineetsharma9252/ADA-PROJECT.git/': The requested URL returned error: 403
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+03
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+info: please complete authentication in your browser...
+Everything up-to-date
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+Everything up-to-date
+PS H:\ada-project\New folder\ADA-PROJECT> git add .
+PS H:\ada-project\New folder\ADA-PROJECT> git status
+On branch main
+Your branch is up to date with 'origin/main'.        
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)  
+        modified:   src/components/ApplicationForm.js
+
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "8March 5:06"
+[main fc66c30] 8March 5:06
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main 
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 431 bytes | 431.00 KiB/s, done. 
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+PS H:\ada-project\New folder\ADA-PROJECT> git add .
+PS H:\ada-project\New folder\ADA-PROJECT> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/components/ApplicationForm.js
+
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "8March 5:06"
+[main fc66c30] 8March 5:06
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 431 bytes | 431.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "8March 5:06"
+[main fc66c30] 8March 5:06
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 431 bytes | 431.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 431 bytes | 431.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+   1528722..fc66c30  main -> main
+PS H:\ada-project\New folder\ADA-PROJECT> git add .
+PS H:\ada-project\New folder\ADA-PROJECT> git status
+On branch main
+Your branch is up to date with 'origin/main'.        
+
+  (use "git restore --staged <file>..." to unstage)
+
+PS H:\ada-project\New folder\ADA-PROJECT> git commit -m "8M 5:08"
+[main 38c66f9] 8M 5:08
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+PS H:\ada-project\New folder\ADA-PROJECT> git push origin main
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 461 bytes | 230.00 KiB/s, done.
+Total 5 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/vineetsharma9252/ADA-PROJECT.git
+   fc66c30..38c66f9  main -> main
+PS H:\ada-project\New folder\ADA-PROJECT> git branch
+* main
+PS H:\ada-project\New folder\ADA-PROJECT> git log
+commit 38c66f9ed0585f0850250797cf6c2b86696af378 (HEAD -> main, origin/main, origin/HEAD)
+Author: viveksharma112232 <155580719+viveksharma112232@users.noreply.github.com>
+Date:   Sat Mar 8 17:09:06 2025 +0530
+
+    8M 5:08
+
+commit fc66c303c4c38abf008cc7c37ac2cffbd7cdd054
+Author: viveksharma112232 <155580719+viveksharma112232@users.noreply.github.com>
+Date:   Sat Mar 8 17:06:49 2025 +0530
+
+    8March 5:06
+
+commit 152872264eaa70b8da484a3ab33fa4aded8d779f
+Author: viveksharma112232 <155580719+viveksharma112232@users.noreply.github.com>
+Date:   Sat Mar 8 15:02:30 2025 +0530
+
+    Initial Commit
+PS H:\ada-project\New folder\ADA-PROJECT> 

@@ -5,6 +5,7 @@ const connectDB = require('./db/db');
 const User = require('./db/UserSchema');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+const Application = require('./db/applicationform');
 
 
 const app = express();
@@ -32,10 +33,10 @@ app.post("/create", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ 
-      firstName, 
-      email, 
-      hash: hashedPassword 
+    const newUser = new User({
+      firstName,
+      email,
+      hash: hashedPassword
     });
 
     await newUser.save();
@@ -86,11 +87,28 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/api/applications', (req, res) => {
-  const applicationData = req.body;
-  console.log(applicationData); // Log received data
-  // Process the data (e.g., save to MongoDB)
-  res.status(200).json({ message: 'Application received successfully!' });
+app.post('/api/applications', async (req, res) => {
+  try {
+    const applicationData = req.body;
+    console.log(applicationData); // Log received data
+   //New instance of Application
+    const newApplication = new Application(applicationData);
+    //Saved in mongodb
+    const savedApplication = await newApplication.save();
+
+    // Process of data
+    res.status(201).json({
+      message: 'Application received sucessfully.',
+      application: savedApplication
+    });
+  } catch (error) {
+    console.error('Error saving application:', error);
+    res.status(500).json({ 
+      message: 'Error saving application', error
+     });
+  }
+
+  
 });
 
 

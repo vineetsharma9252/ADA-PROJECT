@@ -5,11 +5,13 @@ import './ApplicationForm.css';
 export default function ApplicationForm() {
   const [formData, setFormData] = useState({
     firstName: '',
+    middleName: '',
     lastName: '',
     incomeGroup: 'Under 500,000', // Default value
     plot: 'Plot A', // Example for other fields
     category: 'General',
     paymentAmount: '',
+
 
   });
 
@@ -43,36 +45,49 @@ export default function ApplicationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const finalData = {
+      ...formData,
+      familyMembers: familyMembers,
+    };
+
     try {
       const response = await fetch('http://localhost:4500/api/applications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Send the form data as JSON
+        body: JSON.stringify(finalData),
       });
 
+      const responseData = await response.json();
+      // console.log("Backend Response:", responseData);  // 🛠 Debugging ke liye
+
       if (response.ok) {
-        const data = await response.json();
         alert('Application submitted successfully!');
-        console.log(data); // Optional: Log the response
+        // console.log(responseData);
       } else {
-        const errorData = await response.json();
-        alert(`Failed to submit application: ${errorData.message || 'Unknown error'}`);
+        alert(`Failed: ${responseData.message || 'Unknown error'}`);
       }
     } catch (error) {
+      console.error("Error while submitting:", error);
       alert('An error occurred while submitting the application.');
-      console.error(error);
     }
   };
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen  bg-gray-100">
 
-      <form  className="w-full  max-w-2xl bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4  ">
+    <div className=" flex flex-col items-center justify-center  min-h-screen bg-gray-100">
+    <div className="w-full text-center bg-gray-200 py-4 shadow-md">
+  <h2 className="text-2xl font-bold text-gray-800">Application Form for [Scheme Name]</h2>
+</div>
+
+
+
+      <form className=" bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-2 w-full max-w-[90%] ">
         {/* Existing Fields */}
         <div className="flex flex-wrap  -mx-3 mb-6">
+
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
               First Name
@@ -87,6 +102,22 @@ export default function ApplicationForm() {
               placeholder="Jane"
             />
           </div>
+
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+              Middle Name
+            </label>
+            <input
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none"
+              id="grid-first-name"
+              value={formData.middleName}
+              name='middleName'
+              onChange={handleChange}
+              type="text"
+              placeholder="Smith"
+            />
+          </div>
+
           <div className="w-full md:w-1/2 px-3">
             <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
               Last Name

@@ -28,7 +28,7 @@ function App() {
           path="/login"
           element={token ? <Navigate to="/application-form" /> : <SignInForm />}
         />
-        <Route path="about" element={<AboutUs />} />
+        <Route path="about" element={<About />} />
         <Route
           path="/login"
           element={token ? <Navigate to="/application-form" /> : <SignInForm />}

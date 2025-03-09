@@ -5,6 +5,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "cra-template": "1.2.0",
+    "dompurify": "^3.2.4",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
     "react": "^19.0.0",

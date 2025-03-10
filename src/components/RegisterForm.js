@@ -125,14 +125,18 @@ const RegisterForm = () => {
 
 
   return (
+
+
+
+
+
     <div className="flex min-h-full flex-col bg-gray-100  justify-center px-6 py-7 lg:px-8 my-2">
 
-      {/* <form
-          className="space-y-6 w-[80%] mx-auto" // 80% width and center align
-          action="/create"
-          onSubmit={handleSubmit}
-          method="POST"
-        > */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+          Create your account
+        </h2>
+      </div>
 
       <form
         action="/create"
@@ -141,6 +145,9 @@ const RegisterForm = () => {
         className="bg-white shadow-md mx-auto rounded-lg px-10 py-8 mt-5 w-full max-w-[80%] space-y-6"
       >
         {/* First Name */}
+        <label htmlFor="Name" className="block text-left text-sm font-medium text-gray-700">
+          Name
+        </label>
         <input
           type="text"
           name="firstName"

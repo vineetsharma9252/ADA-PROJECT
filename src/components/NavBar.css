@@ -1,0 +1,16 @@
+
+ @media (max-width:640px) {
+   .govText{
+    text-align: center;
+   } 
+   .profileName {
+    display: block;
+   }    
+   .logOutBtn {
+    display: inline-block;
+    margin: auto;
+  
+   }
+ }
+
+ 

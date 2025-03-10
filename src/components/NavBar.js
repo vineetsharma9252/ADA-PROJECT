@@ -1,133 +1,203 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Import Link for routing
-import { FaRegUser } from "react-icons/fa"; // Import FaRegUser icon
+import { useNavigate, Link } from "react-router-dom";
+import { FaRegUser } from "react-icons/fa";
 import myImage from '../smjLogo.png';
 
-import './NavBar.css';
-
 const NavBar = () => {
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Get username and token from localStorage
-  const userName = localStorage.getItem("firstName") || "Welcome"; // This should now work
+  const userName = localStorage.getItem("firstName") || "Welcome";
   const token = localStorage.getItem("Token");
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  // Handle Logout
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("Token");
-    localStorage.removeItem("firstName");
+    localStorage.clear();
     alert("Logged out successfully!");
-    navigate("/login"); // Redirect to login page after logout
+    navigate("/login");
   };
+  const handleLogin = () => navigate("/login");
 
   return (
-    <nav className="bg-white shadow-md  w-full z-50 top-0 left-0">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
-        {/* Logo Section */}
-        <Link to="/" className="flex items-center space-x-3">
-          <img
-            src={myImage}
-            className="h-20 w-10"
-            alt=""
-          />
-          <div className=" text-black py-4 px-6 text-center ">
-            <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
-            <p className="text-sm govText font-normal text-left mt-1">Government of Rajasthan</p>
-           
+    <nav className="bg-white shadow-md w-full z-50 top-0 left-0 relative">
+      <div className="max-w-screen-xl mx-auto px-2 relative">
+
+        {/* ----------- Mobile Layout ------------ */}
+        <div className="md:hidden flex flex-col py-2 relative">
+
+          {/* Logo Left aligned */}
+          <div className="flex items-center justify-start">
+            <Link to="/" className="flex items-center">
+              <img
+                src={myImage}
+                className="h-20 w-20 object-contain"
+                alt="Logo"
+              />
+              <div className="text-black py-4 px-4 text-center">
+                <h1 className="text-1xl font-bold uppercase">Ajmer Development Authority</h1>
+                <p className="text-sm govText font-normal mt-1">Government of Rajasthan</p>
+              </div>
+            </Link>
           </div>
-        </Link>
 
-        {/* Profile Section */}
-        <div className="flex items-center space-x-3">
-          <FaRegUser className="w-8 h-8 text-gray-600" />
-          <span className="hidden profileName md:block text-gray-900 font-medium">
-            {userName}
-          </span>
-        </div>
+          {/* Profile Name, Login & Hamburger Menu */}
+          <div className="w-full flex items-center justify-between mt-2 px-2 relative">
+            {/* Profile Name */}
+            <div className="flex items-center space-x-1">
+              <FaRegUser className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-900 font-medium">{userName}</span>
+            </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMenu}
-          type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-600 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-          aria-controls="navbar-default"
-          aria-expanded={isMenuOpen ? "true" : "false"}
-        >
-          <span className="sr-only">Open main menu</span>
-          {isMenuOpen ? (
-            <svg
-              className="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          )}
-        </button>
-
-        {/* Navigation Links */}
-        <div className={`${isMenuOpen ? "block" : "hidden"} md:block w-full md:w-auto`} id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:flex-row md:space-x-6 md:p-0">
-            <li>
-              <Link
-                to="/"
-                className="block py-2 text-decoration-none px-4 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700  "
-                aria-current="page"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                className="block py-2 px-4 text-decoration-none text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              {token && (
+            {/* Login + Hamburger */}
+            <div className="flex items-center space-x-2">
+              {token ? (
                 <button
                   onClick={handleLogout}
-                  className="block py-2 px-4 logOutBtn text-gray-900 rounded hover:bg-red-100 md:hover:bg-transparent md:border-0 md:hover:text-red-500"
+                  className="py-1 px-2 text-sm logOutBtn whiteapce-nowrap text-red-900 rounded hover:bg-red-100"
                 >
                   Log out
                 </button>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className="py-1 px-3 text-sm text-gray-900 rounded hover:bg-blue-100"
+                >
+                  Log in
+                </button>
               )}
-            </li>
-          </ul>
+
+              {/* Hamburger Button */}
+              <button
+                onClick={toggleMenu}
+                type="button"
+                className="px-1.5 w-9 h-9 justify-center items-center text-gray-600 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+              >
+                {isMenuOpen ? (
+                  <svg
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 17 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 1h15M1 7h15M1 13h15"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
+
+            {/* ----------- Mobile Dropdown Menu ------------ */}
+            {/* ----------- Mobile Dropdown Menu ------------ */}
+            {isMenuOpen && (
+              <div
+                className="absolute right-2 top-14 w-80 bg-white shadow-lg rounded-lg py-2 transition-all duration-300 ease-in-out z-50"
+              >
+                <ul className="flex flex-col space-y-2">
+                  <li>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)} // Close menu on click
+                      className="block w-full py-2 px-2 rounded text-decoration-none hover:bg-blue-100 "
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/about"
+                      onClick={() => setIsMenuOpen(false)} // Close menu on click
+                      className="block w-full py-2 px-2 rounded text-decoration-none hover:bg-blue-100"
+                    >
+                      About
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+          </div>
         </div>
+
+        {/* ----------- Desktop Layout ------------ */}
+        <div className="hidden md:flex items-center justify-between">
+          {/* Logo + Heading */}
+          <Link to="/" className="flex items-center space-x-3">
+            <img src={myImage} className="h-20 w-20" alt="Logo" />
+            <div className="text-black py-4 px-6 text-center">
+              <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
+              <p className="text-sm govText font-normal between:md:lg:text-center  mt-1">Government of Rajasthan</p>
+            </div>
+          </Link>
+
+          {/* Right Side Items */}
+          <div className="flex items-center space-x-6">
+            {/* Profile */}
+            <div className="flex items-center space-x-3">
+              <FaRegUser className="w-8 h-8 text-gray-600" />
+              <span className="text-gray-900 font-medium">{userName}</span>
+            </div>
+
+            {/* Navigation Links */}
+            <ul className="font-medium flex items-center space-x-2">
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 text-decoration-none px-4 text-gray-900 rounded hover:bg-blue-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700  "
+                  aria-current="page"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="block py-2 px-4 text-decoration-none text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                {token ? (
+                  <button
+                    onClick={handleLogout}
+                    className="py-2 px-4  logOutBtn text-gray-900 whitespace-nowrap rounded hover:bg-red-100"
+                  >
+                    Log out
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleLogin}
+                    className="py-2 px-4 text-gray-900 whitespace-nowrap rounded hover:bg-blue-100"
+                  >
+                    Log in
+                  </button>
+                )}
+              </li>
+            </ul>
+          </div>
+        </div>
+
       </div>
     </nav>
-
   );
 };
 

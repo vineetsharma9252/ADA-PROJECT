@@ -47,8 +47,18 @@ export default function SignInForm() {
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8 my-1">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div
+        className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8 my-1"
+        style={{
+          marginTop: "300px",
+        }}
+      >
+        <div
+          className="sm:mx-auto sm:w-full sm:max-w-sm"
+          style={{
+            marginTop: "100px",
+          }}
+        >
           <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
             Sign in to your account
           </h2>

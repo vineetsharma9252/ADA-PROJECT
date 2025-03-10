@@ -57,11 +57,14 @@ export default function ApplicationForm() {
       return;
     }
 
-    setFamilyMembers([...familyMembers, {
-      name: DOMPurify.sanitize(member.name.toUpperCase()),
-      mobile: DOMPurify.sanitize(member.mobile),
-      aadhar: DOMPurify.sanitize(member.aadhar),
-    }]);
+    setFamilyMembers([
+      ...familyMembers,
+      {
+        name: DOMPurify.sanitize(member.name.toUpperCase()),
+        mobile: DOMPurify.sanitize(member.mobile),
+        aadhar: DOMPurify.sanitize(member.aadhar),
+      },
+    ]);
 
     setMember({ name: "", mobile: "", aadhar: "" });
   };
@@ -106,8 +109,16 @@ export default function ApplicationForm() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full appHeading text-center bg-gray-200 py-4 shadow-md">
-        <h2 className="text-2xl font-bold text-gray-800">
+      <div
+        className="w-full appHeading text-center bg-gray-200 py-4 shadow-md"
+        style={{
+          height: "200px",
+        }}
+      >
+        <h2
+          className="text-2xl font-bold text-gray-800 my-10"
+          style={{ marginTop: "100px" }}
+        >
           Application Form for [Scheme Name]
         </h2>
       </div>
@@ -173,7 +184,10 @@ export default function ApplicationForm() {
                 placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 value={member[field]}
                 onChange={(e) =>
-                  setMember({ ...member, [field]: e.target.value.toUpperCase() })
+                  setMember({
+                    ...member,
+                    [field]: e.target.value.toUpperCase(),
+                  })
                 }
               />
             ))}

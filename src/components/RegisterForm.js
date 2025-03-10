@@ -61,15 +61,11 @@ const RegisterForm = () => {
     setErrors((prev) => ({ ...prev, [name]: message })); // Dynamic error setting
   };
 
-
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value }); // Update form data
     validateField(name, value); // Validate current field dynamically
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,17 +118,19 @@ const RegisterForm = () => {
     }
   };
 
-
-
   return (
-
-
-
-
-
-    <div className="flex min-h-full flex-col bg-gray-100  justify-center px-6 py-7 lg:px-8 my-2">
-
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div
+      className="flex min-h-full flex-col bg-gray-100  justify-center px-6 py-7 lg:px-8 my-2"
+      style={{
+        marginTop: "150px",
+      }}
+    >
+      <div
+        className="sm:mx-auto sm:w-full sm:max-w-sm"
+        style={{
+          marginTop: "80px",
+        }}
+      >
         <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
           Create your account
         </h2>
@@ -145,7 +143,10 @@ const RegisterForm = () => {
         className="bg-white shadow-md mx-auto rounded-lg px-10 py-8 mt-5 w-full max-w-[80%] space-y-6"
       >
         {/* First Name */}
-        <label htmlFor="Name" className="block text-left text-sm font-medium text-gray-700">
+        <label
+          htmlFor="Name"
+          className="block text-left text-sm font-medium text-gray-700"
+        >
           Name
         </label>
         <input
@@ -157,13 +158,17 @@ const RegisterForm = () => {
           className="block w-full rounded-md border px-4 py-2"
         />
         {errors.firstName && (
-          <p className="text-red-500 text-left text-xs mt-1">{errors.firstName}</p>
+          <p className="text-red-500 text-left text-xs mt-1">
+            {errors.firstName}
+          </p>
         )}
-
 
         {/* Email */}
         <div className="space-y-2">
-          <label htmlFor="email" className="block text-left text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-left text-sm font-medium text-gray-700"
+          >
             Email
           </label>
           <input
@@ -176,12 +181,17 @@ const RegisterForm = () => {
             placeholder="Enter your email"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
-          {errors.email && <p className="text-red-500 text-left text-sm">{errors.email}</p>}
+          {errors.email && (
+            <p className="text-red-500 text-left text-sm">{errors.email}</p>
+          )}
         </div>
 
         {/* Password */}
         <div className="space-y-2">
-          <label htmlFor="password" className="block text-left text-sm font-medium text-gray-700">
+          <label
+            htmlFor="password"
+            className="block text-left text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -194,12 +204,17 @@ const RegisterForm = () => {
             placeholder="Enter your password"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
-          {errors.password && <p className="text-red-500 text-left text-sm">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-left text-sm">{errors.password}</p>
+          )}
         </div>
 
         {/* Mobile Number */}
         <div className="space-y-2">
-          <label htmlFor="mobile" className="block text-left text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobile"
+            className="block text-left text-sm font-medium text-gray-700"
+          >
             Mobile Number
           </label>
           <input
@@ -213,12 +228,17 @@ const RegisterForm = () => {
             maxLength="10"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
-          {errors.mobile && <p className="text-red-500 text-left text-sm">{errors.mobile}</p>}
+          {errors.mobile && (
+            <p className="text-red-500 text-left text-sm">{errors.mobile}</p>
+          )}
         </div>
 
         {/* Aadhar Number */}
         <div className="space-y-2">
-          <label htmlFor="aadhar" className="block text-left text-sm font-medium text-gray-700">
+          <label
+            htmlFor="aadhar"
+            className="block text-left text-sm font-medium text-gray-700"
+          >
             Aadhar Number
           </label>
           <input
@@ -232,7 +252,9 @@ const RegisterForm = () => {
             maxLength="12"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
-          {errors.aadhar && <p className="text-red-500 text-left text-sm">{errors.aadhar}</p>}
+          {errors.aadhar && (
+            <p className="text-red-500 text-left text-sm">{errors.aadhar}</p>
+          )}
         </div>
 
         {/* Submit and Login */}
@@ -256,8 +278,6 @@ const RegisterForm = () => {
           </Link>
         </div>
       </form>
-
-
     </div>
   );
 };

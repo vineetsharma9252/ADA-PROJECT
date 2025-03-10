@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
-import myImage from '../smjLogo.png';
+import myImage from "../smjLogo.png";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -18,12 +18,17 @@ const NavBar = () => {
   const handleLogin = () => navigate("/login");
 
   return (
-    <nav className="bg-white shadow-md w-full z-50 top-0 left-0 relative">
+    <nav
+      className="bg-white shadow-md w-full z-50 top-0 left-0 relative"
+      style={{
+        position: "fixed",
+        zIndex: "1000",
+        borderRadius: "0px 0px 40px 40px",
+      }}
+    >
       <div className="max-w-screen-xl mx-auto px-2 relative">
-
         {/* ----------- Mobile Layout ------------ */}
         <div className="md:hidden flex flex-col py-2 relative">
-
           {/* Logo Left aligned */}
           <div className="flex items-center justify-start">
             <Link to="/" className="flex items-center">
@@ -33,8 +38,12 @@ const NavBar = () => {
                 alt="Logo"
               />
               <div className="text-black py-4 px-4 text-center">
-                <h1 className="text-1xl font-bold uppercase">Ajmer Development Authority</h1>
-                <p className="text-sm govText font-normal mt-1">Government of Rajasthan</p>
+                <h1 className="text-1xl font-bold uppercase">
+                  Ajmer Development Authority
+                </h1>
+                <p className="text-sm govText font-normal mt-1">
+                  Government of Rajasthan
+                </p>
               </div>
             </Link>
           </div>
@@ -108,9 +117,7 @@ const NavBar = () => {
             {/* ----------- Mobile Dropdown Menu ------------ */}
             {/* ----------- Mobile Dropdown Menu ------------ */}
             {isMenuOpen && (
-              <div
-                className="absolute right-2 top-14 w-80 bg-white shadow-lg rounded-lg py-2 transition-all duration-300 ease-in-out z-50"
-              >
+              <div className="absolute right-2 top-14 w-80 bg-white shadow-lg rounded-lg py-2 transition-all duration-300 ease-in-out z-50">
                 <ul className="flex flex-col space-y-2">
                   <li>
                     <Link
@@ -133,7 +140,6 @@ const NavBar = () => {
                 </ul>
               </div>
             )}
-
           </div>
         </div>
 
@@ -143,8 +149,12 @@ const NavBar = () => {
           <Link to="/" className="flex items-center space-x-3">
             <img src={myImage} className="h-20 w-20" alt="Logo" />
             <div className="text-black py-4 px-6 text-center">
-              <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
-              <p className="text-sm govText font-normal between:md:lg:text-center  mt-1">Government of Rajasthan</p>
+              <h1 className="text-2xl font-bold uppercase">
+                Ajmer Development Authority
+              </h1>
+              <p className="text-sm govText font-normal between:md:lg:text-center  mt-1">
+                Government of Rajasthan
+              </p>
             </div>
           </Link>
 
@@ -195,7 +205,6 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-
       </div>
     </nav>
   );

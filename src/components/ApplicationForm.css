@@ -1,6 +1,7 @@
 /* .appHeading {
   margin-top: 4rem;
 } */
+
 @media (max-width: 640px) {
     .mobile-mt {
       margin-top: 50px !important; /* Adjust as needed */

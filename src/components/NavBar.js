@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom"; // Import Link for routing
 import { FaRegUser } from "react-icons/fa"; // Import FaRegUser icon
 import myImage from '../smjLogo.png';
 
+import './NavBar.css';
+
 const NavBar = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +38,7 @@ const NavBar = () => {
           />
           <div className=" text-black py-4 px-6 text-center ">
             <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
-            <p className="text-sm font-normal text-left mt-1">Government of Rajasthan</p>
+            <p className="text-sm govText font-normal text-left mt-1">Government of Rajasthan</p>
            
           </div>
         </Link>
@@ -44,7 +46,7 @@ const NavBar = () => {
         {/* Profile Section */}
         <div className="flex items-center space-x-3">
           <FaRegUser className="w-8 h-8 text-gray-600" />
-          <span className="hidden md:block text-gray-900 font-medium">
+          <span className="hidden profileName md:block text-gray-900 font-medium">
             {userName}
           </span>
         </div>
@@ -97,7 +99,7 @@ const NavBar = () => {
             <li>
               <Link
                 to="/"
-                className="block py-2 px-4 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
+                className="block py-2 text-decoration-none px-4 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700  "
                 aria-current="page"
               >
                 Home
@@ -106,7 +108,7 @@ const NavBar = () => {
             <li>
               <Link
                 to="/about"
-                className="block py-2 px-4 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
+                className="block py-2 px-4 text-decoration-none text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
               >
                 About
               </Link>
@@ -115,7 +117,7 @@ const NavBar = () => {
               {token && (
                 <button
                   onClick={handleLogout}
-                  className="block py-2 px-4 text-gray-900 rounded hover:bg-red-100 md:hover:bg-transparent md:border-0 md:hover:text-red-500"
+                  className="block py-2 px-4 logOutBtn text-gray-900 rounded hover:bg-red-100 md:hover:bg-transparent md:border-0 md:hover:text-red-500"
                 >
                   Log out
                 </button>

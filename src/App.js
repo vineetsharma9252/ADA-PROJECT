@@ -8,6 +8,9 @@ import NavBar from "./components/NavBar";
 import ForgotPassword from "./components/ForgotPassword";
 import About from "./components/About";
 import HomePage from "./components/HomePage";
+import Dashboard from "./components/Dashboard";
+import SchemePage from "./components/SchemePage";
+
 function App() {
   const token = localStorage.getItem("Token"); // Check if the user is logged in
 
@@ -32,12 +35,14 @@ function App() {
         <Route path="about" element={<About />} />
         <Route
           path="/login"
-          element={token ? <Navigate to="/application-form" /> : <SignInForm />}
+          element={token ? <Navigate to="/schemes" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
         <Route path="/application-form" element={<ApplicationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/Home" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/schemes" element={<SchemePage />} />
       </Routes>
     </div>
   );

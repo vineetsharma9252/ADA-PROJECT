@@ -1,0 +1,19 @@
+
+.small-box {
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+}
+.small-box h3 {
+    font-size: 2rem;
+}
+.small-box .inner {
+    text-align: center;
+}
+.small-box .icon {
+    font-size: 3rem;
+}
+.small-box a {
+    color: white;
+    text-decoration: none;
+}

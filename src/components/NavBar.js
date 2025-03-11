@@ -23,7 +23,7 @@ const NavBar = () => {
       style={{
         position: "fixed",
         zIndex: "1000",
-        borderRadius: "0px 0px 40px 40px",
+        borderRadius: "0px 0px 16px 16px",
       }}
     >
       <div className="max-w-screen-xl mx-auto px-2 relative">

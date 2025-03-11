@@ -1,0 +1,101 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .search-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    width: 60%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .filter-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .scheme-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .card-text {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+  
+  .bg-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .bg-warning {
+    background-color: #ffc107;
+    color: black;
+  }
+  
+  .bg-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  ol {
+    padding-left: 20px;
+  }
+  
+  .testimonial {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-left: 5px solid #007bff;
+    margin-top: 15px;
+  }
+  
+  blockquote {
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .application-steps {
+    padding-left: 20px;
+    list-style: none; /* Remove default list styling */
+  }
+  
+  .application-steps li {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .arrow-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    color: #007bff;
+  }
+  

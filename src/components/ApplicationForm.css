@@ -1,6 +1,11 @@
-/* .appHeading {
-  margin-top: 4rem;
-} */
+.appHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 !important;
+  margin: 0 !important;
+  
+}
 
 @media (max-width: 640px) {
     .mobile-mt {

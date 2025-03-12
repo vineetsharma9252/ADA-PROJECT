@@ -38,7 +38,7 @@ function App() {
           element={token ? <Navigate to="/schemes" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
-        <Route path="/application-form" element={<ApplicationForm />} />
+        <Route path="/application-form/:schemeName" element={<ApplicationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/dashboard" element={<Dashboard />} />

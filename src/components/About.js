@@ -1,5 +1,6 @@
 import React from "react";
 import { Building2, Globe2, Landmark, Users, ShieldCheck, Leaf, Home, Briefcase, MessageSquareQuote } from "lucide-react";
+import Footer from './Footer';
 
 const AboutUsPage = () => {
   return (
@@ -51,6 +52,7 @@ const AboutUsPage = () => {
           The Commissioner or Chief Executive Officer (CEO) of the Ajmer Development Authority oversees all administrative and developmental activities. For the latest updates on commissioners and administrative heads, please visit our official portal.
         </p>
       </section>
+      
     </div>
   );
 };
@@ -102,5 +104,6 @@ const objectives = [
     icon: <Landmark size={36} className="text-green-800" />,
   },
 ];
+
 
 export default AboutUsPage;

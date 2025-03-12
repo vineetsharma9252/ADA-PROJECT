@@ -10,6 +10,7 @@ import About from "./components/About";
 import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
+import Footer from "./components/Footer";
 
 function App() {
   const token = localStorage.getItem("Token"); // Check if the user is logged in
@@ -44,6 +45,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/schemes" element={<SchemePage />} />
       </Routes>
+      <Footer />
     </div>
   );
 }

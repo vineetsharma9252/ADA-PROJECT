@@ -115,7 +115,7 @@ export default function ApplicationForm() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div
         className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md"
-       
+
       >
 
         <h2 className="relative inline-block w-[40%] text-center mt-5 py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">

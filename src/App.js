@@ -10,7 +10,7 @@ import About from "./components/About";
 import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
-import Footer from "./components/Footer";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   const token = localStorage.getItem("Token"); // Check if the user is logged in
@@ -39,13 +39,17 @@ function App() {
           element={token ? <Navigate to="/schemes" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
-        <Route path="/application-form/:schemeName" element={<ApplicationForm />} />
+        <Route
+          path="/application-form/:schemeName"
+          element={<ApplicationForm />}
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/schemes" element={<SchemePage />} />
+        <Route path="/user-profile" element={<UserProfile />} />
       </Routes>
-      <Footer />
+   
     </div>
   );
 }

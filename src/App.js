@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from './components/ProtectedRoute';
 import "./App.css";
 import RegisterForm from "./components/RegisterForm";
 import SignInForm from "./components/SignInForm";
@@ -13,43 +14,50 @@ import SchemePage from "./components/SchemePage";
 import UserProfile from "./components/UserProfile";
 
 function App() {
-  const token = localStorage.getItem("Token"); // Check if the user is logged in
+  const token = localStorage.getItem("token"); // ✅ Consistent lowercase
 
   return (
     <div className="App">
       <NavBar />
       <Routes>
-        {/* Redirect to login if user is registered */}
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/register"
-          element={
-            token ? <Navigate to="/application-form" /> : <RegisterForm />
-          }
-        />
-        {/* Redirect to application form if user is logged in */}
 
         <Route
-          path="/login"
-          element={token ? <Navigate to="/application-form" /> : <SignInForm />}
+          path="/register"
+          element={token ? <Navigate to="/application-form" /> : <RegisterForm />}
         />
-        <Route path="about" element={<About />} />
+
         <Route
           path="/login"
           element={token ? <Navigate to="/schemes" /> : <SignInForm />}
         />
+
         <Route path="/about" element={<About />} />
+
+        <Route
+          path="/application-form"
+          element={
+            <ProtectedRoute>
+              <ApplicationForm />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/application-form/:schemeName"
-          element={<ApplicationForm />}
+          element={
+            <ProtectedRoute>
+              <ApplicationForm />
+            </ProtectedRoute>
+          }
         />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
       </Routes>
-   
     </div>
   );
 }

@@ -47,6 +47,15 @@ const checkRequiredDocuments = (schemeTitle) => {
 
 // Function to handle Apply Now click
 const handleApplyClick = (schemeTitle) => {
+
+  const token = localStorage.getItem("token"); // Check token
+
+  if (!token) {
+    alert("Please login to apply for this scheme.");
+    navigate("/login");
+    return; // Stop further execution
+  }
+
   const message = `
 Please read the following instructions carefully before proceeding:
 

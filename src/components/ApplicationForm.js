@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DOMPurify from "dompurify"; // Prevents XSS attacks
 import { useParams, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 import "./ApplicationForm.css";
 
 export default function ApplicationForm() {
@@ -78,35 +79,48 @@ export default function ApplicationForm() {
     setFamilyMembers(familyMembers.filter((_, i) => i !== index));
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalData = { ...formData, familyMembers };
+    const token = localStorage.getItem("token"); // lowercase
 
-    const token = localStorage.getItem("token"); // Assuming token is stored directly
-
+  
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, // Pass token directly without Bearer
-          // OR "x-auth-token": token if you prefer custom header
+          Authorization: token, // Direct token
         },
         body: JSON.stringify(finalData),
       });
-
+  
       const responseData = await response.json();
-
+  
+      console.log("Response status:", response.status); // ✅ Check status in console
+  
       if (response.status === 401) {
-        // Redirect on Unauthorized
-        alert("Unauthorized! Please login to continue.");
-        navigate("/login");
+        Swal.fire({
+          icon: 'warning',
+          title: 'Unauthorized!',
+          text: 'Please login to continue.',
+          confirmButtonText: 'Go to Login'
+        }).then(() => {
+          navigate("/login");
+        });
         return;
       }
-
+      
       if (response.ok) {
-        alert("Application submitted successfully!");
-        // Reset form
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Application submitted successfully!',
+        });
+  
+        // Reset Form
         setFormData({
           firstName: "",
           middleName: "",
@@ -118,15 +132,24 @@ export default function ApplicationForm() {
         });
         setFamilyMembers([]);
         setMember({ name: "", mobile: "", aadhar: "" });
+  
       } else {
-        alert(`Failed: ${responseData.message || "Unknown error"}`);
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed!',
+          text: responseData.message || "Unknown error",
+        });
       }
+  
     } catch (error) {
       console.error("Error while submitting:", error);
-      alert("An error occurred while submitting the application.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'An error occurred while submitting the application.',
+      });
     }
   };
-
   
 
   return (

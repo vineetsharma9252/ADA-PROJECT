@@ -34,7 +34,7 @@ export default function SignInForm() {
         localStorage.setItem("Token", data.token);
 
         alert("Login successfully!");
-        navigate("/application-form");
+        navigate("/schemes");
       } else {
         const errorData = await response.json();
         alert(`Login failed: ${errorData.message}`);

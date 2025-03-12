@@ -87,7 +87,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get('/api/applications' ,async (req, res) => {
+app.post('/api/applications', authenticateToken ,async (req, res) => {
   try {
     const applicationData = req.body;
     console.log(applicationData); // Log received data

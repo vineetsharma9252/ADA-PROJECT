@@ -42,7 +42,7 @@ const SchemePage = () => {
 const checkRequiredDocuments = (schemeTitle) => {
   // For demo purposes, let's say documents are missing for "ADA Research Grant"
   const missingDocsSchemes = ["ADA Research Grant", "ADA Women Empowerment Program"];
-  return !missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
+  return missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
 };
 
 // Function to handle Apply Now click
@@ -127,14 +127,16 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
                     </span>
 
                     {/* // In map loop */}
-                    {(scheme.status === "Closed") ? " " :
+                   <center>
+                   {(scheme.status === "Closed") ? " " :
                       <button
                         onClick={() => handleApplyClick(scheme.title)}
-                        className="custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
+                        className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
                       >
                         Apply Now
                       </button>
                     }
+                   </center>
 
                   </p>
                 </div>

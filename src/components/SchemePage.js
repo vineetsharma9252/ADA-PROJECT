@@ -76,7 +76,7 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
 
     <div className="container w-full mt-5">
       <div className="greenBorder" >
-        <h2 className="relative inline-block w-[20%] text-center mt-6  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+        <h2 className="relative inline-block w-[20%] text-center mt-6  py-2 mb-2 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
           ADA Schemes
         </h2>
         <br />

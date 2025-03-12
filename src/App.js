@@ -49,6 +49,7 @@ function App() {
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
       </Routes>
+      <Footer />
     </div>
   );
 }

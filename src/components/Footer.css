@@ -1,13 +1,93 @@
-.footer {
-    background-color: #343a40;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    width: 100%;
-    border-radius: 10px;
-    height: 100px;
-    position: relative;
-    margin-top: 20px;
-    bottom: 0;
+/* General Footer Styling */
+#footerArea {
+  background-color: #003366; /* Ascent Color */
+  color: white;
+  font-size: 14px;
+}
+
+.footer-heading {
+  color: #00cc66; /* Green Color */
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.footer-visitor-info p {
+  margin: 0 0 0.5rem;
+}
+
+.footer-visitor-info strong {
+  color: white;
+}
+
+/* Links Styling */
+.footer-ext-links a, 
+.quick-link a, 
+.footer-email, 
+.social a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-ext-links a:hover, 
+.quick-link a:hover, 
+.footer-email:hover, 
+.social a:hover {
+  color: #00cc66; /* Green on hover */
+}
+
+/* Social Media Icon */
+.social a i, .social a svg {
+  font-size: 16px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.social a:hover i, .social a:hover svg {
+  color: #00cc66; /* Green on hover */
+}
+
+/* Bottom Links */
+.footer-ext-links {
+  padding-top: 1rem;
+  font-size: 13px;
+}
+
+.footer-ext-links a {
+  padding: 0 10px;
+  display: inline-block;
+  border-right: 1px solid white;
+}
+
+.footer-ext-links a:last-child {
+  border-right: none;
+}
+
+/* Quick Links */
+.quick-link li {
+  margin-bottom: 0.5rem;
+}
+
+/* Email */
+.footer-email {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* Border Top */
+.border-top {
+  border-top: 1px solid white;
+}
+.footer-icons {
+  font-size: 1.8rem !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-ext-links {
+    justify-content: center;
   }
-  
+  .footer-heading {
+    text-align: center;
+  }
+}

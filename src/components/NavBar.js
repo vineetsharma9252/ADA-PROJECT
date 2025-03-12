@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import myImage from "../smjLogo.png";
-import './NavBar.css'
+import UserProfile from "./UserProfile";
+import "./NavBar.css";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -19,10 +20,7 @@ const NavBar = () => {
   const handleLogin = () => navigate("/login");
 
   return (
-    <nav
-      className=" shadow-md w-full z-50 top-0 left-0 relative"
-
-    >
+    <nav className=" shadow-md w-full z-50 top-0 left-0 relative">
       <div className="max-w-screen-xl mx-auto px-2 relative">
         {/* ----------- Mobile Layout ------------ */}
         <div className="md:hidden flex flex-col py-2 relative">

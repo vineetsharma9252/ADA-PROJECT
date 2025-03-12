@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import DOMPurify from "dompurify"; // Prevents XSS attacks
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ApplicationForm.css";
 
 export default function ApplicationForm() {
+  const navigate = useNavigate();
   const { schemeName } = useParams();
   const decodedSchemeName = decodeURIComponent(schemeName);
 
@@ -81,16 +82,31 @@ export default function ApplicationForm() {
     e.preventDefault();
     const finalData = { ...formData, familyMembers };
 
+    const token = localStorage.getItem("token"); // Assuming token is stored directly
+
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token, // Pass token directly without Bearer
+          // OR "x-auth-token": token if you prefer custom header
+        },
         body: JSON.stringify(finalData),
       });
 
       const responseData = await response.json();
+
+      if (response.status === 401) {
+        // Redirect on Unauthorized
+        alert("Unauthorized! Please login to continue.");
+        navigate("/login");
+        return;
+      }
+
       if (response.ok) {
         alert("Application submitted successfully!");
+        // Reset form
         setFormData({
           firstName: "",
           middleName: "",
@@ -110,6 +126,8 @@ export default function ApplicationForm() {
       alert("An error occurred while submitting the application.");
     }
   };
+
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

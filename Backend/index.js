@@ -6,7 +6,7 @@ const User = require('./db/UserSchema');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const Application = require('./db/applicationform');
-
+const authenticateToken = require('./middleware/auth');
 
 const app = express();
 
@@ -87,7 +87,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/api/applications', async (req, res) => {
+app.get('/api/applications' ,async (req, res) => {
   try {
     const applicationData = req.body;
     console.log(applicationData); // Log received data

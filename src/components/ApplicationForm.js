@@ -113,6 +113,7 @@ export default function ApplicationForm() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      
       <div
         className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md"
 
@@ -123,9 +124,10 @@ export default function ApplicationForm() {
         </h2>
 
       </div>
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[80%] mobile-mt"
+        className="application-form-border  px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[95%] mobile-mt"
       >
         <div className="flex flex-wrap -mx-3 mb-6">
           {["firstName", "middleName", "lastName"].map((field, index) => (
@@ -134,7 +136,7 @@ export default function ApplicationForm() {
                 {field.replace(/([A-Z])/g, " $1").trim()}
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 leading-tight focus:outline-none uppercase"
+                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700  py-3 px-4 leading-tight  uppercase"
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
@@ -151,7 +153,7 @@ export default function ApplicationForm() {
               {field.replace(/([A-Z])/g, " $1").trim()}
             </label>
             <select
-              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 rounded focus:outline-none"
+              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4  focus:outline-none"
               name={field}
               value={formData[field]}
               onChange={handleChange}
@@ -180,7 +182,7 @@ export default function ApplicationForm() {
             {["name", "mobile", "aadhar"].map((field) => (
               <input
                 key={field}
-                className="block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2 uppercase"
+                className="block w-full inputGreenBorder bg-gray-200  text-gray-700 py-2 px-3  mb-2 uppercase"
                 type="text"
                 placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 value={member[field]}
@@ -232,6 +234,7 @@ export default function ApplicationForm() {
           Submit Application
         </button>
       </form>
+
     </div>
   );
 }

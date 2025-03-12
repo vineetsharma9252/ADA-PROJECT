@@ -4,11 +4,22 @@
   align-items: center;
   padding: 0 !important;
   margin: 0 !important;
-  
+
 }
 
+.application-form-border {
+  border: 2px solid oklch(0.792 0.209 151.711);
+  /* Accent color */
+}
+
+.inputGreenBorder:hover {
+  border: 1px solid oklch(0.792 0.209 151.711);
+}
+
+
 @media (max-width: 640px) {
-    .mobile-mt {
-      margin-top: 50px !important; /* Adjust as needed */
-    }
+  .mobile-mt {
+    margin-top: 50px !important;
+    /* Adjust as needed */
   }
+}

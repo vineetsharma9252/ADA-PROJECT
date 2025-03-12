@@ -36,12 +36,13 @@ const Footer = () => {
               <p className="whitespace-nowrap">Last Updated On: <strong>{formattedDate}, {formattedTime}</strong></p>
             </div>
             <ul className="social d-flex gap-3 p-0 m-0">
-              <li><a href="https://www.facebook.com/RajCMO/" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a></li>
-              <li><a href="https://twitter.com/RajCMO" target="_blank" rel="noopener noreferrer">
-                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+              <li><a href="https://www.facebook.com/RajCMO/" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f footer-icons "></i></a></li>
+              <li><a href="https://twitter.com/RajCMO" className="footer-icons" target="_blank" rel="noopener noreferrer">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512">
                   <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path>
                 </svg>
               </a></li>
+              <li><a href="https://www.facebook.com/RajCMO/" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-whatsapp footer-icons " ></i></a></li>
             </ul>
           </div>
 
@@ -50,7 +51,7 @@ const Footer = () => {
             <h4 className="footer-heading">External Links</h4>
            
             <ul className="quick-link list-unstyled">
-              <li><a href="https://sampark.rajasthan.gov.in/" target="_blank" rel="noopener noreferrer">Rajasthan Sampark/ CM Helpline</a></li>
+              <li><a href="https://sampark.rajasthan.gov.in/"   target="_blank" rel="noopener noreferrer">Rajasthan Sampark/ CM Helpline</a></li>
               <li><a href="https://jda.rajasthan.gov.in/home/dptHome" target="_blank" rel="noopener noreferrer">Jaipur Development Authority (JDA)</a></li>
               <li><a href="https://urban.rajasthan.gov.in/content/raj/udh/ctp/en/home.html" target="_blank" rel="noopener noreferrer">Town Planning Department</a></li>
               <li><a href="https://rera.rajasthan.gov.in/" target="_blank" rel="noopener noreferrer">RERA</a></li>
@@ -58,7 +59,7 @@ const Footer = () => {
               <li><a href="https://www.jaipurmetrorail.info/" target="_blank" rel="noopener noreferrer">Jaipur Metro Rail Corporation</a></li>
               <li><a href="/pages/department-page/1028">Links of Important Portals</a></li>
             </ul>
-            
+
           </div>
 
           {/* Contact Section */}

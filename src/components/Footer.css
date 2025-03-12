@@ -78,6 +78,9 @@
 .border-top {
   border-top: 1px solid white;
 }
+.footer-icons {
+  font-size: 1.8rem !important;
+}
 
 /* Responsive */
 @media (max-width: 768px) {

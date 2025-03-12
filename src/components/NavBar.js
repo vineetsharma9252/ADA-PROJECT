@@ -157,11 +157,14 @@ const NavBar = () => {
 
           {/* Right Side Items */}
           <div className="flex items-center space-x-6">
-            {/* Profile */}
-            <div className="flex items-center space-x-3">
-              <FaRegUser className="w-8 h-8 text-white" />
-              <span className="text-white font-medium">{userName}</span>
-            </div>
+
+            <Link to="/profile">
+              {/* Profile */}
+              <div className="flex items-center space-x-3">
+                <FaRegUser className="w-8 h-8 text-white" />
+                <span className="text-white font-medium">{userName}</span>
+              </div>
+            </Link>
 
             {/* Navigation Links */}
             <ul className="font-medium flex items-center space-x-2">

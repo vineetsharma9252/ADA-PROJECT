@@ -45,12 +45,13 @@ const NavBar = () => {
 
           {/* Profile Name, Login & Hamburger Menu */}
           <div className="w-full flex items-center justify-between mt-2 px-2 relative">
-            {/* Profile Name */}
-            <div className="flex items-center space-x-1">
-              <FaRegUser className="w-5 h-5 text-white" />
-              <span className="text-white font-medium">{userName}</span>
-            </div>
-
+            <Link to="/user-profile">
+              {/* Profile Name */}
+              <div className="flex items-center space-x-1">
+                <FaRegUser className="w-5 h-5 text-white" />
+                <span className="text-white font-medium">{userName}</span>
+              </div>
+            </Link>
             {/* Login + Hamburger */}
             <div className="flex items-center space-x-2">
               {token ? (
@@ -155,8 +156,12 @@ const NavBar = () => {
 
           {/* Right Side Items */}
           <div className="flex items-center space-x-6">
-
-            <Link to="/profile">
+            <Link
+              to="/user-profile"
+              style={{
+                textDecoration: "none",
+              }}
+            >
               {/* Profile */}
               <div className="flex items-center space-x-3">
                 <FaRegUser className="w-8 h-8 text-white" />

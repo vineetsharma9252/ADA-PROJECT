@@ -87,6 +87,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
 app.post('/api/applications', async (req, res) => {
   try {
     const applicationData = req.body;

@@ -1,4 +1,8 @@
 
+nav {
+  background-color: oklch(0.527 0.154 150.069);
+}
+
  @media (max-width:640px) {
    .govText{
     text-align: center;

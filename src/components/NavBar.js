@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import myImage from "../smjLogo.png";
+import './NavBar.css'
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -19,12 +20,8 @@ const NavBar = () => {
 
   return (
     <nav
-      className="bg-white shadow-md w-full z-50 top-0 left-0 relative"
-      style={{
-        position: "fixed",
-        zIndex: "1000",
-        borderRadius: "0px 0px 16px 16px",
-      }}
+      className=" shadow-md w-full z-50 top-0 left-0 relative"
+
     >
       <div className="max-w-screen-xl mx-auto px-2 relative">
         {/* ----------- Mobile Layout ------------ */}
@@ -37,11 +34,11 @@ const NavBar = () => {
                 className="h-20 w-20 object-contain"
                 alt="Logo"
               />
-              <div className="text-black py-4 px-4 text-center">
+              <div className="text-white py-4 px-4 text-center">
                 <h1 className="text-1xl font-bold uppercase">
                   Ajmer Development Authority
                 </h1>
-                <p className="text-sm govText font-normal mt-1">
+                <p className="text-sm text-white govText font-normal mt-1">
                   Government of Rajasthan
                 </p>
               </div>
@@ -52,8 +49,8 @@ const NavBar = () => {
           <div className="w-full flex items-center justify-between mt-2 px-2 relative">
             {/* Profile Name */}
             <div className="flex items-center space-x-1">
-              <FaRegUser className="w-5 h-5 text-gray-600" />
-              <span className="text-gray-900 font-medium">{userName}</span>
+              <FaRegUser className="w-5 h-5 text-white" />
+              <span className="text-white font-medium">{userName}</span>
             </div>
 
             {/* Login + Hamburger */}
@@ -61,14 +58,14 @@ const NavBar = () => {
               {token ? (
                 <button
                   onClick={handleLogout}
-                  className="py-1 px-2 text-sm logOutBtn whiteapce-nowrap text-red-900 rounded hover:bg-red-100"
+                  className="py-1 px-2 text-sm logOutBtn whiteapce-nowrap text-white rounded hover:bg-red-100"
                 >
                   Log out
                 </button>
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="py-1 px-3 text-sm text-gray-900 rounded hover:bg-blue-100"
+                  className="py-1 px-3 text-sm text-white rounded  hover:bg-blue-100"
                 >
                   Log in
                 </button>
@@ -123,7 +120,7 @@ const NavBar = () => {
                     <Link
                       to="/"
                       onClick={() => setIsMenuOpen(false)} // Close menu on click
-                      className="block w-full py-2 px-2 rounded text-decoration-none hover:bg-blue-100 "
+                      className="block w-full py-2 px-2 rounded text-white text-decoration-none hover:bg-blue-100 "
                     >
                       Home
                     </Link>
@@ -132,7 +129,7 @@ const NavBar = () => {
                     <Link
                       to="/about"
                       onClick={() => setIsMenuOpen(false)} // Close menu on click
-                      className="block w-full py-2 px-2 rounded text-decoration-none hover:bg-blue-100"
+                      className="block w-full py-2 px-2 rounded text-white text-decoration-none hover:bg-blue-100"
                     >
                       About
                     </Link>
@@ -149,10 +146,10 @@ const NavBar = () => {
           <Link to="/" className="flex items-center space-x-3">
             <img src={myImage} className="h-20 w-20" alt="Logo" />
             <div className="text-black py-4 px-6 text-center">
-              <h1 className="text-2xl font-bold uppercase">
+              <h1 className="text-2xl font-bold text-white uppercase">
                 Ajmer Development Authority
               </h1>
-              <p className="text-sm govText font-normal between:md:lg:text-center  mt-1">
+              <p className="text-sm govText text-white font-normal between:md:lg:text-center  mt-1">
                 Government of Rajasthan
               </p>
             </div>
@@ -162,8 +159,8 @@ const NavBar = () => {
           <div className="flex items-center space-x-6">
             {/* Profile */}
             <div className="flex items-center space-x-3">
-              <FaRegUser className="w-8 h-8 text-gray-600" />
-              <span className="text-gray-900 font-medium">{userName}</span>
+              <FaRegUser className="w-8 h-8 text-white" />
+              <span className="text-white font-medium">{userName}</span>
             </div>
 
             {/* Navigation Links */}
@@ -171,7 +168,7 @@ const NavBar = () => {
               <li>
                 <Link
                   to="/"
-                  className="block py-2 text-decoration-none px-4 text-gray-900 rounded hover:bg-blue-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700  "
+                  className="block py-2 text-decoration-none px-4 text-white rounded hover:bg-blue-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700  "
                   aria-current="page"
                 >
                   Home
@@ -180,7 +177,7 @@ const NavBar = () => {
               <li>
                 <Link
                   to="/about"
-                  className="block py-2 px-4 text-decoration-none text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
+                  className="block py-2 px-4 text-decoration-none text-white rounded hover:bg-gray-200 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
                 >
                   About
                 </Link>
@@ -189,14 +186,14 @@ const NavBar = () => {
                 {token ? (
                   <button
                     onClick={handleLogout}
-                    className="py-2 px-4  logOutBtn text-gray-900 whitespace-nowrap rounded hover:bg-red-100"
+                    className="py-2 px-4  logOutBtn text-white whitespace-nowrap rounded hover:bg-red-100"
                   >
                     Log out
                   </button>
                 ) : (
                   <button
                     onClick={handleLogin}
-                    className="py-2 px-4 text-gray-900 whitespace-nowrap rounded hover:bg-blue-100"
+                    className="py-2 px-4 text-white whitespace-nowrap rounded hover:bg-blue-100"
                   >
                     Log in
                   </button>

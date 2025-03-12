@@ -1,0 +1,62 @@
+.custom-btn {
+    background-color: oklch(0.627 0.194 149.214);
+    color: white; /* Text color ko readable banane ke liye */
+    border: none; /* Optional: agar border nahi chahiye to */
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    background-color: oklch(0.792 0.209 151.711);
+    color: white; /* Hover ke time bhi text visible rahe */
+  }
+  
+  /* Highlight Cards Styling */
+.custom-card {
+    background-color: transparent; /* Match section background */
+    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
+    color: black; /* Text color */
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .custom-card:hover {
+    transform: translateY(-5px);
+    background-color: oklch(0.792 0.209 151.711); /* Slight hover effect if needed */
+  }
+  
+  .custom-card .card-title, 
+  .custom-card .card-text {
+    color: white; /* Ensure all inside text is white */
+  }
+  
+  .highlights {
+    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
+    /* border-radius: 12px; */
+    margin: 0 5px 0 5px;
+  }
+
+
+/* About section */
+
+/* Common green color used */
+:root {
+    --theme-green: oklch(0.792 0.209 151.711);;
+  }
+  
+  /* About Section Card Styling (Similar to Highlights) */
+  .about-card {
+    border: 2px solid var(--theme-green);
+    padding: 20px;
+   
+    color: white;
+    background-color: transparent;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  /* Ensure heading matches */
+  .about h2 {
+    color: white;
+  }
+
+  

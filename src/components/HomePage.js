@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import { Building2, Landmark, TreePine } from 'lucide-react';
 import PropTypes from "prop-types";
 import "./HomePageCSS.css";
 import Footer from "./Footer";
@@ -7,19 +8,23 @@ const HomePage = memo(function HomePage(props) {
   return (
     <div className="d-flex flex-column min-vh-100">
       <div className="flex-grow-1">
+       
         {/* Hero Section */}
-        <section className="hero bg-primary text-white text-center d-flex align-items-center justify-content-center" style={{ minHeight: "50vh" }}>
+        <section className="hero bg-[oklch(0.871_0.15_154.449)] text-white text-center d-flex align-items-center justify-content-center" style={{ minHeight: "50vh" }}>
           <div className="container mt-20 ">
             <h1 className="display-4 display-md-3 mt-20 display-lg-2">Shaping Ajmer’s Future with Sustainable Development</h1>
             <p className="lead lead-md lead-lg">Ensuring planned urban growth, infrastructure enhancement, and heritage preservation.</p>
-            <a href="#projects" className="btn btn-light mt-3">View Projects</a>
+            <a href="#projects" className="custom-btn btn btn-light text-decoration-none mt-3">View Projects</a>
+            <a href="/schemes" className="custom-btn btn btn-light text-decoration-none mt-3 mx-2">View Schemes</a>
+
           </div>
         </section>
 
-        {/* Highlights Section */}
         <section className="highlights py-5 mt-5">
           <div className="container">
-            <h2 className="text-center  mb-5">Key Highlights</h2>
+          <h2 className="relative inline-block w-[40%] text-center  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+              Key Highlights
+            </h2>
             <div className="row">
               {[
                 { title: "Ongoing Projects", text: "Infrastructure development, road construction, and urban beautification." },
@@ -27,9 +32,18 @@ const HomePage = memo(function HomePage(props) {
                 { title: "Urban Development", text: "Plans for smart city initiatives and sustainable growth." },
               ].map((item, index) => (
                 <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={index}>
-                  <div className="card shadow-sm h-100">
+                  <div
+                    className="h-100 p-4 rounded"
+                    style={{
+                      border: "2px solid oklch(0.792 0.209 151.711)",
+                      color: "white",
+                      transition: "transform 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+                  >
                     <div className="card-body text-center">
-                      <h3 className="card-title h5">{item.title}</h3>
+                      <h3 className="card-title text-black h5">{item.title}</h3>
                       <p className="card-text">{item.text}</p>
                     </div>
                   </div>
@@ -38,43 +52,66 @@ const HomePage = memo(function HomePage(props) {
             </div>
           </div>
         </section>
+
+
 
         {/* About Section */}
-        <section className="about py-5 mt-5 bg-light">
+        <section className="about py-5 mt-5">
           <div className="container">
-            <h2 className="text-center mb-5">About Ajmer Development</h2>
-            <div className="row">
-              
-              <div className=" d-flex align-items-center">
-                <div className="w-full" >
-                  <p className="w-full text-left ">
-                    Ajmer is a city of historical and cultural significance, and we are committed to its sustainable development. Our initiatives focus on preserving heritage while promoting modern infrastructure and smart city solutions.
-                  </p>
-                  <a href="#about" className="btn btn-primary mt-3">
-                    Learn More
-                  </a>
+            <h2 className="relative inline-block w-[40%] text-center  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+              About Ajmer Development
+            </h2>
+
+            <div className="row justify-content-center">
+              <div className="col-lg-8 col-md-10 col-sm-12 mb-4">
+                <div className="about-card text-center h-100">
+                  <div className="card-body">
+                    <p className="card-text">
+                      Ajmer is a city of historical and cultural significance, and we are committed to its sustainable development. Our initiatives focus on preserving heritage while promoting modern infrastructure and smart city solutions.
+                    </p>
+                    <a href="#projects" className="custom-btn btn btn-light text-decoration-none mt-3">Learn more</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+
+
         {/* Projects Section */}
-        <section className="projects py-5 mt-5">
-          <div className="container">
-            <h2 className="text-center mb-5">Our Projects</h2>
-            <div className="row">
+        <section className="projects py-10 mt-10 border-y border-[oklch(0.627_0.194_149.214)]">
+          <div className="container mx-auto px-4">
+          <h2 className="relative inline-block w-[40%] text-center  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+             Our Projects
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
-                { title: "Road Expansion", text: "Widening and improving major roads for better connectivity." },
-                { title: "Heritage Restoration", text: "Restoring historical sites to preserve Ajmer's rich culture." },
-                { title: "Green Spaces", text: "Developing parks and green belts for a healthier environment." },
+                {
+                  icon: <Building2 className="w-12 h-12 mx-auto mb-4 text-[oklch(0.627_0.194_149.214)]" />,
+                  title: "Road Expansion & Urban Mobility",
+                  text: "Modernizing and expanding city roads to ease traffic congestion and improve public transport efficiency. Focused on smart traffic systems and pedestrian safety.",
+                },
+                {
+                  icon: <Landmark className="w-12 h-12 mx-auto mb-4 text-[oklch(0.627_0.194_149.214)]" />,
+                  title: "Heritage & Cultural Restoration",
+                  text: "Reviving Ajmer’s iconic historical landmarks and monuments while preserving their rich cultural heritage. Focus on tourism, heritage walks, and public awareness.",
+                },
+                {
+                  icon: <TreePine className="w-12 h-12 mx-auto mb-4 text-[oklch(0.627_0.194_149.214)]" />,
+                  title: "Eco Parks & Green Initiatives",
+                  text: "Development of public parks, eco-friendly zones, and green belts for a healthier environment. Emphasizing urban forestry and water conservation.",
+                },
               ].map((item, index) => (
-                <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={index}>
-                  <div className="card shadow-sm h-100">
-                    <div className="card-body text-center">
-                      <h3 className="card-title h5">{item.title}</h3>
-                      <p className="card-text">{item.text}</p>
-                    </div>
+                <div
+                  key={index}
+                  className="rounded-xl border border-[oklch(0.627_0.194_149.214)] bg-white shadow-md hover:shadow-xl transition duration-300 p-6 text-center h-full flex flex-col justify-between"
+                >
+                  <div>
+                    {item.icon}
+                    <h3 className="text-xl font-semibold text-black mb-3">{item.title}</h3>
+                    <p className="text-gray-700">{item.text}</p>
                   </div>
                 </div>
               ))}
@@ -82,35 +119,15 @@ const HomePage = memo(function HomePage(props) {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="contact py-5 mt-5 bg-light">
-          <div className="container">
-            <h2 className="text-center mb-5">Contact Us</h2>
-            <div className="row">
-              <div className="col-md-6 mx-auto">
-                <form>
-                  <div className="mb-3">
-                    <label htmlFor="name" className="form-label"  >Name</label>
-                    <input type="text" className="form-control" id="name" placeholder="Enter your name" />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label text-left ">Email</label>
-                    <input type="email" className="form-control text-left " id="email" placeholder="Enter your email" />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="message" className="form-label text-left ">Message</label>
-                    <textarea className="form-control" id="message" rows="5" placeholder="Enter your message"></textarea>
-                  </div>
-                  <button type="submit" className="btn btn-primary">Submit</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
+      
+
       </div>
 
       {/* Footer - Fixed at Bottom */}
-      <Footer className="mt-auto" />
+      {/* <Footer className="mt-auto" /> */}
+
+
+
     </div>
   );
 });

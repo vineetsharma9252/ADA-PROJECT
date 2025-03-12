@@ -149,11 +149,11 @@ export default function ApplicationForm() {
 
         {["incomeGroup", "plot", "category"].map((field, index) => (
           <div key={index} className="mb-4">
-            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            <label className="block text-left  uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               {field.replace(/([A-Z])/g, " $1").trim()}
             </label>
             <select
-              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4  focus:outline-none"
+              className="block w-full bg-gray-200 border  text-gray-700 py-3 px-4  focus:outline-none"
               name={field}
               value={formData[field]}
               onChange={handleChange}

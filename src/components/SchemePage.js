@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./SchemePage.css";
 
 const SchemePage = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("All");
 
@@ -34,6 +35,42 @@ const SchemePage = () => {
       (filter === "All" || scheme.status === filter) &&
       scheme.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+//Handle apply logic
+
+// Mock check for required documents
+const checkRequiredDocuments = (schemeTitle) => {
+  // For demo purposes, let's say documents are missing for "ADA Research Grant"
+  const missingDocsSchemes = ["ADA Research Grant", "ADA Women Empowerment Program"];
+  return !missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
+};
+
+// Function to handle Apply Now click
+const handleApplyClick = (schemeTitle) => {
+  const message = `
+Please read the following instructions carefully before proceeding:
+
+1. Ensure you have scanned copies of all mandatory documents.
+2. Your profile must be fully updated.
+3. Double-check your eligibility criteria for this scheme.
+4. You need to provide address proof and ID proof.
+5. Upload recent passport-size photographs.
+6. Application once submitted cannot be edited.
+
+Click OK to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.
+  `;
+
+  if (window.confirm(message)) {
+    if (checkRequiredDocuments(schemeTitle)) {
+      // All documents present, proceed to application form
+      navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
+    } else {
+      // Documents missing, redirect to profile page
+      alert("Some required documents are missing. Please complete your profile first.");
+      navigate('/profile');
+    }
+  }
+};
 
   return (
 
@@ -80,24 +117,25 @@ const SchemePage = () => {
                     <strong>Status:</strong>{" "}
                     <span
                       className={`badge bg-${scheme.status === "Open"
-                          ? "success"
-                          : scheme.status === "Closed"
-                            ? "danger"
-                            : "warning"
+                        ? "success"
+                        : scheme.status === "Closed"
+                          ? "danger"
+                          : "warning"
                         }`}
                     >
                       {scheme.status}
                     </span>
 
-                  {/* // In map loop */}
+                    {/* // In map loop */}
                     {(scheme.status === "Closed") ? " " :
-                      <Link
-                        to={`/application-form/${encodeURIComponent(scheme.title)}`}
+                      <button
+                        onClick={() => handleApplyClick(scheme.title)}
                         className="custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
                       >
                         Apply Now
-                      </Link>
+                      </button>
                     }
+
                   </p>
                 </div>
               </div>

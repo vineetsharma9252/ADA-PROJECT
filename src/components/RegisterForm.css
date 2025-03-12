@@ -2,3 +2,9 @@
     border-radius: 0px;
     border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
 }
+
+@media ( max-width: 425px  ) {
+    .mainBody {
+        padding: 0 !important;
+    }
+}

@@ -121,164 +121,157 @@ const RegisterForm = () => {
 
   return (
     <div
-      className="flex min-h-full flex-col   justify-center px-6 py-7 lg:px-8 my-2"
-
+    className="flex min-h-full flex-col justify-center mainBody px-6 py-7 lg:px-8 my-2 w-full"
+  >
+    <div className="sm:mx-auto sm:w-full sm:max-w-full">
+      <h2 className="relative inline-block w-[65%] text-center py-2 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+        Create your account
+      </h2>
+    </div>
+  
+    <form
+      action="/create"
+      onSubmit={handleSubmit}
+      method="POST"
+      className="bg-white regFormCont mx-auto px-6 py-8 mt-5 w-full max-w-[90%] space-y-6 sm:max-w-[80%]" // Mobile me w-full, tab & desktop pe max-w-80%
     >
-      <div
-        className="  sm:mx-auto sm:w-full sm:max-w-sm"
+      {/* Form Fields */}
+      {/* First Name */}
+      <label
+        htmlFor="Name"
+        className="block text-left text-sm font-medium text-gray-700"
       >
-        <h2 className="relative inline-block w-[65%] text-center  py-2  text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
-          Create your account
-        </h2>
-      </div>
-
-      <form
-        action="/create"
-        onSubmit={handleSubmit}
-        method="POST"
-        className="bg-white regFormCont mx-auto px-10 py-8 mt-5 w-full max-w-[80%] space-y-6"
-      >
-        {/* First Name */}
+        Name
+      </label>
+      <input
+        type="text"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleChange}
+        placeholder="Enter First Name"
+        className="block w-full rounded-md border px-4 py-2"
+      />
+      {errors.firstName && (
+        <p className="text-red-500 text-left text-xs mt-1">{errors.firstName}</p>
+      )}
+  
+      {/* Email */}
+      <div className="space-y-2">
         <label
-          htmlFor="Name"
+          htmlFor="email"
           className="block text-left text-sm font-medium text-gray-700"
         >
-          Name
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          placeholder="Enter your email"
+          className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+        />
+        {errors.email && (
+          <p className="text-red-500 text-left text-sm">{errors.email}</p>
+        )}
+      </div>
+  
+      {/* Password */}
+      <div className="space-y-2">
+        <label
+          htmlFor="password"
+          className="block text-left text-sm font-medium text-gray-700"
+        >
+          Password
+        </label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          placeholder="Enter your password"
+          className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+        />
+        {errors.password && (
+          <p className="text-red-500 text-left text-sm">{errors.password}</p>
+        )}
+      </div>
+  
+      {/* Mobile Number */}
+      <div className="space-y-2">
+        <label
+          htmlFor="mobile"
+          className="block text-left text-sm font-medium text-gray-700"
+        >
+          Mobile Number
         </label>
         <input
           type="text"
-          name="firstName"
-          value={formData.firstName}
+          name="mobile"
+          id="mobile"
+          value={formData.mobile}
           onChange={handleChange}
-          placeholder="Enter First Name"
-          className="block w-full rounded-md border px-4 py-2"
+          required
+          placeholder="Enter your mobile number"
+          maxLength="10"
+          className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
         />
-        {errors.firstName && (
-          <p className="text-red-500 text-left text-xs mt-1">
-            {errors.firstName}
-          </p>
+        {errors.mobile && (
+          <p className="text-red-500 text-left text-sm">{errors.mobile}</p>
         )}
-
-        {/* Email */}
-        <div className="space-y-2">
-          <label
-            htmlFor="email"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="Enter your email"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-left text-sm">{errors.email}</p>
-          )}
+      </div>
+  
+      {/* Aadhar Number */}
+      <div className="space-y-2">
+        <label
+          htmlFor="aadhar"
+          className="block text-left text-sm font-medium text-gray-700"
+        >
+          Aadhar Number
+        </label>
+        <input
+          type="text"
+          name="aadhar"
+          id="aadhar"
+          value={formData.aadhar}
+          onChange={handleChange}
+          required
+          placeholder="Enter your Aadhar number"
+          maxLength="12"
+          className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+        />
+        {errors.aadhar && (
+          <p className="text-red-500 text-left text-sm">{errors.aadhar}</p>
+        )}
+      </div>
+  
+      {/* Buttons */}
+      <div className="space-y-4 text-center w-full">
+        <button
+          type="submit"
+          className="w-full justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+        >
+          Register
+        </button>
+  
+        <div className="flex items-center justify-center">
+          <span className="text-gray-500">or</span>
         </div>
-
-        {/* Password */}
-        <div className="space-y-2">
-          <label
-            htmlFor="password"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Enter your password"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-left text-sm">{errors.password}</p>
-          )}
-        </div>
-
-        {/* Mobile Number */}
-        <div className="space-y-2">
-          <label
-            htmlFor="mobile"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Mobile Number
-          </label>
-          <input
-            type="text"
-            name="mobile"
-            id="mobile"
-            value={formData.mobile}
-            onChange={handleChange}
-            required
-            placeholder="Enter your mobile number"
-            maxLength="10"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-          />
-          {errors.mobile && (
-            <p className="text-red-500 text-left text-sm">{errors.mobile}</p>
-          )}
-        </div>
-
-        {/* Aadhar Number */}
-        <div className="space-y-2">
-          <label
-            htmlFor="aadhar"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Aadhar Number
-          </label>
-          <input
-            type="text"
-            name="aadhar"
-            id="aadhar"
-            value={formData.aadhar}
-            onChange={handleChange}
-            required
-            placeholder="Enter your Aadhar number"
-            maxLength="12"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none"
-          />
-          {errors.aadhar && (
-            <p className="text-red-500 text-left text-sm">{errors.aadhar}</p>
-          )}
-        </div>
-
-        <div className="space-y-4 text-center w-full">
-          <button
-            type="submit"
-            className="w-[50%] justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-          >
-            Register
-          </button>
-
-          <div className="flex items-center justify-center">
-            <span className="text-gray-500">or</span>
-          </div>
-
-          <center>
-          <Link
-            to="/login"
-            className="block w-[50%]  text-center rounded-md bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
-          >
-            Login
-          </Link>
-          </center>
-        </div>
-
-
-
-      </form>
-    </div>
+  
+        <Link
+          to="/login"
+          className="block w-full text-center rounded-md bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
+        >
+          Login
+        </Link>
+      </div>
+    </form>
+  </div>
+  
   );
 };
 

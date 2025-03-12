@@ -36,27 +36,27 @@ const SchemePage = () => {
       scheme.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-//Handle apply logic
+  //Handle apply logic
 
-// Mock check for required documents
-const checkRequiredDocuments = (schemeTitle) => {
-  // For demo purposes, let's say documents are missing for "ADA Research Grant"
-  const missingDocsSchemes = ["ADA Research Grant", "ADA Women Empowerment Program"];
-  return missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
-};
+  // Mock check for required documents
+  const checkRequiredDocuments = (schemeTitle) => {
+    // For demo purposes, let's say documents are missing for "ADA Research Grant"
+    const missingDocsSchemes = ["ADA Research Grant", "ADA Women Empowerment Program"];
+    return missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
+  };
 
-// Function to handle Apply Now click
-const handleApplyClick = (schemeTitle) => {
+  // Function to handle Apply Now click
+  const handleApplyClick = (schemeTitle) => {
 
-  const token = localStorage.getItem("token"); // Check token
+    const token = localStorage.getItem("token"); // Check token
 
-  if (!token) {
-    alert("Please login to apply for this scheme.");
-    navigate("/login");
-    return; // Stop further execution
-  }
+    if (!token) {
+      alert("Please login to apply for this scheme.");
+      navigate("/login");
+      return; // Stop further execution
+    }
 
-  const message = `
+    const message = `
 Please read the following instructions carefully before proceeding:
 
 1. Ensure you have scanned copies of all mandatory documents.
@@ -69,17 +69,17 @@ Please read the following instructions carefully before proceeding:
 Click OK to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.
   `;
 
-  if (window.confirm(message)) {
-    if (checkRequiredDocuments(schemeTitle)) {
-      // All documents present, proceed to application form
-      navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
-    } else {
-      // Documents missing, redirect to profile page
-      alert("Some required documents are missing. Please complete your profile first.");
-      navigate('/profile');
+    if (window.confirm(message)) {
+      if (checkRequiredDocuments(schemeTitle)) {
+        // All documents present, proceed to application form
+        navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
+      } else {
+        // Documents missing, redirect to profile page
+        alert("Some required documents are missing. Please complete your profile first.");
+        navigate('/profile');
+      }
     }
-  }
-};
+  };
 
   return (
 
@@ -94,26 +94,25 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
           different domains.
         </p>
         <br />
-        <div className="search-filter-bar">
+        <div className="search-filter-bar flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
           <input
             type="text"
             placeholder="Search for schemes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input inputGreenBorder "
+            className="search-input inputGreenBorder flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
           />
           <select
-            className="filter-select"
+            className="filter-select flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="All">All</option>
             <option value="Open">Open</option>
-            <option value="Application in Progress">
-              Application in Progress
-            </option>
+            <option value="Application in Progress">Application in Progress</option>
             <option value="Closed">Closed</option>
           </select>
         </div>
+
 
         <div className="row mt-4">
           {filteredSchemes.map((scheme, index) => (
@@ -136,16 +135,16 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
                     </span>
 
                     {/* // In map loop */}
-                   <center>
-                   {(scheme.status === "Closed") ? " " :
-                      <button
-                        onClick={() => handleApplyClick(scheme.title)}
-                        className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
-                      >
-                        Apply Now
-                      </button>
-                    }
-                   </center>
+                    <center>
+                      {(scheme.status === "Closed") ? " " :
+                        <button
+                          onClick={() => handleApplyClick(scheme.title)}
+                          className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
+                        >
+                          Apply Now
+                        </button>
+                      }
+                    </center>
 
                   </p>
                 </div>
@@ -159,23 +158,28 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
       <h3 className="mt-5 text-left ">How to Apply</h3>
 
       <hr className="bg-blue-800 my-2" />
-      <ol className="application-steps">
-        <li>
-          <span className="arrow-icon">➡️</span> Check eligibility criteria for
-          the scheme.
+      <ol className="application-steps space-y-4">
+        <li className="flex items-start gap-2">
+          <span className="arrow-icon mt-1">➡️</span>
+          <p className="text-left">Check eligibility criteria for the scheme.</p>
         </li>
-        <li>
-          <span className="arrow-icon">➡️</span> Fill out the online application
-          form.
+        <hr />
+        <li className="flex items-start gap-2">
+          <span className="arrow-icon mt-1">➡️</span>
+          <p className="text-left">Fill out the online application form.</p>
         </li>
-        <li>
-          <span className="arrow-icon">➡️</span> Attach required documents.
+        <hr />
+        <li className="flex items-start gap-2">
+          <span className="arrow-icon mt-1">➡️</span>
+          <p className="text-left">Attach required documents.</p>
         </li>
-        <li>
-          <span className="arrow-icon">➡️</span> Submit the application and
-          await approval.
+        <hr />
+        <li className="flex items-start gap-2">
+          <span className="arrow-icon mt-1">➡️</span>
+          <p className="text-left">Submit the application and await approval.</p>
         </li>
       </ol>
+
 
     </div>
   );

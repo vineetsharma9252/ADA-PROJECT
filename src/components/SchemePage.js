@@ -35,15 +35,12 @@ const SchemePage = () => {
   );
 
   return (
-    <div className="container mt-5">
-      <h2
-        className="text-center"
-        style={{
-          marginTop: "100px",
-        }}
-      >
-        ADA Schemes
-      </h2>
+
+    <div className="container w-full mt-5">
+      <div className="greenBorder" >
+      <h2 className="relative inline-block w-[20%] text-center mt-6  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+            ADA Schemes
+            </h2>
       <br />
       <p className="text-center">
         Explore various schemes offered by ADA to support applicants in
@@ -56,7 +53,7 @@ const SchemePage = () => {
           placeholder="Search for schemes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
+          className="search-input inputGreenBorder "
         />
         <select
           className="filter-select"
@@ -91,11 +88,15 @@ const SchemePage = () => {
                   >
                     {scheme.status}
                   </span>
+
+                  { ( scheme.status === "Closed" ) ? " " :  <a href="#projects" className="custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3">Apply Now </a> }
                 </p>
               </div>
             </div>
           </div>
         ))}
+      </div>
+
       </div>
 
       <h3 className="mt-5 text-left ">How to Apply</h3>

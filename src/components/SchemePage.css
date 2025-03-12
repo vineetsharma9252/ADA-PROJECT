@@ -1,11 +1,21 @@
 .container {
-    max-width: 900px;
+    max-width: 1100px;
     margin: auto;
     padding: 20px;
   }
-  
+
+  .greenBorder {
+    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
+    padding: 0 1rem 0 1rem;
+  }
+.inputGreenBorder:hover {
+  border: 1px solid oklch(0.792 0.209 151.711);
+}
   .text-center {
     text-align: center;
+  }
+  .schemes-apply-button{
+    display: block;
   }
   
   .search-filter-bar {

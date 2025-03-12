@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Link } from "react-router-dom";
+import './RegisterForm.css';
 
 const RegisterForm = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -120,18 +121,13 @@ const RegisterForm = () => {
 
   return (
     <div
-      className="flex min-h-full flex-col bg-gray-100  justify-center px-6 py-7 lg:px-8 my-2"
-      style={{
-        marginTop: "150px",
-      }}
+      className="flex min-h-full flex-col   justify-center px-6 py-7 lg:px-8 my-2"
+
     >
       <div
-        className="sm:mx-auto sm:w-full sm:max-w-sm"
-        style={{
-          marginTop: "80px",
-        }}
+        className="  sm:mx-auto sm:w-full sm:max-w-sm"
       >
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
+        <h2 className="relative inline-block w-[65%] text-center  py-2  text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
           Create your account
         </h2>
       </div>
@@ -140,7 +136,7 @@ const RegisterForm = () => {
         action="/create"
         onSubmit={handleSubmit}
         method="POST"
-        className="bg-white shadow-md mx-auto rounded-lg px-10 py-8 mt-5 w-full max-w-[80%] space-y-6"
+        className="bg-white regFormCont mx-auto px-10 py-8 mt-5 w-full max-w-[80%] space-y-6"
       >
         {/* First Name */}
         <label
@@ -257,11 +253,10 @@ const RegisterForm = () => {
           )}
         </div>
 
-        {/* Submit and Login */}
-        <div className="space-y-4 text-center">
+        <div className="space-y-4 text-center w-full">
           <button
             type="submit"
-            className="inline-flex justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="w-[50%] justify-center rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
           >
             Register
           </button>
@@ -270,13 +265,18 @@ const RegisterForm = () => {
             <span className="text-gray-500">or</span>
           </div>
 
+          <center>
           <Link
             to="/login"
-            className="inline-flex justify-center rounded-md bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="block w-[50%]  text-center rounded-md bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
           >
             Login
           </Link>
+          </center>
         </div>
+
+
+
       </form>
     </div>
   );

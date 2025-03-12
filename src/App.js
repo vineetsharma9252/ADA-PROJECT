@@ -51,10 +51,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+           <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+            
+            } />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+     
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
       </Routes>

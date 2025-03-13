@@ -7,11 +7,11 @@ const RegisterForm = () => {
   const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const [formData, setFormData] = useState({
-    firstName: "",
+    fullName: "",
     email: "",
     password: "",
-    mobile: "",
-    aadhar: "",
+    phone: "",
+    aadharCard: "",
   });
 
   const [errors, setErrors] = useState({});

@@ -1,12 +1,12 @@
-const cors = require("cors");
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const connectDB = require("./db/db");
-const User = require("./db/UserSchema");
-const bcrypt = require("bcrypt");
-require("dotenv").config();
-const Application = require("./db/applicationform");
-const authenticateToken = require("./middleware/auth");
+const cors = require('cors');
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const connectDB = require('./db/db');
+const User = require('./db/UserSchema');
+const bcrypt = require('bcrypt');
+require('dotenv').config();
+const Application = require('./db/applicationform');
+const authenticateToken = require('./middleware/auth');
 
 const app = express();
 
@@ -86,9 +86,7 @@ app.post("/user-profile", async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error registering user:", error);
-    res
-      .status(400)
-      .json({ message: "Failed to register user", error: error.message });
+    res.status(400).json({ message: "Failed to register user", error: error.message });
   }
 });
 
@@ -121,9 +119,7 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Invalid email or user not found" });
+      return res.status(401).json({ message: "Invalid email or user not found" });
     }
     
     
@@ -149,7 +145,7 @@ app.post("/login", async (req, res) => {
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.post("/api/applications", authenticateToken, async (req, res) => {
+app.post('/api/applications', authenticateToken, async (req, res) => {
   try {
     const applicationData = req.body;
     console.log(applicationData); // Log received data
@@ -160,14 +156,13 @@ app.post("/api/applications", authenticateToken, async (req, res) => {
     const savedApplication = await newApplication.save();
 
     res.status(201).json({
-      message: "Application received successfully.",
-      application: savedApplication,
+      message: 'Application received successfully.',
+      application: savedApplication
     });
   } catch (error) {
-    console.error("Error saving application:", error);
+    console.error('Error saving application:', error);
     res.status(500).json({
-      message: "Error saving application",
-      error: error.message,
+      message: 'Error saving application', error: error.message
     });
   }
 });

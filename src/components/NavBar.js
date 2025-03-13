@@ -8,7 +8,7 @@ import "./NavBar.css";
 const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const userName = localStorage.getItem("firstName") || "Welcome";
+  const userName = localStorage.getItem("fullName") || "Welcome";
   const token = localStorage.getItem("Token");
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

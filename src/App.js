@@ -26,9 +26,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route
           path="/register"
-          element={
-            token ? <Navigate to="/application-form" /> : <RegisterForm />
-          }
+          element={token ? <Navigate to="/login" /> : <RegisterForm />}
+        />
+        <Route
+          path="/login"
+          element={token ? <Navigate to="/" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<SignInForm />} />

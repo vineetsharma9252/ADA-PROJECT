@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 // Replace with a strong, securely stored key
 
-// Define Mongoose Schema
 const userSchema = new mongoose.Schema(
   {
     fullName: { type: String },
@@ -11,7 +10,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, unique: true, lowercase: true },
     password: { type: String }, // Hashed password using bcrypt
     phone: { type: String },
-    marital_status: { type: Boolean },
+    marital_status: { type: String }, // ✅ CHANGED FROM Boolean to String
     caste: { type: String },
     curr_address: { type: String },
     perm_address: { type: String },
@@ -21,8 +20,9 @@ const userSchema = new mongoose.Schema(
     occupation: { type: String },
     income: { type: String },
     education: { type: String },
-    disablity: { type: String },
-  } // Enables decryption on retrieval
+    disability : { type: String }, // Typo fix recommended: disability
+  }
 );
 
-module.exports = mongoose.model("User", userSchema);
+
+module.exports = mongoose.model("users", userSchema);

@@ -1,116 +1,67 @@
-import React, { useState, useEffect } from "react";
-import UserPage from "./UserPage";
-import { Link, useNavigate } from "react-router-dom";
-import { useNaviage } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const UserProfile = () => {
+const UserProfileForm = () => {
   const navigate = useNavigate();
-
-  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [isCurrentPermanent, setIsCurrentPermanent] = useState(false);
-  const [isUserCreated, setIsUserCreated] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [user, setUser] = useState({
-    name: "",
+    fullName: "",
     gender: "",
+    father_name: "",
     dob: "",
-    fathers_name: "",
-    perm_address: "",
-    curr_address: "",
-    phone: "",
     email: "",
-    aadhar_number: "",
-    pan_card: "",
-    voter_id: "",
-    pass_number: "",
+    password: "",
+    phone: "",
+    marital_status: "",
+    caste: "",
+    curr_address: "",
+    perm_address: "",
+    aadharCard: "",
+    panCard: "",
+    voterId: "",
     occupation: "",
     income: "",
-    edu_qualification: "",
-    caste_category: "",
-    disability: "",
-    marital_status: "",
-    bank_account: "",
-    nominee_details: "",
-    photograph: "",
-    signature: "",
+    education: "",
+    disablity: ""
   });
-  const handleAddress = (e) => {
-    const isSame = e.target.value === "yes";
-    setIsCurrentPermanent(isSame);
-    if (isSame) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        curr_address: prevUser.perm_address,
-      }));
-    }
-  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
+    setUser({ ...user, [e.target.name]: e.target.value });
+    setProgress((prev) => Math.min(100, prev + 5)); // Example progress logic
   };
-
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      try {
-        const response = await fetch("http://localhost:4500/user-profile", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // body: JSON.stringify(user),
-
-          body: JSON.stringify(user),
-        });
-        if (user.length() > 0) {
-          console.log(user);
-        } else {
-          console.log("User is Empty");
-        }
-        if (!response.ok) {
-          throw new Error("Failed to submit form");
-        }
-
-        const data = await response.json();
-
-        // setSuccess("Data saved successfully!");
-        // setError("");
-      } catch (error) {
-        // setError("Error submitting form. Please try again.");
-        // setSuccess("");
+      const response = await fetch("http://localhost:4500/user-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert("Profile Updated Successfully!");
+        navigate(`/user-profile-2/api/data/${user.email}`);
+      } else {
+        alert(`Error: ${data.error}`); // Show backend error
       }
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert("Profile Updated Successfully!");
-      setIsUserCreated(true);
-      navigate(`/user-profile-2/api/data/${user.email}`);
     } catch (error) {
       console.error("Error updating profile:", error);
+      alert("Error submitting form. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
-  const progress = (step / 5) * 100;
+  
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
-      <div
-        className="w-full max-w-2xl p-8 shadow-lg bg-white rounded-lg relative"
-        style={{
-          height: "650px",
-        }}
-      >
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-4">
+      <div className="w-full max-w-3xl p-8 shadow-lg bg-white rounded-lg relative overflow-y-auto max-h-screen">
+        {/* Progress Bar */}
         <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden mb-4">
           <div
             className="h-full bg-blue-500 transition-all duration-300"
@@ -118,430 +69,48 @@ const UserProfile = () => {
           ></div>
         </div>
 
-        <h2 className="text-2xl font-bold text-left mb-4">User Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {step === 1 && (
-            <div>
-              <label className="block text-sm font-medium text-left my-3">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label className="block text-sm font-medium text-left my-3">
-                Gender
-              </label>
-              <select
-                name="gender"
-                value={user.gender}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-              <label
-                htmlFor="dob"
-                className="block text-sm font-medium text-left my-3"
-              >
-                DoB
-              </label>
-              <input
-                type="date"
-                name="dob"
-                value={user.dob}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label
-                htmlFor="dob"
-                className="block text-sm font-medium text-left my-3"
-              >
-                Father's Name
-              </label>
-              <input
-                type="text"
-                name="fathers_name"
-                value={user.fathers_name}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <button
-                onClick={nextStep}
-                type="button"
-                className="mt-4 w-full p-2 bg-blue-500 text-white rounded my-3"
-              >
-                Next
-              </button>
-            </div>
-          )}
+        <h2 className="text-2xl font-bold text-center mb-6">User Profile</h2>
 
-          {step === 2 && (
-            <div>
-              <div className="text-left">Contact Details</div>
-              <label className="block text-sm font-medium text-left my-3">
-                Permanent Address
-              </label>
-              <input
-                type="text"
-                name="perm_address"
-                value={user.perm_address}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-left"
-                required
-              />
-              <label
-                htmlFor=""
-                className="block text-sm font-medium text-left my-3"
-              >
-                <br />
-                Is Current Address Same as Permanent Address?
-              </label>
-              <div className="block text-sm font-medium text-left my-3">
-                <label>
-                  <input
-                    type="radio"
-                    name="isCurrentPermanent"
-                    value="yes"
-                    checked={isCurrentPermanent}
-                    onChange={handleAddress}
-                  />{" "}
-                  Yes{" "}
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="isCurrentPermanent"
-                    value="no"
-                    checked={!isCurrentPermanent}
-                    onChange={handleAddress}
-                  />{" "}
-                  No
-                </label>
-              </div>
-              <label className="block text-sm font-medium text-left my-2">
-                Current Address
-              </label>
-              <input
-                type="text"
-                name="curr_address"
-                value={user.curr_address}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-                disabled={isCurrentPermanent}
-              />
-              <label className="block text-sm font-medium text-left my-2">
-                Phone Number
-              </label>
-              <input
-                type="number"
-                name="phone"
-                value={user.phone}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label className="block text-sm font-medium text-left">
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <button
-                onClick={prevStep}
-                type="button"
-                className="mt-4 p-2 bg-gray-400 text-white rounded mr-2"
-              >
-                Back
-              </button>
-              <button
-                onClick={nextStep}
-                type="button"
-                className="p-2 bg-blue-500 text-white rounded"
-              >
-                Next
-              </button>
-            </div>
-          )}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" name="fullName" placeholder="Full Name" value={user.fullName} onChange={handleChange} required />
+          <input type="text" name="father_name" placeholder="Father's Name" value={user.father_name} onChange={handleChange} required />
+          <input type="date" name="dob" placeholder="Date of Birth" value={user.dob} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Email" value={user.email} onChange={handleChange} required />
+          <input type="password" name="password" placeholder="Password" value={user.password} onChange={handleChange} required />
+          <input type="text" name="phone" placeholder="Phone Number" value={user.phone} onChange={handleChange} required />
 
-          {step === 3 && (
-            <div>
-              <label
-                htmlFor=""
-                className="block text-sm font-medium text-left my-3"
-              >
-                {" "}
-                Identity Proofs{" "}
-              </label>
-              <label className="block text-sm font-medium text-left my-3">
-                Aadhaar Number
-              </label>
-              <input
-                type="text"
-                name="aadhar_number"
-                value={user.aadhar_number}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label className="block text-sm font-medium text-left my-3">
-                PAN number
-              </label>
-              <input
-                type="text"
-                name="pan_card"
-                value={user.pan_card}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label className="block text-sm font-medium text-left my-3">
-                Voter ID
-              </label>
-              <input
-                type="text"
-                name="voter_id"
-                value={user.voter_id}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded "
-                required
-              />
-              <div
-                className="text-center"
-                style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "40%",
-                }}
-              >
-                <button
-                  onClick={prevStep}
-                  type="button"
-                  className="mt-4 p-2 bg-gray-400 text-white rounded mr-2"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={nextStep}
-                  type="button"
-                  className="p-2 bg-blue-500 text-white rounded"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Select Options */}
+          <select name="gender" value={user.gender} onChange={handleChange} required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
 
-          {step === 4 && (
-            <div>
-              <label className="block text-sm font-medium text-left my-3">
-                Occupation
-              </label>
-              <input
-                type="text"
-                name="occupation"
-                value={user.occupation}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <label className="block text-sm font-medium text-left my-3">
-                Income Group
-              </label>
-              <div className="text-left">
-                <select
-                  name="income"
-                  value={user.income}
-                  onChange={handleChange}
-                >
-                  <option value="100000">below one lakh</option>
-                  <option value="100000-200000">1L-2L</option>
-                  <option value="200000-500000">2L-5L</option>
-                  <option value="500000-1000000">5L-10L</option>
-                  <option value="10000000">10L+</option>
-                </select>
-              </div>
-              <label className="block text-sm font-medium text-left my-3">
-                Highest Education
-              </label>
-              <input
-                type="text"
-                name="edu_qualification"
-                value={user.edu_qualification}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
-              <div
-                className="text-center"
-                style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "40%",
-                }}
-              >
-                <button
-                  onClick={prevStep}
-                  type="button"
-                  className="mt-4 p-2 bg-gray-400 text-white rounded mr-2"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={nextStep}
-                  type="button"
-                  className="p-2 bg-blue-500 text-white rounded"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+          <select name="marital_status" value={user.marital_status} onChange={handleChange} required>
+            <option value="">Marital Status</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+          </select>
 
-          {step === 5 && (
-            <div>
-              <label className="block text-sm font-medium text-left my-3">
-                Caste{" "}
-              </label>
-              <div className="text-left">
-                <select
-                  name="caste_category"
-                  value={user.caste_category}
-                  onChange={handleChange}
-                >
-                  <option value="general">General</option>
-                  <option value="obc">OBC</option>
-                  <option value="sc">SC</option>
-                  <option value="st">ST</option>
-                </select>
-              </div>
-              <label className="block text-sm font-medium text-left my-3">
-                Disable
-              </label>
-              <div className="text-left">
-                <input
-                  type="radio"
-                  name="disability"
-                  value="yes"
-                  checked={user.disability === "yes"}
-                  onChange={handleChange}
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                />
-                <label
-                  htmlFor="disability_yes"
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  Yes
-                </label>
-                <input
-                  type="radio"
-                  name="disability"
-                  value="no"
-                  checked={user.disability === "no"}
-                  onChange={handleChange}
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                />
-                <label
-                  htmlFor="disability_no"
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  No
-                </label>
-              </div>
-              <br />
-              <label
-                htmlFor="marital_status"
-                className="block text-sm font-medium text-left "
-                style={{
-                  fontSize: "20px",
-                }}
-              >
-                Marital Status
-              </label>
-              <br />
-              <div className="text-left">
-                <input
-                  type="radio"
-                  value="Married"
-                  name="marital_status"
-                  checked={user.marital_status === "Married"}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="maritalstatus"
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  Married
-                </label>
-                <input
-                  type="radio"
-                  value="Unmarried"
-                  name="marital_status"
-                  checked={user.marital_status === "Unmarried"}
-                  onChange={handleChange}
-                  style={{
-                    marginLeft: "20px",
-                  }}
-                />
-                <label
-                  htmlFor="maritalstatus"
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  Unmarried
-                </label>
-              </div>
-              <br />
-              <div
-                className="text-center"
-                style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "40%",
-                }}
-              >
-                <button
-                  onClick={prevStep}
-                  type="button"
-                  className="mt-4 p-2 bg-gray-400 text-white rounded mr-2"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="p-2 bg-green-500 text-white rounded"
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
-          )}
+          <input type="text" name="caste" placeholder="Caste" value={user.caste} onChange={handleChange} />
+          <input type="text" name="curr_address" placeholder="Current Address" value={user.curr_address} onChange={handleChange} required />
+          <input type="text" name="perm_address" placeholder="Permanent Address" value={user.perm_address} onChange={handleChange} required />
+          <input type="text" name="aadharCard" placeholder="Aadhar Card Number" value={user.aadharCard} onChange={handleChange} required />
+          <input type="text" name="panCard" placeholder="PAN Card Number" value={user.panCard} onChange={handleChange} />
+          <input type="text" name="voterId" placeholder="Voter ID" value={user.voterId} onChange={handleChange} />
+          <input type="text" name="occupation" placeholder="Occupation" value={user.occupation} onChange={handleChange} />
+          <input type="text" name="income" placeholder="Annual Income" value={user.income} onChange={handleChange} />
+          <input type="text" name="education" placeholder="Education" value={user.education} onChange={handleChange} />
+          <input type="text" name="disablity" placeholder="Disability (if any)" value={user.disablity} onChange={handleChange} />
+          
+          <button type="submit" disabled={loading} className="col-span-1 md:col-span-2 bg-blue-500 text-white py-2 rounded-lg">
+            {loading ? "Submitting..." : "Submit"}
+          </button>
         </form>
+
+        {/* Loading Overlay */}
         {loading && (
           <div className="absolute inset-0 bg-white bg-opacity-70 flex justify-center items-center">
             <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
@@ -552,4 +121,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfileForm;

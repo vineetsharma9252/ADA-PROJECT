@@ -17,9 +17,10 @@ connectDB();
 app.use(express.json());
 app.use(
   cors({
-    origin: "htts://localhost:3000",
+    origin: "http://localhost:3000", // ✅ Corrected CORS origin
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Optional: Allow cookies/tokens
   })
 );
 
@@ -30,79 +31,29 @@ if (!SECRET_KEY) {
   process.exit(1);
 }
 
-// User Registration
+// ============================
+// Register User Route
+// ============================
 app.post("/user-profile", async (req, res) => {
-  console.log(req.body);
-  const {
-    fullName,
-    gender,
-    dob,
-    father_name,
-    email,
-    password,
-    phone,
-    marital_status,
-    caste,
-    curr_address,
-    perm_address,
-    aadharCard,
-    panCard,
-    voterId,
-    occupation,
-    income,
-    education,
-    disability,
-  } = req.body;
+  console.log(req.body); // Check if data is coming correctly
 
   try {
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new User({
-      fullName,
-      gender,
-      dob,
-      father_name,
-      email,
-      password: hashedPassword,
-      phone,
-      marital_status,
-      caste,
-      curr_address,
-      perm_address,
-      aadharCard,
-      panCard,
-      voterId,
-      occupation,
-      income,
-      education,
-      disability,
-    });
+    // ✅ Hash the password before saving
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const newUser = new User({ ...req.body, password: hashedPassword });
 
     await newUser.save();
-
-    const payload = { fullName, email };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
-
-    res.status(201).json({
-      message: "User registered successfully",
-      token,
-    });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Error during registration:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to register user", error: error.message });
+    console.error("Error registering user:", error);
+    res.status(400).json({ message: "Failed to register user", error: error.message });
   }
 });
 
-// API Route to fetch data
+// ============================
+// Get User Data by Email Route
+// ============================
 app.get("/user-profile/api/data/:email", async (req, res) => {
   try {
     const email = req.params.email;
@@ -112,11 +63,14 @@ app.get("/user-profile/api/data/:email", async (req, res) => {
     }
     res.json(data);
   } catch (err) {
+    console.error("Error fetching user data:", err);
     res.status(500).json({ message: err.message });
   }
 });
 
-// User Login
+// ============================
+// User Login Route
+// ============================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -127,9 +81,7 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Invalid email or user not found" });
+      return res.status(401).json({ message: "Invalid email or user not found" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -151,34 +103,34 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/api/applications', authenticateToken ,async (req, res) => {
+// ============================
+// Application Form Submission (Protected Route)
+// ============================
+app.post('/api/applications', authenticateToken, async (req, res) => {
   try {
     const applicationData = req.body;
     console.log(applicationData); // Log received data
-   //New instance of Application
+
+    // New instance of Application
     const newApplication = new Application(applicationData);
-    //Saved in mongodb
+    // Save in MongoDB
     const savedApplication = await newApplication.save();
 
-    // Process of data
     res.status(201).json({
-      message: 'Application received sucessfully.',
+      message: 'Application received successfully.',
       application: savedApplication
     });
   } catch (error) {
     console.error('Error saving application:', error);
-    res.status(500).json({ 
-      message: 'Error saving application', error
-     });
+    res.status(500).json({
+      message: 'Error saving application', error: error.message
+    });
   }
-
-  
 });
 
-
-
-
-// Start the server
+// ============================
+// Server Listen
+// ============================
 const PORT = process.env.PORT || 4500;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

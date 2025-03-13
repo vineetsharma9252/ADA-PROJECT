@@ -113,7 +113,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="name"
-                value={user.name}
+                value={localStorage.getItem("fullName_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -231,7 +231,7 @@ const UserProfile = () => {
               <input
                 type="number"
                 name="phone"
-                value={user.phone}
+                value={localStorage.getItem("phone_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -242,7 +242,7 @@ const UserProfile = () => {
               <input
                 type="email"
                 name="email"
-                value={user.email}
+                value={localStorage.getItem("email_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -279,10 +279,10 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="aadhar_number"
-                value={user.aadhar_number}
+                value={localStorage.getItem("aadharCard_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
-                required
+                requireds
               />
               <label className="block text-sm font-medium text-left my-3">
                 PAN number

@@ -9,12 +9,14 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const userName = localStorage.getItem("fullName") || "Welcome";
-  const token = localStorage.getItem("Token");
+  const token = localStorage.getItem("token");
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("fullName");
     alert("Logged out successfully!");
+
     navigate("/login");
   };
   const handleLogin = () => navigate("/login");

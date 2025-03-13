@@ -15,10 +15,6 @@ const RegisterForm = () => {
   });
 
   const [errors, setErrors] = useState({});
-  // localStorage.setItem("fullName_token", formData.fullName);
-  // localStorage.setItem("email_token", formData.email);
-  // localStorage.setItem("phone_token", formData.phone);
-  // localStorage.setItem("aadharCard_token", formData.aadharCard);
   const validateField = (name, value) => {
     let message = "";
 
@@ -74,7 +70,6 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Final form-level validation check before submit
     let isValid = true;
     Object.keys(formData).forEach((field) => {
       validateField(field, formData[field]);

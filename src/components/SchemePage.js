@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import "./SchemePage.css";
 
 const SchemePage = () => {
@@ -41,13 +41,15 @@ const SchemePage = () => {
   // Mock check for required documents
   const checkRequiredDocuments = (schemeTitle) => {
     // For demo purposes, let's say documents are missing for "ADA Research Grant"
-    const missingDocsSchemes = ["ADA Research Grant", "ADA Women Empowerment Program"];
+    const missingDocsSchemes = [
+      "ADA Research Grant",
+      "ADA Women Empowerment Program",
+    ];
     return missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
   };
 
   // Function to handle Apply Now click
   const handleApplyClick = (schemeTitle) => {
-
     const token = localStorage.getItem("token"); // Check token
 
     if (!token) {
@@ -75,16 +77,17 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
         navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
       } else {
         // Documents missing, redirect to profile page
-        alert("Some required documents are missing. Please complete your profile first.");
-        navigate('/profile');
+        alert(
+          "Some required documents are missing. Please complete your profile first."
+        );
+        navigate("/user-profile");
       }
     }
   };
 
   return (
-
     <div className="container w-full mt-5">
-      <div className="greenBorder" >
+      <div className="greenBorder">
         <h2 className="relative inline-block w-[20%] text-center mt-6  py-2 mb-2 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
           ADA Schemes
         </h2>
@@ -108,11 +111,12 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
           >
             <option value="All">All</option>
             <option value="Open">Open</option>
-            <option value="Application in Progress">Application in Progress</option>
+            <option value="Application in Progress">
+              Application in Progress
+            </option>
             <option value="Closed">Closed</option>
           </select>
         </div>
-
 
         <div className="row mt-4">
           {filteredSchemes.map((scheme, index) => (
@@ -124,35 +128,35 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
                   <p>
                     <strong>Status:</strong>{" "}
                     <span
-                      className={`badge bg-${scheme.status === "Open"
-                        ? "success"
-                        : scheme.status === "Closed"
+                      className={`badge bg-${
+                        scheme.status === "Open"
+                          ? "success"
+                          : scheme.status === "Closed"
                           ? "danger"
                           : "warning"
-                        }`}
+                      }`}
                     >
                       {scheme.status}
                     </span>
-
                     {/* // In map loop */}
                     <center>
-                      {(scheme.status === "Closed") ? " " :
+                      {scheme.status === "Closed" ? (
+                        " "
+                      ) : (
                         <button
                           onClick={() => handleApplyClick(scheme.title)}
                           className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
                         >
                           Apply Now
                         </button>
-                      }
+                      )}
                     </center>
-
                   </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
       </div>
 
       <h3 className="mt-5 text-left ">How to Apply</h3>
@@ -161,7 +165,9 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
       <ol className="application-steps space-y-4">
         <li className="flex items-start gap-2">
           <span className="arrow-icon mt-1">➡️</span>
-          <p className="text-left">Check eligibility criteria for the scheme.</p>
+          <p className="text-left">
+            Check eligibility criteria for the scheme.
+          </p>
         </li>
         <hr />
         <li className="flex items-start gap-2">
@@ -176,11 +182,11 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
         <hr />
         <li className="flex items-start gap-2">
           <span className="arrow-icon mt-1">➡️</span>
-          <p className="text-left">Submit the application and await approval.</p>
+          <p className="text-left">
+            Submit the application and await approval.
+          </p>
         </li>
       </ol>
-
-
     </div>
   );
 };

@@ -112,8 +112,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="name"
-                value={localStorage.getItem("fullName_token")}
+                name="fullName"
+                value={user.fullName}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -231,7 +231,7 @@ const UserProfile = () => {
               <input
                 type="number"
                 name="phone"
-                value={localStorage.getItem("phone_token")}
+                value={user.phone}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -278,8 +278,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="aadhar_number"
-                value={localStorage.getItem("aadharCard_token")}
+                name="aadharCard"
+                value={user.aadharCard}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 requireds
@@ -289,8 +289,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="pan_card"
-                value={user.pan_card}
+                name="panCard"
+                value={user.panCard}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -300,8 +300,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="voter_id"
-                value={user.voter_id}
+                name="voterId"
+                value={user.voterId}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded "
                 required
@@ -366,8 +366,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="edu_qualification"
-                value={user.edu_qualification}
+                name="education"
+                value={user.education}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -404,11 +404,7 @@ const UserProfile = () => {
                 Caste{" "}
               </label>
               <div className="text-left">
-                <select
-                  name="caste_category"
-                  value={user.caste_category}
-                  onChange={handleChange}
-                >
+                <select name="caste" value={user.caste} onChange={handleChange}>
                   <option value="general">General</option>
                   <option value="obc">OBC</option>
                   <option value="sc">SC</option>
@@ -421,9 +417,9 @@ const UserProfile = () => {
               <div className="text-left">
                 <input
                   type="radio"
-                  name="disability"
+                  name="disablity"
                   value="yes"
-                  checked={user.disability === "yes"}
+                  checked={user.disablity === "yes"}
                   onChange={handleChange}
                   style={{
                     marginLeft: "10px",

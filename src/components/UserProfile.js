@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import UserPage from "./UserPage";
+import { Link, useNavigate } from "react-router-dom";
+import { useNaviage } from "react-router-dom";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [isCurrentPermanent, setisCurrentPermanent] = useState(false);
+  const [isCurrentPermanent, setIsCurrentPermanent] = useState(false);
+  const [isUserCreated, setIsUserCreated] = useState(false);
   const [user, setUser] = useState({
     name: "",
     gender: "",
@@ -29,22 +35,70 @@ const UserProfile = () => {
     signature: "",
   });
   const handleAddress = (e) => {
-    setUser({ curr_address: "Same as Permanent Address" });
+    const isSame = e.target.value === "yes";
+    setIsCurrentPermanent(isSame);
+    if (isSame) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        curr_address: prevUser.perm_address,
+      }));
+    }
   };
+
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
   };
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      try {
+        const response = await fetch("http://localhost:4500/user-profile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify(user),
+
+          body: JSON.stringify(user),
+        });
+        if (user.length() > 0) {
+          console.log(user);
+        } else {
+          console.log("User is Empty");
+        }
+        if (!response.ok) {
+          throw new Error("Failed to submit form");
+        }
+
+        const data = await response.json();
+
+        // setSuccess("Data saved successfully!");
+        // setError("");
+      } catch (error) {
+        // setError("Error submitting form. Please try again.");
+        // setSuccess("");
+      }
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       alert("Profile Updated Successfully!");
+      setIsUserCreated(true);
+      navigate(`/user-profile-2/api/data/${user.email}`);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const progress = (step / 5) * 100;
@@ -100,7 +154,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="date"
-                name="DoB"
+                name="dob"
+                value={user.dob}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -113,7 +168,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="father_name"
+                name="fathers_name"
+                value={user.fathers_name}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -136,8 +192,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="Permanent_address"
-                value={user.dob}
+                name="perm_address"
+                value={user.perm_address}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded text-left"
                 required
@@ -147,21 +203,28 @@ const UserProfile = () => {
                 className="block text-sm font-medium text-left my-3"
               >
                 <br />
-                is Current Address Same as Permanent Address
+                Is Current Address Same as Permanent Address?
               </label>
               <div className="block text-sm font-medium text-left my-3">
                 <label>
                   <input
                     type="radio"
-                    name="gender"
-                    value="male"
-                    className="text-left"
-                    onClick={handleAddress}
+                    name="isCurrentPermanent"
+                    value="yes"
+                    checked={isCurrentPermanent}
+                    onChange={handleAddress}
                   />{" "}
-                  yes{" "}
+                  Yes{" "}
                 </label>
                 <label>
-                  <input type="radio" name="gender" value="female" /> no
+                  <input
+                    type="radio"
+                    name="isCurrentPermanent"
+                    value="no"
+                    checked={!isCurrentPermanent}
+                    onChange={handleAddress}
+                  />{" "}
+                  No
                 </label>
               </div>
               <label className="block text-sm font-medium text-left my-2">
@@ -170,17 +233,18 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="curr_address"
-                value={user.fathers_name}
+                value={user.curr_address}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
+                disabled={isCurrentPermanent}
               />
               <label className="block text-sm font-medium text-left my-2">
                 Phone Number
               </label>
               <input
                 type="number"
-                name="phone_number"
+                name="phone"
                 value={user.phone}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
@@ -228,7 +292,7 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="adharNumber"
+                name="aadhar_number"
                 value={user.aadhar_number}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
@@ -239,7 +303,7 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="pan_number"
+                name="pan_card"
                 value={user.pan_card}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
@@ -296,10 +360,14 @@ const UserProfile = () => {
                 required
               />
               <label className="block text-sm font-medium text-left my-3">
-                income Group
+                Income Group
               </label>
               <div className="text-left">
-                <select name="income_group" id="">
+                <select
+                  name="income"
+                  value={user.income}
+                  onChange={handleChange}
+                >
                   <option value="100000">below one lakh</option>
                   <option value="100000-200000">1L-2L</option>
                   <option value="200000-500000">2L-5L</option>
@@ -312,8 +380,8 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="highest Education"
-                value={user.occupation}
+                name="edu_qualification"
+                value={user.edu_qualification}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -350,7 +418,11 @@ const UserProfile = () => {
                 Caste{" "}
               </label>
               <div className="text-left">
-                <select name="caste" id="">
+                <select
+                  name="caste_category"
+                  value={user.caste_category}
+                  onChange={handleChange}
+                >
                   <option value="general">General</option>
                   <option value="obc">OBC</option>
                   <option value="sc">SC</option>
@@ -363,8 +435,10 @@ const UserProfile = () => {
               <div className="text-left">
                 <input
                   type="radio"
-                  name="disable"
+                  name="disability"
                   value="yes"
+                  checked={user.disability === "yes"}
+                  onChange={handleChange}
                   style={{
                     marginLeft: "10px",
                   }}
@@ -379,8 +453,10 @@ const UserProfile = () => {
                 </label>
                 <input
                   type="radio"
-                  name="disable"
+                  name="disability"
                   value="no"
+                  checked={user.disability === "no"}
+                  onChange={handleChange}
                   style={{
                     marginLeft: "10px",
                   }}
@@ -396,7 +472,7 @@ const UserProfile = () => {
               </div>
               <br />
               <label
-                htmlFor="marrital_status"
+                htmlFor="marital_status"
                 className="block text-sm font-medium text-left "
                 style={{
                   fontSize: "20px",
@@ -406,7 +482,13 @@ const UserProfile = () => {
               </label>
               <br />
               <div className="text-left">
-                <input type="radio" value="Married" name="marital_status" />
+                <input
+                  type="radio"
+                  value="Married"
+                  name="marital_status"
+                  checked={user.marital_status === "Married"}
+                  onChange={handleChange}
+                />
                 <label
                   htmlFor="maritalstatus"
                   style={{
@@ -417,8 +499,10 @@ const UserProfile = () => {
                 </label>
                 <input
                   type="radio"
-                  value="Married"
+                  value="Unmarried"
                   name="marital_status"
+                  checked={user.marital_status === "Unmarried"}
+                  onChange={handleChange}
                   style={{
                     marginLeft: "20px",
                   }}
@@ -458,7 +542,6 @@ const UserProfile = () => {
             </div>
           )}
         </form>
-
         {loading && (
           <div className="absolute inset-0 bg-white bg-opacity-70 flex justify-center items-center">
             <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>

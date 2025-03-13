@@ -12,6 +12,8 @@ import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
 import UserProfile from "./components/UserProfile";
+import Footer from "./components/Footer";
+import UserPage from "./components/UserPage";
 
 function App() {
   const token = localStorage.getItem("token"); // ✅ Consistent lowercase
@@ -21,17 +23,10 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-
         <Route
           path="/register"
           element={token ? <Navigate to="/application-form" /> : <RegisterForm />}
         />
-
-        <Route
-          path="/login"
-          element={token ? <Navigate to="/schemes" /> : <SignInForm />}
-        />
-
         <Route path="/about" element={<About />} />
 
         <Route
@@ -62,6 +57,9 @@ function App() {
      
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
+
+        {/* ✅ Corrected Route with useParams */}
+        <Route path="/user-profile-2/api/data/:email" element={<UserPage />} />
       </Routes>
     </div>
   );

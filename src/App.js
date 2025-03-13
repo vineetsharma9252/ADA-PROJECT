@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 import RegisterForm from "./components/RegisterForm";
 import SignInForm from "./components/SignInForm";
@@ -14,6 +14,7 @@ import SchemePage from "./components/SchemePage";
 import UserProfile from "./components/UserProfile";
 import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
+import { LogIn } from "lucide-react";
 
 function App() {
   const token = localStorage.getItem("token"); // ✅ Consistent lowercase
@@ -25,10 +26,12 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route
           path="/register"
-          element={token ? <Navigate to="/application-form" /> : <RegisterForm />}
+          element={
+            token ? <Navigate to="/application-form" /> : <RegisterForm />
+          }
         />
         <Route path="/about" element={<About />} />
-
+        <Route path="/login" element={<SignInForm />} />
         <Route
           path="/application-form"
           element={
@@ -46,15 +49,17 @@ function App() {
             </ProtectedRoute>
           }
         />
-           <Route path="/dashboard" element={
+        <Route
+          path="/dashboard"
+          element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-            
-            } />
+          }
+        />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
-     
+
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
 

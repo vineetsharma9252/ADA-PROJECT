@@ -31,7 +31,7 @@ export default function SignInForm() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("firstName", data.user.firstName); // Store first name
+        localStorage.setItem("fullName", data.user.fullName); // Store first name
         localStorage.setItem("Token", data.token);
 
         alert("Login successfully!");

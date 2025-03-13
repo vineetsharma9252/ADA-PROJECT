@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; // Import useNavigate
-import './SignInForm.css'
+import "./SignInForm.css";
 
 export default function SignInForm() {
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -32,7 +32,7 @@ export default function SignInForm() {
         const data = await response.json();
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("fullName", data.user.fullName); // Store first name
-        localStorage.setItem("Token", data.token);
+        localStorage.setItem("token", data.token);
 
         alert("Login successfully!");
         navigate("/schemes");
@@ -54,14 +54,18 @@ export default function SignInForm() {
           marginTop: "200px",
         }}
       >
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="relative inline-block w-[70%] text-center mb-2 py-2  text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
-              Sign in your account
-            </h2>
+            Sign in your account
+          </h2>
         </div>
 
         <div className="mt-2 sm:mx-auto flex items-center  sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit} method="POST" className="w-89 max-w-lg LoginFormCont p-10 space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            method="POST"
+            className="w-89 max-w-lg LoginFormCont p-10 space-y-6"
+          >
             <div>
               <label
                 htmlFor="email"
@@ -134,7 +138,7 @@ export default function SignInForm() {
                 to="/register"
                 className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Register 
+                Register
               </Link>
             </div>
           </form>

@@ -33,7 +33,7 @@ function App() {
           element={token ? <Navigate to="/" /> : <SignInForm />}
         />
         <Route path="/about" element={<About />} />
-        <Route path="/login" element={<SignInForm />} />
+        {/* <Route path="/login" element={<SignInForm />} /> */}
         <Route
           path="/application-form"
           element={

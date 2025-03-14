@@ -69,7 +69,7 @@ function App() {
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
         {/* ✅ Corrected Route with useParams */}
-        <Route path="/user-profile-2/api/data/:email" element={<UserPage />} />
+        <Route path="/user-profile/api/data/:email" element={<UserPage />} />
       </Routes>
     </div>
   );

@@ -88,19 +88,11 @@ Please read the following instructions carefully before proceeding:
 Click OK to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.
     `;
 
-    if (window.confirm(message)) {
-      // 🔔 Backend verification of documents
-      const allDocumentsPresent = await checkUserDocuments(schemeTitle);
-
-      if (allDocumentsPresent) {
-        // ✅ Documents complete, proceed to application form
-        navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
-      } else {
-        // ❌ Documents missing, redirect to profile
-        alert("Some required documents are missing. Please complete your profile first.");
-        navigate("/user-profile");
-      }
-    }
+    if (window.confirm(message)) 
+{
+      navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
+}
+    
   };
 
   return (

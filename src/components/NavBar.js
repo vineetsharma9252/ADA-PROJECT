@@ -31,7 +31,7 @@ const NavBar = () => {
       );
       navigate("/user-profile"); // Redirect to complete profile
     } else {
-      navigate(`/user-profile-2/api/data/${email}`); // If completed, go to profile page
+      navigate(`/user-profile/api/data/${email}`); // If completed, go to profile page
     }
   };
 

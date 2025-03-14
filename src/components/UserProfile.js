@@ -68,8 +68,8 @@ const UserProfile = () => {
     setLoading(true);
 
     try {
-      const email = user.email || localStorage.getItem("email_token"); // Take from form or localStorage
-      alert(email);
+      const email = user.email || localStorage.getItem("email"); // Take from form or localStorage
+     
       const response = await fetch(
         `http://localhost:4500/user-profile-update/${email}`,
         {
@@ -90,7 +90,7 @@ const UserProfile = () => {
       setError("");
       alert("Profile Updated Successfully!");
       setIsUserCreated(true);
-      navigate(`/user-profile-2/api/data/${email}`); // Navigate to next step
+      navigate(`/user-profile/api/data/${email}`); // Navigate to next step
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("Error submitting form. Please try again.");
@@ -100,7 +100,7 @@ const UserProfile = () => {
     }
   };
 
-  const totalSteps = 4;
+  const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
   return (
@@ -141,6 +141,7 @@ const UserProfile = () => {
                 value={user.gender}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
+                required
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -213,6 +214,7 @@ const UserProfile = () => {
                     value="yes"
                     checked={isCurrentPermanent}
                     onChange={handleAddress}
+                    required
                   />{" "}
                   Yes{" "}
                 </label>
@@ -223,6 +225,7 @@ const UserProfile = () => {
                     value="no"
                     checked={!isCurrentPermanent}
                     onChange={handleAddress}
+                    required
                   />{" "}
                   No
                 </label>
@@ -422,11 +425,11 @@ const UserProfile = () => {
                 Caste{" "}
               </label>
               <div className="text-left">
-                <select name="caste" value={user.caste} onChange={handleChange}>
-                  <option value="General">General</option>
-                  <option value="OBC">OBC</option>
-                  <option value="SC">SC</option>
-                  <option value="ST">ST</option>
+                <select name="caste" value={user.caste} onChange={handleChange} required >
+                  <option value="general">General</option>
+                  <option value="obc">OBC</option>
+                  <option value="sc">SC</option>
+                  <option value="st">ST</option>
                 </select>
               </div>
               <label className="block text-sm font-medium text-left my-3">
@@ -435,13 +438,14 @@ const UserProfile = () => {
               <div className="text-left">
                 <input
                   type="radio"
-                  name="disablity"
-                  value="yes"
-                  checked={user.disablity === "yes"}
+                  name="disability"
+                  value="Yes"
+                  checked={user.disability === "Yes"}
                   onChange={handleChange}
                   style={{
                     marginLeft: "10px",
                   }}
+                  required
                 />
                 <label
                   htmlFor="disability_yes"
@@ -454,12 +458,13 @@ const UserProfile = () => {
                 <input
                   type="radio"
                   name="disability"
-                  value="no"
-                  checked={user.disability === "no"}
+                  value="No"
+                  checked={user.disability === "No"}
                   onChange={handleChange}
                   style={{
                     marginLeft: "10px",
                   }}
+                  required
                 />
                 <label
                   htmlFor="disability_no"
@@ -488,6 +493,7 @@ const UserProfile = () => {
                   name="marital_status"
                   checked={user.marital_status === "Married"}
                   onChange={handleChange}
+                  required
                 />
                 <label
                   htmlFor="maritalstatus"
@@ -506,6 +512,7 @@ const UserProfile = () => {
                   style={{
                     marginLeft: "20px",
                   }}
+                  required
                 />
                 <label
                   htmlFor="maritalstatus"
@@ -546,7 +553,7 @@ const UserProfile = () => {
           )}
         </form>
         {success && (
-          <div className="text-green-500 text-center mb-4">{success}</div>
+          <div className="text-green-500 text-center  mt-4 mb-2">{success}</div>
         )}
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 

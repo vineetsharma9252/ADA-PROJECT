@@ -19,6 +19,8 @@ import { LogIn } from "lucide-react";
 function App() {
   const token = localStorage.getItem("token"); // ✅ Consistent lowercase
 
+  const isLoggedIn = token && token !== "null" && token !== "undefined";
+
   return (
     <div className="App">
       <NavBar />
@@ -28,6 +30,10 @@ function App() {
           path="/register"
           element={token ? <Navigate to="/login" /> : <RegisterForm />}
         />
+        <Route
+          path="/login"
+          element={isLoggedIn ? <Navigate to="/" /> : <SignInForm />}
+        />{" "}
         <Route
           path="/login"
           element={token ? <Navigate to="/" /> : <SignInForm />}
@@ -42,7 +48,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/application-form/:schemeName"
           element={
@@ -61,10 +66,8 @@ function App() {
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/home" element={<HomePage />} />
-
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
-
         {/* ✅ Corrected Route with useParams */}
         <Route path="/user-profile-2/api/data/:email" element={<UserPage />} />
       </Routes>

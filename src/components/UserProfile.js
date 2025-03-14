@@ -113,7 +113,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="fullName"
-                value={user.fullName}
+                value={localStorage.getItem("fullName")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -231,7 +231,7 @@ const UserProfile = () => {
               <input
                 type="number"
                 name="phone"
-                value={user.phone}
+                value={localStorage.getItem("phone_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -279,7 +279,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="aadharCard"
-                value={user.aadharCard}
+                value={localStorage.getItem("aadharCard_token")}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 requireds

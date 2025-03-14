@@ -69,7 +69,9 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    localStorage.setItem("email_token", formData.email);
+    localStorage.setItem("phone_token", formData.phone);
+    localStorage.setItem("aadharCard_token", formData.aadharCard);
     let isValid = true;
     Object.keys(formData).forEach((field) => {
       validateField(field, formData[field]);

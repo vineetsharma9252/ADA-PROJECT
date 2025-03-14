@@ -14,10 +14,13 @@ const NavBar = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () => {
     // localStorage.removeItem("token");
-    localStorage.setItem("token", null);
+    localStorage.removeItem("token");
+    localStorage.setItem("email_token", "");
+    localStorage.setItem("phone_token", "");
+    localStorage.setItem("aadharCard_token", "");
     localStorage.removeItem("fullName");
     alert("Logged out successfully!");
-    
+
     navigate("/login");
   };
   const handleLogin = () => navigate("/login");

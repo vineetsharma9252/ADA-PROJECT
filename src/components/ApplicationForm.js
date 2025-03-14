@@ -134,6 +134,7 @@ export default function ApplicationForm() {
           title: "Success!",
           text: "Application submitted successfully!",
         });
+        navigate('/dashboard');
 
         // Reset Form
         setFormData({

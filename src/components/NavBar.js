@@ -13,10 +13,11 @@ const NavBar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
+    localStorage.setItem("token", null);
     localStorage.removeItem("fullName");
     alert("Logged out successfully!");
-
+    
     navigate("/login");
   };
   const handleLogin = () => navigate("/login");

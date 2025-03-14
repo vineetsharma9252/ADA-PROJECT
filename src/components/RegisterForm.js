@@ -8,10 +8,23 @@ const RegisterForm = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
-    password: "",
-    phone: "",
-    aadharCard: "",
+    gender:"",
+    father_name:"",
+    dob:"",
+    email:"",
+    password:"",
+    phone:"",
+    marital_status:"", // ✅ CHANGED FROM Boolean to String
+    caste:"",
+    curr_address:"",
+    perm_address:"",
+    aadharCard:"",
+    panCard:"",
+    voterId:"",
+    occupation:"",
+    income:"",
+    education:"",
+    disability:"",
   });
 
   const [errors, setErrors] = useState({});
@@ -72,13 +85,17 @@ const RegisterForm = () => {
     localStorage.setItem("email_token", formData.email);
     localStorage.setItem("phone_token", formData.phone);
     localStorage.setItem("aadharCard_token", formData.aadharCard);
+    
+    const requiredFields = ["fullName", "email", "password", "aadharCard", "phone"];
+
     let isValid = true;
-    Object.keys(formData).forEach((field) => {
+    requiredFields.forEach((field) => {
       validateField(field, formData[field]);
       if (formData[field].trim() === "" || errors[field]) {
         isValid = false;
       }
     });
+    
 
     if (!isValid) {
       alert("Please correct the errors in the form.");
@@ -101,10 +118,23 @@ const RegisterForm = () => {
         alert("Form submitted successfully!");
         setFormData({
           fullName: "",
-          email: "",
-          password: "",
-          phone: "",
-          aadharCard: "",
+          gender:"",
+          father_name:"",
+          dob:"",
+          email:"",
+          password:"",
+          phone:"",
+          marital_status:"", // ✅ CHANGED FROM Boolean to String
+          caste:"",
+          curr_address:"",
+          perm_address:"",
+          aadharCard:"",
+          panCard:"",
+          voterId:"",
+          occupation:"",
+          income:"",
+          education:"",
+          disability:"",
         });
         setErrors({});
         navigate("/login");

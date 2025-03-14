@@ -30,15 +30,15 @@ export default function SignInForm() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("email", JSON.stringify(data.user.email));
         localStorage.setItem("fullName", data.user.fullName); // Store first name
         localStorage.setItem("token", data.token);
-        localStorage.setItem("email", formData.email);
-        localStorage.setItem("phone", localStorage.getItem("phone_token"));
-        localStorage.setItem(
-          "aadharCard",
-          localStorage.getItem("aadharCard_token")
-        );
+        // localStorage.setItem("email", formData.email);
+        // localStorage.setItem("phone", localStorage.getItem("phone_token"));
+        // localStorage.setItem(
+          // "aadharCard",
+          // localStorage.getItem("aadharCard_token")
+        // );
         alert("Login successfully!");
         navigate("/schemes");
       } else {

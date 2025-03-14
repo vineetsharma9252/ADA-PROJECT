@@ -34,7 +34,24 @@ if (!SECRET_KEY) {
 
 // User Registration
 app.post("/create", async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, 
+    gender,
+    father_name,
+    dob,
+    email,
+     password, 
+    phone,
+    marital_status , // ✅ CHANGED FROM Boolean to String
+    caste,
+    curr_address ,
+    perm_address ,
+    aadharCard,
+    panCard,
+    voterId ,
+    occupation,
+    income ,
+    education,
+    disability } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -44,13 +61,26 @@ app.post("/create", async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log(hashedPassword)
+   
 
-    const newUser = new User({
-      fullName ,
+    const newUser = new User({ fullName, 
+      gender,
+      father_name,
+      dob,
       email,
-      password: hashedPassword
-    });
+       password: hashedPassword, 
+      phone,
+      marital_status , // ✅ CHANGED FROM Boolean to String
+      caste,
+      curr_address ,
+      perm_address ,
+      aadharCard,
+      panCard,
+      voterId ,
+      occupation,
+      income ,
+      education,
+      disability });
 
     await newUser.save();
     const payload = { fullName, email };
@@ -68,29 +98,37 @@ app.post("/create", async (req, res) => {
 });
 
 
-
 // ============================
-// Register User Route
+// Update User Profile Route
 // ============================
-app.post("/user-profile", async (req, res) => {
-  console.log(req.body); // Check if data is coming correctly
+app.put("/user-profile-update/:email", async (req, res) => {
+  const email = req.params.email;
+  const updatedData = req.body;
 
   try {
-    // ✅ Hash the password before saving
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    const newUser = new User({ ...req.body, password: hashedPassword });
-    console.log(hashedPassword);
+    // Check if user exists
+    const user = await User.findOne({ email });
 
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Loop over each field, if field value is not empty, update it
+    for (let key in updatedData) {
+      if (updatedData[key] && updatedData[key].trim() !== "") {
+        user[key] = updatedData[key]; // Update only non-empty fields
+      }
+    }
+
+    await user.save(); // Save updated user
+
+    res.status(200).json({ message: "Profile updated successfully", user });
   } catch (error) {
-    console.error("Error registering user:", error);
-    res
-      .status(400)
-      .json({ message: "Failed to register user", error: error.message });
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
 
 // ============================
 // Get User Data by Email Route

@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     gender: { type: String },
     father_name: { type: String },
     dob: { type: String },
-    email: { type: String, unique: true, lowercase: true },
+    email: { type: String, lowercase: true },
     password: { type: String }, // Hashed password using bcrypt
     phone: { type: String },
     marital_status: { type: String }, // ✅ CHANGED FROM Boolean to String

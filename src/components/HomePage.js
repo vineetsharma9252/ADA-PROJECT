@@ -1,11 +1,33 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Building2, Landmark, TreePine } from "lucide-react";
 import PropTypes from "prop-types";
 import "./HomePageCSS.css";
 import Footer from "./Footer";
-
-
+import { useNavigate } from 'react-router-dom';
+ 
 const HomePage = memo(function HomePage(props) {
+//   const navigate = useNavigate();
+//  const email = localStorage.getItem("email");
+ 
+//  useEffect(() => {
+//   if (!email) return; // Agar email nahi hai to kuch bhi na karo, homepage dikhao
+
+//   // Agar email hai to check karo ki details fill ki hain ya nahi
+//   fetch(`http://localhost:4500/check-mandatory-details/${email}`)
+//     .then((res) => res.json())
+//     .then((data) => {
+//       if (data.detailsFilled) {
+//         // Agar details bhar diye to profile page par bhejo
+//         navigate(`/user-profile/${email}`);
+//       } else {
+//         // Agar nahi bhare to form par le jao
+//         navigate("/fill-details-form");
+//       }
+//     })
+//     .catch((err) => console.error("Error checking details: ", err));
+// }, [email, navigate]);
+
+ 
   return (
     <div className="d-flex flex-column min-vh-100">
       <div className="flex-grow-1">

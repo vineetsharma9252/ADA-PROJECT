@@ -32,6 +32,16 @@ const UserProfile = () => {
     disablity: "",
   });
 
+  // useEffect(() => {
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     fullName: localStorage.getItem("fullName") || "",
+  //     email: localStorage.getItem("email_token") || "",
+  //     phone: localStorage.getItem("phone_token") || "",
+  //     aadharCard: localStorage.getItem("aadharCard_token") || "",
+  //   }));
+  // }, []);
+
   const handleAddress = (e) => {
     const isSame = e.target.value === "yes";
     setIsCurrentPermanent(isSame);
@@ -56,22 +66,25 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const email = user.email || localStorage.getItem("email_token"); // Take from form or localStorage
       alert(email);
-      const response = await fetch(`http://localhost:4500/user-profile-update/${email}`, {
-        method: "PUT", // ✅ PUT for update
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user), // Send updated fields
-      });
-  
+      const response = await fetch(
+        `http://localhost:4500/user-profile-update/${email}`,
+        {
+          method: "PUT", // ✅ PUT for update
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user), // Send updated fields
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Failed to submit form");
       }
-  
+
       const data = await response.json();
       setSuccess("Profile updated successfully!");
       setError("");
@@ -86,7 +99,6 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
-  
 
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
@@ -156,7 +168,7 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="fathers_name"
+                name="father_name"
                 value={user.father_name}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
@@ -234,7 +246,7 @@ const UserProfile = () => {
               <input
                 type="number"
                 name="phone"
-                value={localStorage.getItem("phone_token")}
+                value={user.phone}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -245,7 +257,7 @@ const UserProfile = () => {
               <input
                 type="email"
                 name="email"
-                value={localStorage.getItem("email_token")}
+                value={user.email}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
@@ -282,10 +294,10 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="aadharCard"
-                value={localStorage.getItem("aadharCard_token")}
+                value={user.aadharCard}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
-                requireds
+                required
               />
               <label className="block text-sm font-medium text-left my-3">
                 PAN number
@@ -356,11 +368,14 @@ const UserProfile = () => {
                   name="income"
                   value={user.income}
                   onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
                 >
-                  <option value="100000">below one lakh</option>
-                  <option value="100000-200000">1L-2L</option>
-                  <option value="200000-500000">2L-5L</option>
-                  <option value="500000-1000000">5L-10L</option>
+                  <option value="">Select Income Range</option>
+                  <option value="100000">Below 1 Lakh</option>
+                  <option value="100000-200000">1L - 2L</option>
+                  <option value="200000-500000">2L - 5L</option>
+                  <option value="500000-1000000">5L - 10L</option>
                   <option value="10000000">10L+</option>
                 </select>
               </div>
@@ -408,10 +423,10 @@ const UserProfile = () => {
               </label>
               <div className="text-left">
                 <select name="caste" value={user.caste} onChange={handleChange}>
-                  <option value="general">General</option>
-                  <option value="obc">OBC</option>
-                  <option value="sc">SC</option>
-                  <option value="st">ST</option>
+                  <option value="General">General</option>
+                  <option value="OBC">OBC</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
                 </select>
               </div>
               <label className="block text-sm font-medium text-left my-3">
@@ -519,14 +534,21 @@ const UserProfile = () => {
                 </button>
                 <button
                   type="submit"
-                  className="p-2 bg-green-500 text-white rounded"
+                  className={`mt-4 w-full p-2 ${
+                    loading ? "bg-gray-400" : "bg-green-500"
+                  } text-white rounded`}
+                  disabled={loading}
                 >
-                  Submit
+                  {loading ? "Submitting..." : "Submit"}
                 </button>
               </div>
             </div>
           )}
         </form>
+        {success && (
+          <div className="text-green-500 text-center mb-4">{success}</div>
+        )}
+        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         {loading && (
           <div className="absolute inset-0 bg-white bg-opacity-70 flex justify-center items-center">

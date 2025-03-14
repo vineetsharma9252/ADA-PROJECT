@@ -170,12 +170,12 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    const payload = { email: user.email, fullName: user.fullName };
+    const payload = { email: user.email, fullName: user.fullName, phone: user.phone, aadharCard: user.aadharCard  };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
     res.status(200).json({
       message: "Login successful",
-      user: { email: user.email, fullName: user.fullName },
+      user: { email: user.email, fullName: user.fullName, phone: user.phone, aadharCard: user.aadharCard },
       token,
     });
   } catch (error) {

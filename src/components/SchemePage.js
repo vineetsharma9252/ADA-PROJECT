@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./SchemePage.css";
 
@@ -36,26 +36,43 @@ const SchemePage = () => {
       scheme.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  //Handle apply logic
+  // ✅ Function to check user documents from backend
+  const checkUserDocuments = async (schemeTitle) => {
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
 
-  // Mock check for required documents
-  const checkRequiredDocuments = (schemeTitle) => {
-    // For demo purposes, let's say documents are missing for "ADA Research Grant"
-    const missingDocsSchemes = [
-      "ADA Research Grant",
-      "ADA Women Empowerment Program",
-    ];
-    return missingDocsSchemes.includes(schemeTitle); // returns true if all docs present
+    try {
+      const response = await fetch(`http://localhost:4500/user-profile/api/data/${email}`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data");
+      }
+
+      const result = await response.json();
+      console.log("Document check result:", result);
+
+      // Assuming API returns { allDocumentsPresent: true/false }
+      return result.allDocumentsPresent;
+    } catch (error) {
+      console.error("Error during document check:", error);
+      return false; // In case of error, assume documents are incomplete
+    }
   };
 
-  // Function to handle Apply Now click
-  const handleApplyClick = (schemeTitle) => {
-    const token = localStorage.getItem("token"); // Check token
+  // ✅ Function to handle Apply Now button
+  const handleApplyClick = async (schemeTitle) => {
+    const token = localStorage.getItem("token"); // Check token first
 
     if (!token) {
       alert("Please login to apply for this scheme.");
       navigate("/login");
-      return; // Stop further execution
+      return;
     }
 
     const message = `
@@ -69,17 +86,18 @@ Please read the following instructions carefully before proceeding:
 6. Application once submitted cannot be edited.
 
 Click OK to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.
-  `;
+    `;
 
     if (window.confirm(message)) {
-      if (checkRequiredDocuments(schemeTitle)) {
-        // All documents present, proceed to application form
+      // 🔔 Backend verification of documents
+      const allDocumentsPresent = await checkUserDocuments(schemeTitle);
+
+      if (allDocumentsPresent) {
+        // ✅ Documents complete, proceed to application form
         navigate(`/application-form/${encodeURIComponent(schemeTitle)}`);
       } else {
-        // Documents missing, redirect to profile page
-        alert(
-          "Some required documents are missing. Please complete your profile first."
-        );
+        // ❌ Documents missing, redirect to profile
+        alert("Some required documents are missing. Please complete your profile first.");
         navigate("/user-profile");
       }
     }
@@ -111,9 +129,7 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
           >
             <option value="All">All</option>
             <option value="Open">Open</option>
-            <option value="Application in Progress">
-              Application in Progress
-            </option>
+            <option value="Application in Progress">Application in Progress</option>
             <option value="Closed">Closed</option>
           </select>
         </div>
@@ -138,10 +154,9 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
                     >
                       {scheme.status}
                     </span>
-                    {/* // In map loop */}
                     <center>
                       {scheme.status === "Closed" ? (
-                        " "
+                        ""
                       ) : (
                         <button
                           onClick={() => handleApplyClick(scheme.title)}
@@ -159,15 +174,13 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
         </div>
       </div>
 
-      <h3 className="mt-5 text-left ">How to Apply</h3>
+      <h3 className="mt-5 text-left">How to Apply</h3>
 
       <hr className="bg-blue-800 my-2" />
       <ol className="application-steps space-y-4">
         <li className="flex items-start gap-2">
           <span className="arrow-icon mt-1">➡️</span>
-          <p className="text-left">
-            Check eligibility criteria for the scheme.
-          </p>
+          <p className="text-left">Check eligibility criteria for the scheme.</p>
         </li>
         <hr />
         <li className="flex items-start gap-2">
@@ -182,9 +195,7 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
         <hr />
         <li className="flex items-start gap-2">
           <span className="arrow-icon mt-1">➡️</span>
-          <p className="text-left">
-            Submit the application and await approval.
-          </p>
+          <p className="text-left">Submit the application and await approval.</p>
         </li>
       </ol>
     </div>

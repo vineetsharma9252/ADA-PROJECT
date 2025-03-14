@@ -13,8 +13,8 @@ const ApplicationSchema = new mongoose.Schema({
   incomeGroup: String,
   plot: String,
   category: String,
-  paymentAmount: Number,
+  // paymentAmount: Number,
   familyMembers: [FamilyMemberSchema],
 });
 
-module.exports = mongoose.model('Application', ApplicationSchema);
+module.exports = mongoose.model('application', ApplicationSchema);

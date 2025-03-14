@@ -6,6 +6,7 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
+ 
 const authenticateToken = require("./middleware/auth");
 
 const app = express();
@@ -187,10 +188,10 @@ app.post("/login", async (req, res) => {
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.post("/api/applications", authenticateToken, async (req, res) => {
+app.post("/api/applications", authenticateToken ,async (req, res) => {
   try {
     const applicationData = req.body;
-    console.log(applicationData); // Log received data
+ 
 
     // New instance of Application
     const newApplication = new Application(applicationData);

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DOMPurify from "dompurify"; // Prevents XSS attacks
 import { useParams, useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import "./ApplicationForm.css";
 
 export default function ApplicationForm() {
@@ -15,9 +15,27 @@ export default function ApplicationForm() {
     lastName: "",
     incomeGroup: "Under 500,000",
     plot: "Plot A",
-    category: "General",
+    category: "",
     paymentAmount: "",
   });
+
+  const email = localStorage.getItem("email");  
+  // 1. Fetch user data from User Collection for prefill
+    useEffect(() => {
+      fetch(`http://localhost:4500/user-profile/api/data/${email}`)
+          .then((res) => res.json())
+          .then((data) => {
+        
+            setFormData((prev) => ({
+              ...prev,
+              incomeGroup: data.income || "",
+              category: (data.caste || "").toLowerCase(),
+             
+            }));
+            
+          })
+          .catch((err) => console.error(err));
+  }, [email]);
 
   const [familyMembers, setFamilyMembers] = useState([]);
   const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
@@ -79,47 +97,44 @@ export default function ApplicationForm() {
     setFamilyMembers(familyMembers.filter((_, i) => i !== index));
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalData = { ...formData, familyMembers };
     const token = localStorage.getItem("token"); // lowercase
 
-  
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, // Direct token
+          Authorization: token, 
         },
         body: JSON.stringify(finalData),
       });
-  
+
       const responseData = await response.json();
-  
+
       console.log("Response status:", response.status); // ✅ Check status in console
-  
+
       if (response.status === 401) {
         Swal.fire({
-          icon: 'warning',
-          title: 'Unauthorized!',
-          text: 'Please login to continue.',
-          confirmButtonText: 'Go to Login'
+          icon: "warning",
+          title: "Unauthorized!",
+          text: "Please login to continue.",
+          confirmButtonText: "Go to Login",
         }).then(() => {
           navigate("/login");
         });
         return;
       }
-      
+
       if (response.ok) {
         Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Application submitted successfully!',
+          icon: "success",
+          title: "Success!",
+          text: "Application submitted successfully!",
         });
-  
+
         // Reset Form
         setFormData({
           firstName: "",
@@ -132,38 +147,29 @@ export default function ApplicationForm() {
         });
         setFamilyMembers([]);
         setMember({ name: "", mobile: "", aadhar: "" });
-  
       } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Failed!',
+          icon: "error",
+          title: "Failed!",
           text: responseData.message || "Unknown error",
         });
       }
-  
     } catch (error) {
       console.error("Error while submitting:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: 'An error occurred while submitting the application.',
+        icon: "error",
+        title: "Error!",
+        text: "An error occurred while submitting the application.",
       });
     }
   };
-  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      
-      <div
-        className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md"
-
-      >
-
+      <div className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md">
         <h2 className="relative inline-block w-[40%] text-center mt-5 py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
           Application Form for {decodedSchemeName}
         </h2>
-
       </div>
 
       <form
@@ -190,26 +196,50 @@ export default function ApplicationForm() {
 
         {["incomeGroup", "plot", "category"].map((field, index) => (
           <div key={index} className="mb-4">
-            <label className="block text-left  uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               {field.replace(/([A-Z])/g, " $1").trim()}
             </label>
             <select
-              className="block w-full bg-gray-200 border  text-gray-700 py-3 px-4  focus:outline-none"
+              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 focus:outline-none"
               name={field}
-              value={formData[field]}
+              value={formData[field] || ""}
               onChange={handleChange}
+              required
             >
+              <option value="">
+                Select {field.replace(/([A-Z])/g, " $1").trim()}
+              </option>
+
               {field === "incomeGroup" &&
-                ["Under 500,000", "Under 1,000,000", "Above 1,000,000"].map(
-                  (option) => <option key={option}>{option}</option>
-                )}
+                [
+                  { value: "100000", label: "Below 1 Lakh" },
+                  { value: "100000-200000", label: "1L - 2L" },
+                  { value: "200000-500000", label: "2L - 5L" },
+                  { value: "500000-1000000", label: "5L - 10L" },
+                  { value: "10000000", label: "10L+" },
+                ].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+
               {field === "plot" &&
                 ["Plot A", "Plot B", "Plot C"].map((option) => (
-                  <option key={option}>{option}</option>
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
                 ))}
+
               {field === "category" &&
-                ["General", "SC", "ST", "Other"].map((option) => (
-                  <option key={option}>{option}</option>
+                [
+                  { value: "general", label: "GENERAL" },
+                  { value: "obc", label: "OBC" },
+                  { value: "sc" , label: "SC" },
+                  { value: "st", label: "ST" },
+                ].map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
                 ))}
             </select>
           </div>
@@ -275,7 +305,6 @@ export default function ApplicationForm() {
           Submit Application
         </button>
       </form>
-
     </div>
   );
 }

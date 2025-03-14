@@ -33,7 +33,12 @@ export default function SignInForm() {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("fullName", data.user.fullName); // Store first name
         localStorage.setItem("token", data.token);
-
+        localStorage.setItem("email", formData.email);
+        localStorage.setItem("phone", localStorage.getItem("phone_token"));
+        localStorage.setItem(
+          "aadharCard",
+          localStorage.getItem("aadharCard_token")
+        );
         alert("Login successfully!");
         navigate("/schemes");
       } else {

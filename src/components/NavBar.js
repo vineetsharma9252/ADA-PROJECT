@@ -13,11 +13,10 @@ const NavBar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () => {
-    // localStorage.removeItem("token");
     localStorage.removeItem("token");
-    localStorage.setItem("email_token", "");
-    localStorage.setItem("phone_token", "");
-    localStorage.setItem("aadharCard_token", "");
+    localStorage.removeItem("email_token");
+    localStorage.removeItem("phone_token");
+    localStorage.removeItem("aadharCard_token");
     localStorage.removeItem("fullName");
     alert("Logged out successfully!");
 

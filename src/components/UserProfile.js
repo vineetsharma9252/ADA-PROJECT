@@ -56,28 +56,31 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const email = user.email || localStorage.getItem("email_token"); // Take from form or localStorage
       alert(email);
-      const response = await fetch(`http://localhost:4500/user-profile-update/${email}`, {
-        method: "PUT", // ✅ PUT for update
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user), // Send updated fields
-      });
-  
+      const response = await fetch(
+        `http://localhost:4500/user-profile/api/data/${email}`,
+        {
+          method: "PUT", // ✅ PUT for update
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user), // Send updated fields
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Failed to submit form");
       }
-  
+
       const data = await response.json();
       setSuccess("Profile updated successfully!");
       setError("");
       alert("Profile Updated Successfully!");
       setIsUserCreated(true);
-      navigate(`/user-profile-2/api/data/${email}`); // Navigate to next step
+      navigate(`/user-profile/api/data/${email}`); // Navigate to next step
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("Error submitting form. Please try again.");
@@ -86,7 +89,6 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
-  
 
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
@@ -156,7 +158,7 @@ const UserProfile = () => {
               </label>
               <input
                 type="text"
-                name="fathers_name"
+                name="father_name"
                 value={user.father_name}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"

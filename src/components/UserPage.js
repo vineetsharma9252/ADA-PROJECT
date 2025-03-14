@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function UserPage() {
   const { email } = useParams();
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -42,7 +43,6 @@ function UserPage() {
 
         {/* User Details */}
         <div className="p-4 text-left">
-          {/* Section Component */}
           {[
             {
               title: "Personal Details",
@@ -98,6 +98,16 @@ function UserPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Edit Profile Button */}
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={() => navigate("/user-profile")}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Edit Profile
+          </button>
         </div>
       </div>
     </div>

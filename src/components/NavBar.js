@@ -162,7 +162,9 @@ const NavBar = () => {
           {/* Right Side Items */}
           <div className="flex items-center space-x-6">
             <Link
-              to="/user-profile"
+              to={`/user-profile/api/data/${localStorage
+                .getItem("email")
+                .toString()}`}
               style={{
                 textDecoration: "none",
               }}

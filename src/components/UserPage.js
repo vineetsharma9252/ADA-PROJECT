@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-
+import { ClipLoader } from "react-spinners";
 function UserPage() {
   const { email } = useParams();
   const navigate = useNavigate();
@@ -62,9 +62,16 @@ function UserPage() {
     setEditMode(false);
   };
 
-  if (loading) return <p className="text-center mt-8">Loading...</p>;
-  if (error) return <p className="text-center text-red-500 mt-8">Error: {error}</p>;
-  if (!userData.email) return <p className="text-center mt-8">User not found</p>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ClipLoader color="#4caf50" size={50} /> {/* Spinner */}
+      </div>
+    );
+  if (error)
+    return <p className="text-center text-red-500 mt-8">Error: {error}</p>;
+  if (!userData.email)
+    return <p className="text-center mt-8">User not found</p>;
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 flex justify-center">
@@ -105,8 +112,6 @@ function UserPage() {
                 title: "Occupation & Income",
                 fields: ["occupation", "income", "education"],
               },
-            
-            
             ].map((section, index) => (
               <div key={index} className="mb-6">
                 <h3 className="text-2xl font-semibold mb-3">{section.title}</h3>

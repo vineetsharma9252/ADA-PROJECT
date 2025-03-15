@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { Building2, Landmark, TreePine, Home } from "lucide-react"; // Added Home icon
+import React, { memo, useState } from "react";
+import { Building2, Landmark, TreePine, Home, User, List } from "lucide-react"; // Added icons
 import PropTypes from "prop-types";
 import "./HomePageCSS.css";
 import Footer from "./Footer";
@@ -7,22 +7,62 @@ import { useNavigate } from "react-router-dom";
 
 const HomePage = memo(function HomePage(props) {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
-  // Function to handle dashboard redirection
-  const handleDashboardClick = () => {
-    navigate("/dashboard");
+  // Function to handle menu toggle
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Function to handle navigation
+  const handleNavigation = (route) => {
+    navigate(route);
+    setIsMenuOpen(false); // Close the menu after navigation
   };
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      {/* Floating Side Button */}
-      <button
-        onClick={handleDashboardClick}
-        className="fixed bottom-8 right-8 bg-[oklch(0.627_0.194_149.214)] text-white p-4 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110"
-        style={{ zIndex: 1000 }} // Ensure it stays above other elements
-      >
-        <Home size={24} /> {/* Dashboard icon */}
-      </button>
+      {/* Floating Menu Button */}
+      <div className="fixed bottom-8 right-8" style={{ zIndex: 1000 }}>
+        {/* Menu Items */}
+        {isMenuOpen && (
+          <div className="flex flex-col items-end mb-2 space-y-2">
+            {/* Schemes */}
+            <button
+              onClick={() => handleNavigation("/schemes")}
+              className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
+            >
+              <List size={20} />
+            </button>
+            {/* Profile */}
+            <button
+              onClick={() =>
+                handleNavigation(
+                  `/user-profile/api/data/${localStorage.getItem("email")}`
+                )
+              }
+              className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
+            >
+              <User size={20} />
+            </button>
+            {/* Dashboard */}
+            <button
+              onClick={() => handleNavigation("/dashboard")}
+              className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
+            >
+              <Home size={20} />
+            </button>
+          </div>
+        )}
+
+        {/* Main Menu Button */}
+        <button
+          onClick={toggleMenu}
+          className="bg-[oklch(0.627_0.194_149.214)] text-white p-4 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110"
+        >
+          {isMenuOpen ? <Home size={24} /> : <List size={24} />}
+        </button>
+      </div>
 
       <div className="flex-grow-1">
         {/* Hero Section */}

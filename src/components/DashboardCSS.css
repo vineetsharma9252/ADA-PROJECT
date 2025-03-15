@@ -17,3 +17,11 @@
     color: white;
     text-decoration: none;
 }
+
+.ada-dashboard{
+    background-color: oklch(0.527 0.154 150.069);
+    
+}
+.adaInfoCard{
+    border-radius: 0px !important;
+}

@@ -24,14 +24,14 @@ const Dashboard = memo(function Dashboard() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center text-xl bg-gray-200 p-10 my-20">
+      <h2 className="text-center ada-dashboard text-3xl text-white p-10 mt-4">
         ADA Dashboard
       </h2>
 
       {/* Cards Section */}
       <div className="row mt-4">
-        <div className="col-lg-3 col-6">
-          <div className="small-box bg-info">
+        <div className="  col-lg-3 col-6">
+          <div className="adaInfoCard small-box bg-info">
             <div className="inner">
               <h3>{counts.total}</h3>
               <p>Total ADA Applications</p>
@@ -42,7 +42,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className="small-box bg-warning">
+          <div className=" adaInfoCard small-box bg-warning">
             <div className="inner">
               <h3>{counts.pending}</h3>
               <p>Pending ADA Applications</p>
@@ -53,7 +53,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className="small-box bg-success">
+          <div className=" adaInfoCard small-box bg-success">
             <div className="inner">
               <h3>{counts.approved}</h3>
               <p>Approved ADA Applications</p>
@@ -64,7 +64,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className="small-box bg-danger">
+          <div className=" adaInfoCard small-box bg-danger">
             <div className="inner">
               <h3>{counts.rejected}</h3>
               <p>Rejected ADA Applications</p>
@@ -77,13 +77,15 @@ const Dashboard = memo(function Dashboard() {
       </div>
 
       {/* Applications Table */}
-      <h3 className="mt-5">ADA Applications Overview</h3>
+      <h3 className="mt-5 text-2xl text-left mb-1 ">ADA Applications Overview</h3>
+      <hr/>
+      <br/>
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead className="thead-dark">
             <tr>
               <th>#</th>
-              <th>Applicant Name</th>
+              <th>Application ID</th>
               <th>Start Date</th>
               <th>End Date</th>
               <th>Status</th>

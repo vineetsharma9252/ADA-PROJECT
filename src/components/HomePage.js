@@ -1,35 +1,29 @@
-import React, { memo, useEffect } from "react";
-import { Building2, Landmark, TreePine } from "lucide-react";
+import React, { memo } from "react";
+import { Building2, Landmark, TreePine, Home } from "lucide-react"; // Added Home icon
 import PropTypes from "prop-types";
 import "./HomePageCSS.css";
 import Footer from "./Footer";
-import { useNavigate } from 'react-router-dom';
- 
+import { useNavigate } from "react-router-dom";
+
 const HomePage = memo(function HomePage(props) {
-//   const navigate = useNavigate();
-//  const email = localStorage.getItem("email");
- 
-//  useEffect(() => {
-//   if (!email) return; // Agar email nahi hai to kuch bhi na karo, homepage dikhao
+  const navigate = useNavigate();
 
-//   // Agar email hai to check karo ki details fill ki hain ya nahi
-//   fetch(`http://localhost:4500/check-mandatory-details/${email}`)
-//     .then((res) => res.json())
-//     .then((data) => {
-//       if (data.detailsFilled) {
-//         // Agar details bhar diye to profile page par bhejo
-//         navigate(`/user-profile/${email}`);
-//       } else {
-//         // Agar nahi bhare to form par le jao
-//         navigate("/fill-details-form");
-//       }
-//     })
-//     .catch((err) => console.error("Error checking details: ", err));
-// }, [email, navigate]);
+  // Function to handle dashboard redirection
+  const handleDashboardClick = () => {
+    navigate("/dashboard");
+  };
 
- 
   return (
     <div className="d-flex flex-column min-vh-100">
+      {/* Floating Side Button */}
+      <button
+        onClick={handleDashboardClick}
+        className="fixed bottom-8 right-8 bg-[oklch(0.627_0.194_149.214)] text-white p-4 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110"
+        style={{ zIndex: 1000 }} // Ensure it stays above other elements
+      >
+        <Home size={24} /> {/* Dashboard icon */}
+      </button>
+
       <div className="flex-grow-1">
         {/* Hero Section */}
         <section
@@ -45,7 +39,7 @@ const HomePage = memo(function HomePage(props) {
               heritage preservation.
             </p>
             <a
-              href="#projects"
+              href="/projects"
               className="custom-btn btn btn-light text-decoration-none mt-3"
             >
               View Projects
@@ -59,6 +53,7 @@ const HomePage = memo(function HomePage(props) {
           </div>
         </section>
 
+        {/* Highlights Section */}
         <section className="highlights py-5 mt-5">
           <div className="container">
             <h2 className="relative inline-block w-[40%] text-center  py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
@@ -123,7 +118,7 @@ const HomePage = memo(function HomePage(props) {
                       modern infrastructure and smart city solutions.
                     </p>
                     <a
-                      href="#projects"
+                      href="/about"
                       className="custom-btn btn btn-light text-decoration-none mt-3"
                     >
                       Learn more

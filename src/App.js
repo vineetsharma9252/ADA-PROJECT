@@ -16,6 +16,7 @@ import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
 import ApplicationTableForm from "./components/ApplicationTableForm";
+import ProjectPage from "./components/ProjectPage";
 
 function App() {
   const token = localStorage.getItem("token"); // ✅ Consistent lowercase
@@ -72,6 +73,7 @@ function App() {
         {/* ✅ Corrected Route with useParams */}
         <Route path="/user-profile/api/data/:email" element={<UserPage />} />
         <Route path="/atf" element={<ApplicationTableForm />} />
+        <Route path="/projects" element={<ProjectPage />} />
       </Routes>
     </div>
   );

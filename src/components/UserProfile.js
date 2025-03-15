@@ -102,7 +102,6 @@ const UserProfile = () => {
 
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
-
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
       <div

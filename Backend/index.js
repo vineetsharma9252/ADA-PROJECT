@@ -6,6 +6,7 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
+const ApplicationTableSchema = require("./db/ApplicationTableSchema");
  
 const authenticateToken = require("./middleware/auth");
 
@@ -188,13 +189,19 @@ app.post("/login", async (req, res) => {
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.post("/api/applications", authenticateToken ,async (req, res) => {
+app.post("/api/applications", async (req, res) => {
   try {
     const applicationData = req.body;
- 
+   
+    const appID = 'APP-' + Date.now(); // ✅ Unique Application ID
 
-    // New instance of Application
-    const newApplication = new Application(applicationData);
+    // Merge applicationID with applicationData
+    const newApplication = new Application({
+      ...applicationData, // spreading all user data
+      applicationID: appID, // ✅ adding generated Application ID
+      status: 'Pending' // ✅ Default status set to Pending
+    });
+
     // Save in MongoDB
     const savedApplication = await newApplication.save();
 
@@ -210,6 +217,54 @@ app.post("/api/applications", authenticateToken ,async (req, res) => {
     });
   }
 });
+
+
+
+app.post('/dashboard', async (req, res) => { 
+ try{
+  const { name, startDate, endDate, status, comments } = req.body;
+  // Auto generate Application ID
+  const applicationID = 'APP-' + Date.now(); 
+
+    const newApp = new ApplicationTableSchema({
+      name,
+      startDate,
+      endDate,
+      status,
+      comments,
+      applicationID
+    });
+
+    const savedApp = await newApp.save();
+    res.status(201).json(savedApp);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// ============================
+// Application Count Data
+// ============================
+app.get('/dashboard/counts', async (req, res) => {
+  try {
+    const totalApplications = await Application.countDocuments(); // ✅ All applications
+    const pendingApplications = await ApplicationTableSchema.countDocuments({ status: 'Pending' }); // ✅ Pending applications
+    const approvedApplications = await ApplicationTableSchema.countDocuments({ status: 'Approved' });
+    const rejectedApplications = await ApplicationTableSchema.countDocuments({ status: 'Rejected' });
+
+    res.json({
+      total: totalApplications,
+      pending: pendingApplications,
+      approved: approvedApplications,
+      rejected: rejectedApplications
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 
 // ============================
 // Server Listen

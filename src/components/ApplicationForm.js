@@ -14,13 +14,14 @@ export default function ApplicationForm() {
     middleName: "",
     lastName: "",
     incomeGroup: "Under 500,000",
-    plot: "Plot A",
+    plot: "", // Ensure plot is initialized
     category: "",
     paymentAmount: "",
   });
 
   const email = localStorage.getItem("email");
-  // 1. Fetch user data from User Collection for prefill
+
+  // Fetch user data from User Collection for prefill
   useEffect(() => {
     fetch(`http://localhost:4500/user-profile/api/data/${email}`)
       .then((res) => res.json())
@@ -42,14 +43,16 @@ export default function ApplicationForm() {
   const isValidMobile = (mobile) => /^[6-9]\d{9}$/.test(mobile);
   const isValidAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
 
-  console.log(formData);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const upperValue = value.toUpperCase(); // Convert to uppercase
+
+    // Only convert to uppercase for name fields
+    const upperValue = ["firstName", "middleName", "lastName"].includes(name)
+      ? value.toUpperCase()
+      : value;
     const sanitizedValue = DOMPurify.sanitize(upperValue);
 
-    if (["FIRSTNAME", "MIDDLENAME", "LASTNAME"].includes(name.toUpperCase())) {
+    if (["firstName", "middleName", "lastName"].includes(name)) {
       if (!isValidName(sanitizedValue) && sanitizedValue !== "") {
         alert("Only alphabets and spaces are allowed in Name fields.");
         return;
@@ -99,21 +102,19 @@ export default function ApplicationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const finalData = { ...formData, familyMembers };
-    const token = localStorage.getItem("token"); // lowercase
+    const token = localStorage.getItem("token");
 
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(finalData),
       });
 
       const responseData = await response.json();
-
-      console.log("Response status:", response.status); // ✅ Check status in console
 
       if (response.status === 401) {
         Swal.fire({
@@ -141,8 +142,8 @@ export default function ApplicationForm() {
           middleName: "",
           lastName: "",
           incomeGroup: "Under 500,000",
-          plot: "Plot A",
-          category: "General",
+          plot: "",
+          category: "",
           paymentAmount: "",
         });
         setFamilyMembers([]);
@@ -182,7 +183,7 @@ export default function ApplicationForm() {
 
       <form
         onSubmit={handleSubmit}
-        className="application-form-border  px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[95%] mobile-mt"
+        className="application-form-border px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[95%] mobile-mt"
       >
         <div className="flex flex-wrap -mx-3 mb-6">
           {["firstName", "middleName", "lastName"].map((field, index) => (
@@ -191,7 +192,7 @@ export default function ApplicationForm() {
                 {field.replace(/([A-Z])/g, " $1").trim()}
               </label>
               <input
-                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700  py-3 px-4 leading-tight  uppercase"
+                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight uppercase"
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
@@ -220,11 +221,11 @@ export default function ApplicationForm() {
 
               {field === "incomeGroup" &&
                 [
-                  { value: "100000", label: "Below 1 Lakh" },
-                  { value: "100000-200000", label: "1L - 2L" },
-                  { value: "200000-500000", label: "2L - 5L" },
-                  { value: "500000-1000000", label: "5L - 10L" },
-                  { value: "10000000", label: "10L+" },
+                  { value: "Under 100,000", label: "Below 1 Lakh" },
+                  { value: "100,000 - 200,000", label: "1L - 2L" },
+                  { value: "200,000 - 500,000", label: "2L - 5L" },
+                  { value: "500,000 - 1,000,000", label: "5L - 10L" },
+                  { value: "Above 1,000,000", label: "10L+" },
                 ].map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -233,7 +234,7 @@ export default function ApplicationForm() {
 
               {field === "plot" &&
                 ["Plot A", "Plot B", "Plot C"].map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
@@ -261,7 +262,7 @@ export default function ApplicationForm() {
             {["name", "mobile", "aadhar"].map((field) => (
               <input
                 key={field}
-                className="block w-full inputGreenBorder bg-gray-200  text-gray-700 py-2 px-3  mb-2 uppercase"
+                className="block w-full inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
                 type="text"
                 placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                 value={member[field]}

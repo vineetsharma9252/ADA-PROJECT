@@ -15,26 +15,27 @@ const Dashboard = memo(function Dashboard() {
 
   // Fetch data on component mount
   useEffect(() => {
-    // Fetch application counts
-    fetch("http://localhost:4500/dashboard/counts")
-      .then((res) => res.json())
-      .then((data) => {
-        setCounts(data); // Set to your state
-      })
-      .catch((err) => console.error(err));
+    const fetchData = async () => {
+      try {
+        const countsResponse = await fetch(
+          "http://localhost:4500/dashboard/counts"
+        );
+        const countsData = await countsResponse.json();
+        setCounts(countsData);
 
-    // Fetch applications
-    fetch("http://localhost:4500/dashboard")
-      .then((res) => res.json())
-      .then((data) => {
-        setApplications(data); // Set applications state
-        setLoading(false); // Set loading to false after data is fetched
-        console.log(data);
-      })
-      .catch((err) => {
+        const applicationsResponse = await fetch(
+          "http://localhost:4500/dashboard"
+        );
+        const applicationsData = await applicationsResponse.json();
+        setApplications(applicationsData);
+      } catch (err) {
         console.error(err);
-        setLoading(false); // Set loading to false even if there's an error
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Show loading spinner if data is still being fetched
@@ -47,67 +48,59 @@ const Dashboard = memo(function Dashboard() {
   }
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center ada-dashboard text-3xl text-white p-10 mt-4">
+    <div className="container mx-auto mt-5 px-4">
+      <h2 className="text-center ada-dashboard text-4xl text-white p-10 mt-4">
         ADA Dashboard
       </h2>
 
       {/* Cards Section */}
-      <div className="row mt-4">
-        <div className="col-lg-3 col-6">
-          <div className="adaInfoCard small-box bg-info">
-            <div className="inner">
-              <h3>{counts.total}</h3>
-              <p>Total ADA Applications</p>
-            </div>
-            <div className="icon">
-              <i className="fas fa-file-alt"></i>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <div className="adaInfoCard bg-info p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="inner">
+            <h3 className="text-3xl font-bold">{counts.total}</h3>
+            <p className="text-lg">Total ADA Applications</p>
+          </div>
+          <div className="icon">
+            <i className="fas fa-file-alt text-5xl"></i>
           </div>
         </div>
-        <div className="col-lg-3 col-6">
-          <div className="adaInfoCard small-box bg-warning">
-            <div className="inner">
-              <h3>{counts.pending}</h3>
-              <p>Pending ADA Applications</p>
-            </div>
-            <div className="icon">
-              <i className="fas fa-clock"></i>
-            </div>
+        <div className="adaInfoCard bg-warning p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="inner">
+            <h3 className="text-3xl font-bold">{counts.pending}</h3>
+            <p className="text-lg">Pending ADA Applications</p>
+          </div>
+          <div className="icon">
+            <i className="fas fa-clock text-5xl"></i>
           </div>
         </div>
-        <div className="col-lg-3 col-6">
-          <div className="adaInfoCard small-box bg-success">
-            <div className="inner">
-              <h3>{counts.approved}</h3>
-              <p>Approved ADA Applications</p>
-            </div>
-            <div className="icon">
-              <i className="fas fa-check-circle"></i>
-            </div>
+        <div className="adaInfoCard bg-success p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="inner">
+            <h3 className="text-3xl font-bold">{counts.approved}</h3>
+            <p className="text-lg">Approved ADA Applications</p>
+          </div>
+          <div className="icon">
+            <i className="fas fa-check-circle text-5xl"></i>
           </div>
         </div>
-        <div className="col-lg-3 col-6">
-          <div className="adaInfoCard small-box bg-danger">
-            <div className="inner">
-              <h3>{counts.rejected}</h3>
-              <p>Rejected ADA Applications</p>
-            </div>
-            <div className="icon">
-              <i className="fas fa-times-circle"></i>
-            </div>
+        <div className="adaInfoCard bg-danger p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="inner">
+            <h3 className="text-3xl font-bold">{counts.rejected}</h3>
+            <p className="text-lg">Rejected ADA Applications</p>
+          </div>
+          <div className="icon">
+            <i className="fas fa-times-circle text-5xl"></i>
           </div>
         </div>
       </div>
 
       {/* Applications Table */}
-      <h3 className="mt-5 text-2xl text-left mb-1">
+      <h3 className="mt-8 text-3xl text-left mb-4">
         ADA Applications Overview
       </h3>
       <hr />
       <br />
       <div className="table-responsive">
-        <table className="table table-bordered">
+        <table className="table table-bordered table-striped">
           <thead className="thead-dark">
             <tr>
               <th>#</th>

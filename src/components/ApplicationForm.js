@@ -19,22 +19,19 @@ export default function ApplicationForm() {
     paymentAmount: "",
   });
 
-  const email = localStorage.getItem("email");  
+  const email = localStorage.getItem("email");
   // 1. Fetch user data from User Collection for prefill
-    useEffect(() => {
-      fetch(`http://localhost:4500/user-profile/api/data/${email}`)
-          .then((res) => res.json())
-          .then((data) => {
-        
-            setFormData((prev) => ({
-              ...prev,
-              incomeGroup: data.income || "",
-              category: (data.caste || "").toLowerCase(),
-             
-            }));
-            
-          })
-          .catch((err) => console.error(err));
+  useEffect(() => {
+    fetch(`http://localhost:4500/user-profile/api/data/${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFormData((prev) => ({
+          ...prev,
+          incomeGroup: data.income || "",
+          category: (data.caste || "").toLowerCase(),
+        }));
+      })
+      .catch((err) => console.error(err));
   }, [email]);
 
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -107,7 +104,7 @@ export default function ApplicationForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, 
+          Authorization: token,
         },
         body: JSON.stringify(finalData),
       });
@@ -134,7 +131,7 @@ export default function ApplicationForm() {
           title: "Success!",
           text: "Application submitted successfully!",
         });
-        navigate('/dashboard');
+        navigate("/dashboard");
 
         // Reset Form
         setFormData({
@@ -172,6 +169,14 @@ export default function ApplicationForm() {
           Application Form for {decodedSchemeName}
         </h2>
       </div>
+
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/schemes")}
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4 self-start ml-4 hover:bg-green-600"
+      >
+        Back to Schemes
+      </button>
 
       <form
         onSubmit={handleSubmit}
@@ -235,7 +240,7 @@ export default function ApplicationForm() {
                 [
                   { value: "general", label: "GENERAL" },
                   { value: "obc", label: "OBC" },
-                  { value: "sc" , label: "SC" },
+                  { value: "sc", label: "SC" },
                   { value: "st", label: "ST" },
                 ].map((option) => (
                   <option key={option.value} value={option.value}>

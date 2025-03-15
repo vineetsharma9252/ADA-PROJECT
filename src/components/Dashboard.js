@@ -1,8 +1,10 @@
 import React, { memo, useEffect, useState } from "react";
 import "./DashboardCSS.css";
+import { ClipLoader } from "react-spinners";
 
 const Dashboard = memo(function Dashboard() {
   // State for applications and counts
+  const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
   const [counts, setCounts] = useState({
     total: 0,
@@ -11,16 +13,38 @@ const Dashboard = memo(function Dashboard() {
     rejected: 0,
   });
 
-
+  // Fetch data on component mount
   useEffect(() => {
-    fetch('http://localhost:4500/dashboard/counts')
-      .then(res => res.json())
-      .then(data => { 
+    // Fetch application counts
+    fetch("http://localhost:4500/dashboard/counts")
+      .then((res) => res.json())
+      .then((data) => {
         setCounts(data); // Set to your state
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
+
+    // Fetch applications
+    fetch("http://localhost:4500/dashboard")
+      .then((res) => res.json())
+      .then((data) => {
+        setApplications(data); // Set applications state
+        setLoading(false); // Set loading to false after data is fetched
+        console.log(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false); // Set loading to false even if there's an error
+      });
   }, []);
-  
+
+  // Show loading spinner if data is still being fetched
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ClipLoader color="#4caf50" size={50} /> {/* Spinner */}
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
@@ -30,7 +54,7 @@ const Dashboard = memo(function Dashboard() {
 
       {/* Cards Section */}
       <div className="row mt-4">
-        <div className="  col-lg-3 col-6">
+        <div className="col-lg-3 col-6">
           <div className="adaInfoCard small-box bg-info">
             <div className="inner">
               <h3>{counts.total}</h3>
@@ -42,7 +66,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className=" adaInfoCard small-box bg-warning">
+          <div className="adaInfoCard small-box bg-warning">
             <div className="inner">
               <h3>{counts.pending}</h3>
               <p>Pending ADA Applications</p>
@@ -53,7 +77,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className=" adaInfoCard small-box bg-success">
+          <div className="adaInfoCard small-box bg-success">
             <div className="inner">
               <h3>{counts.approved}</h3>
               <p>Approved ADA Applications</p>
@@ -64,7 +88,7 @@ const Dashboard = memo(function Dashboard() {
           </div>
         </div>
         <div className="col-lg-3 col-6">
-          <div className=" adaInfoCard small-box bg-danger">
+          <div className="adaInfoCard small-box bg-danger">
             <div className="inner">
               <h3>{counts.rejected}</h3>
               <p>Rejected ADA Applications</p>
@@ -77,9 +101,11 @@ const Dashboard = memo(function Dashboard() {
       </div>
 
       {/* Applications Table */}
-      <h3 className="mt-5 text-2xl text-left mb-1 ">ADA Applications Overview</h3>
-      <hr/>
-      <br/>
+      <h3 className="mt-5 text-2xl text-left mb-1">
+        ADA Applications Overview
+      </h3>
+      <hr />
+      <br />
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead className="thead-dark">
@@ -89,19 +115,19 @@ const Dashboard = memo(function Dashboard() {
               <th>Start Date</th>
               <th>End Date</th>
               <th>Status</th>
-              <th>Department Comments</th> {/* Optional Column */}
+              <th>Department Comments</th>
             </tr>
           </thead>
           <tbody>
             {applications.length > 0 ? (
               applications.map((app, index) => (
-                <tr key={app._id || index}> {/* ✅ Prefer unique backend ID */}
+                <tr key={app._id || index}>
                   <td>{index + 1}</td>
-                  <td>{app.name}</td>
-                  <td>{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td> {/* Show only YYYY-MM-DD */}
+                  <td>{app.applicationID}</td>
+                  <td>{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td>
                   <td>{app.endDate ? app.endDate.slice(0, 10) : "N/A"}</td>
                   <td>{app.status}</td>
-                  <td>{app.comments ? app.comments : "N/A"}</td> {/* Handle empty comments */}
+                  <td>{app.comments ? app.comments : "N/A"}</td>
                 </tr>
               ))
             ) : (

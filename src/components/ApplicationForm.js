@@ -42,6 +42,8 @@ export default function ApplicationForm() {
   const isValidMobile = (mobile) => /^[6-9]\d{9}$/.test(mobile);
   const isValidAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
 
+  console.log(formData);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const upperValue = value.toUpperCase(); // Convert to uppercase
@@ -231,7 +233,7 @@ export default function ApplicationForm() {
 
               {field === "plot" &&
                 ["Plot A", "Plot B", "Plot C"].map((option) => (
-                  <option key={option} value={option}>
+                  <option key={option.value} value={option.value}>
                     {option}
                   </option>
                 ))}

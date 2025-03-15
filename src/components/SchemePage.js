@@ -61,17 +61,18 @@ const SchemePage = () => {
     setIsModalOpen(false);
   };
 
-  const message = `Please read the following instructions carefully before proceeding:
-
-1. Ensure you have scanned copies of all mandatory documents.
-2. Your profile must be fully updated.
-3. Double-check your eligibility criteria for this scheme.
-4. You need to provide address proof and ID proof.
-5. Upload recent passport-size photographs.
-6. Application once submitted cannot be edited.
-
-Click OK to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.`;
-
+  const message = `
+    <p><strong>Please read the following instructions carefully before proceeding:</strong></p>
+    <ol>
+      <li>Ensure you have scanned copies of all mandatory documents.</li>
+      <li>Your profile must be fully updated.</li>
+      <li>Double-check your eligibility criteria for this scheme.</li>
+      <li>You need to provide address proof and ID proof.</li>
+      <li>Upload recent passport-size photographs.</li>
+      <li>Application once submitted cannot be edited.</li>
+    </ol>
+    <p>Click <strong>OK</strong> to proceed. If mandatory documents are missing, you will be redirected to your profile to upload them.</p>
+  `;
   return (
     <>
       <div className={`container w-full mt-5 ${isModalOpen ? "blur" : ""}`}>
@@ -99,7 +100,9 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
             >
               <option value="All">All</option>
               <option value="Open">Open</option>
-              <option value="Application in Progress">Application in Progress</option>
+              <option value="Application in Progress">
+                Application in Progress
+              </option>
               <option value="Closed">Closed</option>
             </select>
           </div>
@@ -150,7 +153,9 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
         <ol className="application-steps space-y-4">
           <li className="flex items-start gap-2">
             <span className="arrow-icon mt-1">➡️</span>
-            <p className="text-left">Check eligibility criteria for the scheme.</p>
+            <p className="text-left">
+              Check eligibility criteria for the scheme.
+            </p>
           </li>
           <hr />
           <li className="flex items-start gap-2">
@@ -165,7 +170,9 @@ Click OK to proceed. If mandatory documents are missing, you will be redirected 
           <hr />
           <li className="flex items-start gap-2">
             <span className="arrow-icon mt-1">➡️</span>
-            <p className="text-left">Submit the application and await approval.</p>
+            <p className="text-left">
+              Submit the application and await approval.
+            </p>
           </li>
         </ol>
       </div>

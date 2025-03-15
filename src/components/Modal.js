@@ -1,11 +1,13 @@
 import React from "react";
+import DOMPurify from "dompurify";
 import "./Modal.css";
 
 const Modal = ({ message, onClose, onConfirm }) => {
+  const sanitizedMessage = DOMPurify.sanitize(message);
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <p>{message}</p>
+        <div dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />
         <div className="modal-buttons">
           <button onClick={onClose} className="modal-button cancel">
             Cancel

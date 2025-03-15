@@ -15,21 +15,99 @@ const SchemePage = () => {
       title: "ADA Research Grant",
       description: "Financial assistance for researchers.",
       status: "Open",
+      eligibility: "Researchers with a valid research proposal.",
+      benefits: "Up to $50,000 in funding.",
     },
     {
       title: "ADA Entrepreneurship Support",
       description: "Funding and mentorship for startups.",
       status: "Application in Progress",
+      eligibility: "Startups less than 3 years old.",
+      benefits: "Mentorship and up to $100,000 in funding.",
     },
     {
       title: "ADA Education Scholarship",
       description: "Scholarships for students.",
       status: "Closed",
+      eligibility: "Students with a minimum GPA of 3.5.",
+      benefits: "Full tuition coverage.",
     },
     {
       title: "ADA Women Empowerment Program",
       description: "Skill development and funding for women.",
       status: "Open",
+      eligibility: "Women entrepreneurs and professionals.",
+      benefits: "Skill development workshops and funding.",
+    },
+    {
+      title: "ADA Health Initiative",
+      description: "Support for health-related projects.",
+      status: "Open",
+      eligibility: "Health professionals and organizations.",
+      benefits: "Funding and resources for health projects.",
+    },
+    {
+      title: "ADA Environmental Grant",
+      description: "Funding for environmental conservation projects.",
+      status: "Application in Progress",
+      eligibility: "Environmental NGOs and activists.",
+      benefits: "Up to $75,000 in funding.",
+    },
+    {
+      title: "ADA Technology Innovation Fund",
+      description: "Grants for tech innovation.",
+      status: "Closed",
+      eligibility: "Tech startups and innovators.",
+      benefits: "Funding and access to tech resources.",
+    },
+    {
+      title: "ADA Community Development Program",
+      description: "Support for community development initiatives.",
+      status: "Open",
+      eligibility: "Community leaders and organizations.",
+      benefits: "Funding and support for community projects.",
+    },
+    {
+      title: "ADA Arts and Culture Grant",
+      description: "Funding for arts and culture projects.",
+      status: "Application in Progress",
+      eligibility: "Artists and cultural organizations.",
+      benefits: "Up to $30,000 in funding.",
+    },
+    {
+      title: "ADA Sports Scholarship",
+      description: "Scholarships for athletes.",
+      status: "Closed",
+      eligibility: "Athletes with a proven track record.",
+      benefits: "Full scholarship and training support.",
+    },
+    {
+      title: "ADA Rural Development Scheme",
+      description: "Support for rural development projects.",
+      status: "Open",
+      eligibility: "Rural communities and organizations.",
+      benefits: "Funding and resources for rural development.",
+    },
+    {
+      title: "ADA Youth Empowerment Program",
+      description: "Funding and mentorship for youth.",
+      status: "Application in Progress",
+      eligibility: "Youth aged 18-25.",
+      benefits: "Mentorship and up to $20,000 in funding.",
+    },
+    {
+      title: "ADA Senior Citizen Support",
+      description: "Assistance for senior citizens.",
+      status: "Closed",
+      eligibility: "Senior citizens aged 60 and above.",
+      benefits: "Financial assistance and healthcare support.",
+    },
+    {
+      title: "ADA Disaster Relief Fund",
+      description: "Support for disaster relief efforts.",
+      status: "Open",
+      eligibility: "Organizations involved in disaster relief.",
+      benefits: "Funding and resources for disaster relief.",
     },
   ];
 
@@ -109,11 +187,13 @@ const SchemePage = () => {
 
           <div className="row mt-4">
             {filteredSchemes.map((scheme, index) => (
-              <div className="col-md-6" key={index}>
-                <div className="card scheme-card">
-                  <div className="card-body">
+              <div className="col-md-6 my-3" key={index}>
+                <div className="card scheme-card h-100 my-3">
+                  <div className="card-body d-flex flex-column my-3">
                     <h4 className="card-title">{scheme.title}</h4>
-                    <p className="card-text">{scheme.description}</p>
+                    <p className="card-text flex-grow-1">
+                      {scheme.description}
+                    </p>
                     <p>
                       <strong>Status:</strong>{" "}
                       <span
@@ -127,19 +207,25 @@ const SchemePage = () => {
                       >
                         {scheme.status}
                       </span>
-                      <center>
-                        {scheme.status === "Closed" ? (
-                          ""
-                        ) : (
-                          <button
-                            onClick={() => handleApplyClick(scheme.title)}
-                            className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
-                          >
-                            Apply Now
-                          </button>
-                        )}
-                      </center>
                     </p>
+                    <p>
+                      <strong>Eligibility:</strong> {scheme.eligibility}
+                    </p>
+                    <p>
+                      <strong>Benefits:</strong> {scheme.benefits}
+                    </p>
+                    <center>
+                      {scheme.status === "Closed" ? (
+                        ""
+                      ) : (
+                        <button
+                          onClick={() => handleApplyClick(scheme.title)}
+                          className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
+                        >
+                          Apply Now
+                        </button>
+                      )}
+                    </center>
                   </div>
                 </div>
               </div>
@@ -177,7 +263,6 @@ const SchemePage = () => {
         </ol>
       </div>
 
-      {/* Render the modal outside the blurred container */}
       {isModalOpen && (
         <Modal
           message={message}

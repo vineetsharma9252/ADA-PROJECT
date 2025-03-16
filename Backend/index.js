@@ -222,7 +222,7 @@ app.post("/api/applications", async (req, res) => {
   try {
     const applicationData = req.body;
 
-    const appID = "APP-" + Date.now(); // ✅ Unique Application ID
+    const appID = "APP-" + Math.floor(Math.random(100000000) * 100000000); // ✅ Unique Application ID
 
     // Merge applicationID with applicationData
     const newApplication = new Application({

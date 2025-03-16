@@ -12,6 +12,7 @@ const ApplicationSchema = new mongoose.Schema({
   firstName: String,
   middleName: String,
   lastName: String,
+  email:String , 
   incomeGroup: String,
   plot: String,
   category: String,

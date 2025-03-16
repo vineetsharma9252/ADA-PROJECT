@@ -1,9 +1,10 @@
 import React, { memo, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 Import useNavigate
 import "./DashboardCSS.css";
 import { ClipLoader } from "react-spinners";
 
 const Dashboard = memo(function Dashboard() {
-  // State for applications and counts
+  const navigate = useNavigate(); // 👈 Initialize useNavigate
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
   const [counts, setCounts] = useState({
@@ -18,7 +19,7 @@ const Dashboard = memo(function Dashboard() {
     const fetchData = async () => {
       try {
         const countsResponse = await fetch(
-          "http://localhost:4500/dashboard/counts"
+          `http://localhost:4500/dashboard/${localStorage.getItem("email")}`
         );
         const countsData = await countsResponse.json();
         setCounts(countsData);
@@ -49,6 +50,18 @@ const Dashboard = memo(function Dashboard() {
 
   return (
     <div className="container mx-auto mt-5 px-4">
+      {/* Back Button - Aligned to the Left */}
+      <div className="flex justify-start">
+        {" "}
+        {/* 👈 Align button to the left */}
+        <button
+          onClick={() => navigate("/schemes")} // 👈 Navigate to Schemes Page
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
+        >
+          Back to Schemes
+        </button>
+      </div>
+
       <h2 className="text-center ada-dashboard text-4xl text-white p-10 mt-4">
         ADA Dashboard
       </h2>

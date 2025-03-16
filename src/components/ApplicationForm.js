@@ -13,6 +13,7 @@ export default function ApplicationForm() {
     firstName: "",
     middleName: "",
     lastName: "",
+    email: localStorage.getItem("email") || "", // 👈 Add email field
     incomeGroup: "Under 500,000",
     plot: "", // Ensure plot is initialized
     category: "",
@@ -134,13 +135,14 @@ export default function ApplicationForm() {
           title: "Success!",
           text: "Application submitted successfully!",
         });
-        navigate("/dashboard");
+        navigate(`/dashboard/${localStorage.getItem("email")}`);
 
         // Reset Form
         setFormData({
           firstName: "",
           middleName: "",
           lastName: "",
+          email: localStorage.getItem("email"), // 👈 Reset email field
           incomeGroup: "Under 500,000",
           plot: "",
           category: "",
@@ -201,6 +203,22 @@ export default function ApplicationForm() {
               />
             </div>
           ))}
+        </div>
+
+        {/* Add Email Field */}
+        <div className="mb-4">
+          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            Email
+          </label>
+          <input
+            className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            placeholder="Email"
+            disabled // 👈 Disable the field if you don't want users to edit it
+          />
         </div>
 
         {["incomeGroup", "plot", "category"].map((field, index) => (

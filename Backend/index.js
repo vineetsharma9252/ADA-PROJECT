@@ -9,12 +9,15 @@ require("dotenv").config();
 const Application = require("./db/applicationform");
 const ApplicationTableSchema = require("./db/ApplicationTableSchema");
 const bodyParser = require("body-parser");
+const ApplicationSchema = require("./db/applicationform");
 const nodemailer = require("nodemailer");
 
 const authenticateToken = require("./middleware/auth");
 
 const app = express();
 const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
+
+const applicationID = "APP" + Math.floor(Math.random(1000000) * 1000000);
 
 // Connect to MongoDB
 connectDB();
@@ -222,7 +225,7 @@ app.post("/api/applications", async (req, res) => {
   try {
     const applicationData = req.body;
 
-    const appID = "APP-" + Math.floor(Math.random(100000000) * 100000000); // ✅ Unique Application ID
+    const appID = applicationID; // ✅ Unique Application ID
 
     // Merge applicationID with applicationData
     const newApplication = new Application({
@@ -250,14 +253,10 @@ app.post("/api/applications", async (req, res) => {
 app.post("/dashboard", async (req, res) => {
   try {
     const { name, startDate, endDate, status, comments } = req.body;
-
     // Validate required fields
     if (!name || !startDate || !endDate || !status) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    // Auto-generate Application ID
-    const applicationID = "APP-" + Date.now();
 
     const newApp = new ApplicationTableSchema({
       name,
@@ -276,19 +275,45 @@ app.post("/dashboard", async (req, res) => {
   }
 });
 
-app.get("/dashboard/counts", async (req, res) => {
+app.get("/dashboard/:email", async (req, res) => {
   try {
-    const totalApplications = await ApplicationTableSchema.countDocuments(); // ✅ All applications
-    const pendingApplications = await ApplicationTableSchema.countDocuments({
+    // 👇 Get the user's email from the query parameters
+    const userEmail = req.params.email;
+    // const userEmail = "vineet@gmail.com";
+    // Check if email is provided
+    if (!userEmail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    console.log(userEmail);
+    // Fetch counts for the user's applications
+    const totalApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
+    }); // ✅ All applications for the user
+
+    const pendingApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
       status: "Pending",
-    }); // ✅ Pending applications
-    const approvedApplications = await ApplicationTableSchema.countDocuments({
+    }); // ✅ Pending applications for the user
+
+    const approvedApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
       status: "Approved",
     });
-    const rejectedApplications = await ApplicationTableSchema.countDocuments({
+
+    const rejectedApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
       status: "Rejected",
     });
 
+    // Log the counts for debugging
+    console.log({
+      total: totalApplications,
+      pending: pendingApplications,
+      approved: approvedApplications,
+      rejected: rejectedApplications,
+    });
+
+    // Send the response
     res.json({
       total: totalApplications,
       pending: pendingApplications,
@@ -300,7 +325,6 @@ app.get("/dashboard/counts", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 // app.post("/create", async (req, res) => {
 //   const { captchaToken, ...formData } = req.body;
 

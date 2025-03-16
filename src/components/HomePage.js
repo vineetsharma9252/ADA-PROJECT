@@ -47,7 +47,9 @@ const HomePage = memo(function HomePage(props) {
             </button>
             {/* Dashboard */}
             <button
-              onClick={() => handleNavigation("/dashboard")}
+              onClick={() =>
+                handleNavigation(`/dashboard/${localStorage.getItem("email")}`)
+              }
               className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
             >
               <Home size={20} />

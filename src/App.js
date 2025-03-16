@@ -59,7 +59,7 @@ function App() {
           }
         />
         <Route
-          path="/dashboard"
+          path="/dashboard/:email"
           element={
             <ProtectedRoute>
               <Dashboard />

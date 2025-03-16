@@ -1,40 +1,49 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import ReCaptcha from "react-google-recaptcha";
 import "./RegisterForm.css";
 
 const RegisterForm = () => {
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     fullName: "",
-    gender:"",
-    father_name:"",
-    dob:"",
-    email:"",
-    password:"",
-    phone:"",
-    marital_status:"", // ✅ CHANGED FROM Boolean to String
-    caste:"",
-    curr_address:"",
-    perm_address:"",
-    aadharCard:"",
-    panCard:"",
-    voterId:"",
-    occupation:"",
-    income:"",
-    education:"",
-    disability:"",
-  });
+    gender: "",
+    father_name: "",
+    dob: "",
+    email: "",
+    password: "",
+    phone: "",
+    marital_status: "",
+    caste: "",
+    curr_address: "",
+    perm_address: "",
+    aadharCard: "",
+    panCard: "",
+    voterId: "",
+    occupation: "",
+    income: "",
+    education: "",
+    disability: "",
+  };
 
+  const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const sitekey = "6Ldh4vUqAAAAAHz0JNVnVR9b9Yk2XMO3v_c9vaoi";
+
+  useEffect(() => {
+    window.onCaptchaSuccess = onCaptchaSuccess;
+    window.onCaptchaExpired = onCaptchaExpired;
+  }, []);
+
   const validateField = (name, value) => {
     let message = "";
 
     switch (name) {
       case "fullName":
         if (!/^[A-Za-z\s]+$/.test(value.trim())) {
-          message = "First Name should contain only letters.";
+          message = "Full Name should contain only letters.";
         }
         break;
 
@@ -57,7 +66,7 @@ const RegisterForm = () => {
 
       case "phone":
         if (!/^\d{10}$/.test(value.trim())) {
-          message = "phone number must be 10 digits.";
+          message = "Phone number must be 10 digits.";
         }
         break;
 
@@ -71,22 +80,41 @@ const RegisterForm = () => {
         break;
     }
 
-    setErrors((prev) => ({ ...prev, [name]: message })); // Dynamic error setting
+    setErrors((prev) => ({ ...prev, [name]: message }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value }); // Update form data
-    validateField(name, value); // Validate current field dynamically
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+    validateField(name, value);
+  };
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
+
+  const onCaptchaExpired = () => {
+    setCaptchaVerified(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem("email_token", formData.email);
-    localStorage.setItem("phone_token", formData.phone);
-    localStorage.setItem("aadharCard_token", formData.aadharCard);
-    
-    const requiredFields = ["fullName", "email", "password", "aadharCard", "phone"];
+
+    if (!captchaVerified) {
+      alert("Please verify that you are not a robot.");
+      return;
+    }
+
+    const requiredFields = [
+      "fullName",
+      "email",
+      "password",
+      "aadharCard",
+      "phone",
+    ];
 
     let isValid = true;
     requiredFields.forEach((field) => {
@@ -95,48 +123,30 @@ const RegisterForm = () => {
         isValid = false;
       }
     });
-    
 
     if (!isValid) {
       alert("Please correct the errors in the form.");
       return;
     }
 
-    // If valid, proceed to submit
+    const captchaToken = window.grecaptcha.getResponse();
+
     try {
       let response = await fetch("http://localhost:4500/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, captchaToken }),
       });
 
       if (response.ok) {
         response = await response.json();
         localStorage.setItem("user", JSON.stringify(response.result));
         alert("Form submitted successfully!");
-        setFormData({
-          fullName: "",
-          gender:"",
-          father_name:"",
-          dob:"",
-          email:"",
-          password:"",
-          phone:"",
-          marital_status:"", // ✅ CHANGED FROM Boolean to String
-          caste:"",
-          curr_address:"",
-          perm_address:"",
-          aadharCard:"",
-          panCard:"",
-          voterId:"",
-          occupation:"",
-          income:"",
-          education:"",
-          disability:"",
-        });
+        setFormData(initialFormState);
         setErrors({});
+        window.grecaptcha.reset();
         navigate("/login");
       } else {
         const errorData = await response.json();
@@ -158,32 +168,38 @@ const RegisterForm = () => {
       </div>
 
       <form
-        action="/create"
         onSubmit={handleSubmit}
-        method="POST"
-        className="bg-white regFormCont mx-auto px-6 py-8 mt-5 w-full max-w-[90%] space-y-6 sm:max-w-[80%]" // phone me w-full, tab & desktop pe max-w-80%
+        className="bg-white regFormCont mx-auto px-6 py-8 mt-5 w-full max-w-[90%] space-y-6 sm:max-w-[80%]"
       >
         {/* Form Fields */}
-        {/* First Name */}
-        <label
-          htmlFor="Name"
-          className="block text-left text-sm font-medium text-gray-700"
-        >
-          Name
-        </label>
-        <input
-          type="text"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-          placeholder="Enter First Name"
-          className="block w-full rounded-md border px-4 py-2"
-        />
-        {errors.fullName && (
-          <p className="text-red-500 text-left text-xs mt-1">
-            {errors.fullName}
-          </p>
-        )}
+        {/* Full Name */}
+        <div className="space-y-2">
+          <label
+            htmlFor="fullName"
+            className="block text-left text-sm font-medium text-gray-700"
+          >
+            Full Name
+          </label>
+          <input
+            type="text"
+            name="fullName"
+            id="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            placeholder="Enter Full Name"
+            className="block w-full rounded-md border px-4 py-2"
+            aria-invalid={!!errors.fullName}
+            aria-describedby="fullNameError"
+          />
+          {errors.fullName && (
+            <p
+              id="fullNameError"
+              className="text-red-500 text-left text-xs mt-1"
+            >
+              {errors.fullName}
+            </p>
+          )}
+        </div>
 
         {/* Email */}
         <div className="space-y-2">
@@ -202,9 +218,13 @@ const RegisterForm = () => {
             required
             placeholder="Enter your email"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+            aria-invalid={!!errors.email}
+            aria-describedby="emailError"
           />
           {errors.email && (
-            <p className="text-red-500 text-left text-sm">{errors.email}</p>
+            <p id="emailError" className="text-red-500 text-left text-sm">
+              {errors.email}
+            </p>
           )}
         </div>
 
@@ -225,19 +245,23 @@ const RegisterForm = () => {
             required
             placeholder="Enter your password"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+            aria-invalid={!!errors.password}
+            aria-describedby="passwordError"
           />
           {errors.password && (
-            <p className="text-red-500 text-left text-sm">{errors.password}</p>
+            <p id="passwordError" className="text-red-500 text-left text-sm">
+              {errors.password}
+            </p>
           )}
         </div>
 
-        {/* phone Number */}
+        {/* Phone Number */}
         <div className="space-y-2">
           <label
             htmlFor="phone"
             className="block text-left text-sm font-medium text-gray-700"
           >
-            phone Number
+            Phone Number
           </label>
           <input
             type="text"
@@ -249,16 +273,20 @@ const RegisterForm = () => {
             placeholder="Enter your phone number"
             maxLength="10"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+            aria-invalid={!!errors.phone}
+            aria-describedby="phoneError"
           />
           {errors.phone && (
-            <p className="text-red-500 text-left text-sm">{errors.phone}</p>
+            <p id="phoneError" className="text-red-500 text-left text-sm">
+              {errors.phone}
+            </p>
           )}
         </div>
 
         {/* Aadhar Number */}
         <div className="space-y-2">
           <label
-            htmlFor="aadhar"
+            htmlFor="aadharCard"
             className="block text-left text-sm font-medium text-gray-700"
           >
             Aadhar Number
@@ -266,21 +294,35 @@ const RegisterForm = () => {
           <input
             type="text"
             name="aadharCard"
-            id="aadhar"
+            id="aadharCard"
             value={formData.aadharCard}
             onChange={handleChange}
             required
             placeholder="Enter your Aadhar number"
             maxLength="12"
             className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+            aria-invalid={!!errors.aadharCard}
+            aria-describedby="aadharCardError"
           />
           {errors.aadharCard && (
-            <p className="text-red-500 text-left text-sm">
+            <p id="aadharCardError" className="text-red-500 text-left text-sm">
               {errors.aadharCard}
             </p>
           )}
         </div>
 
+        {/* CAPTCHA */}
+
+        {/* <ReCaptcha sitekey="6LerCfYqAAAAAI7UbOn7tylVu9_sjtSQeAQtEOCR" /> */}
+
+        <div>
+          <div
+            className="g-recaptcha"
+            data-sitekey="6LerCfYqAAAAAI7UbOn7tylVu9_sjtSQeAQtEOCR"
+            data-callback="onCaptchaSuccess"
+            data-expired-callback="onCaptchaExpired"
+          ></div>
+        </div>
         {/* Buttons */}
         <div className="space-y-4 text-center w-full">
           <button

@@ -1,4 +1,5 @@
 const cors = require("cors");
+const axios = require("axios");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const connectDB = require("./db/db");
@@ -7,10 +8,13 @@ const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
 const ApplicationTableSchema = require("./db/ApplicationTableSchema");
+const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
 
 const authenticateToken = require("./middleware/auth");
 
 const app = express();
+const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
 
 // Connect to MongoDB
 connectDB();
@@ -25,6 +29,7 @@ app.use(
     credentials: true, // Optional: Allow cookies/tokens
   })
 );
+app.use(bodyParser.json());
 
 // JWT Secret Key
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -36,6 +41,7 @@ if (!SECRET_KEY) {
 // User Registration
 app.post("/create", async (req, res) => {
   const {
+    captchaToken, // CAPTCHA token from the frontend
     fullName,
     gender,
     father_name,
@@ -43,7 +49,7 @@ app.post("/create", async (req, res) => {
     email,
     password,
     phone,
-    marital_status, // ✅ CHANGED FROM Boolean to String
+    marital_status,
     caste,
     curr_address,
     perm_address,
@@ -55,16 +61,27 @@ app.post("/create", async (req, res) => {
     education,
     disability,
   } = req.body;
-
+  console.log(captchaToken);
   try {
+    // Verify CAPTCHA
+    const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretkey}&response=${captchaToken}`;
+    const captchaResponse = await axios.post(verificationUrl);
+
+    if (!captchaResponse.data.success) {
+      return res.status(400).json({ message: "CAPTCHA verification failed" });
+    }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create a new user
     const newUser = new User({
       fullName,
       gender,
@@ -73,7 +90,7 @@ app.post("/create", async (req, res) => {
       email,
       password: hashedPassword,
       phone,
-      marital_status, // ✅ CHANGED FROM Boolean to String
+      marital_status,
       caste,
       curr_address,
       perm_address,
@@ -86,10 +103,14 @@ app.post("/create", async (req, res) => {
       disability,
     });
 
+    // Save the user to the database
     await newUser.save();
+
+    // Generate a JWT token
     const payload = { fullName, email };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
+    // Send success response
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -279,6 +300,27 @@ app.get("/dashboard/counts", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+
+// app.post("/create", async (req, res) => {
+//   const { captchaToken, ...formData } = req.body;
+
+//   // Verify CAPTCHA
+//   const secretKey = process.env.CAP_SECRET_KEY;
+//   const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
+
+//   try {
+//     const response = await axios.post(verificationUrl);
+//     if (!response.data.success) {
+//       return res.status(400).json({ message: "CAPTCHA verification failed" });
+//     }
+
+//     // Proceed with form submission
+//     // Your existing logic for saving form data
+//   } catch (error) {
+//     console.error("Error verifying CAPTCHA:", error);
+//     res.status(500).json({ message: "Failed to verify CAPTCHA" });
+//   }
+// });
 
 // ============================
 // Server Listen

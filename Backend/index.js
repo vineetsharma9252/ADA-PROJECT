@@ -257,7 +257,6 @@ app.post("/dashboard", async (req, res) => {
     if (!name || !startDate || !endDate || !status) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
     const newApp = new ApplicationTableSchema({
       name,
       startDate,

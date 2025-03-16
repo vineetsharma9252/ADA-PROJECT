@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import ReCaptcha from "react-google-recaptcha";
 import "./RegisterForm.css";
 
 const RegisterForm = () => {

@@ -250,29 +250,6 @@ app.post("/api/applications", async (req, res) => {
   }
 });
 
-app.get("/api/applicationsData/", async (req, res) => {
-  try {
-    const { name, startDate, endDate, status } = req.body;
-    // Validate required fields
-    // if (!applicationData. || !startDate || !endDate || !status) {
-    //   return res.status(400).json({ message: "Missing required fields" });
-    // }
-    const newApp = new ApplicationSchema({
-      name: name,
-      startDate: startDate,
-      endDate: endDate,
-      status: status,
-    });
-    console.log("yes it is working ");
-    console.log(newApp);
-    const savedApp = await newApp.save();
-    res.status(201).json(savedApp);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
 app.get("/dashboard/applicationData/:email", async (req, res) => {
   try {
     const userEmail = req.params.email;

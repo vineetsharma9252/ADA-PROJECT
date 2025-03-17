@@ -11,6 +11,10 @@ import {
   Building,
   Home,
 } from "lucide-react";
+import project1_1 from "../assets/project1.jpg";
+import project1_2 from "../assets/project1_2.jpg";
+import project2_1 from "../assets/project2.jpg";
+import project2_2 from "../assets/project2_1.jpg";
 
 const ProjectPage = () => {
   return (
@@ -146,19 +150,13 @@ const projectHighlights = [
     title: "Smart City Initiative",
     description:
       "The Smart City Initiative aims to transform Ajmer into a technologically advanced city with smart infrastructure, efficient public services, and enhanced quality of life for residents.",
-    images: [
-      "https://via.placeholder.com/600x400",
-      "https://via.placeholder.com/600x400",
-    ],
+    images: [project1_1, project1_2],
   },
   {
     title: "Affordable Housing Scheme",
     description:
       "This project focuses on providing affordable housing to low-income families, ensuring access to safe and secure living spaces.",
-    images: [
-      "https://via.placeholder.com/600x400",
-      "https://via.placeholder.com/600x400",
-    ],
+    images: [project2_1, project2_2],
   },
 ];
 

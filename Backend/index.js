@@ -10,14 +10,13 @@ const Application = require("./db/applicationform");
 const ApplicationTableSchema = require("./db/ApplicationTableSchema");
 const bodyParser = require("body-parser");
 const ApplicationSchema = require("./db/applicationform");
-const nodemailer = require("nodemailer");
-
+const { v4: uuidv4 } = require("uuid");
 const authenticateToken = require("./middleware/auth");
 
 const app = express();
 const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
 
-const applicationID = "APP" + Math.floor(Math.random(1000000) * 1000000);
+const applicationID = "APP-" + uuidv4();
 
 // Connect to MongoDB
 connectDB();
@@ -234,6 +233,7 @@ app.post("/api/applications", async (req, res) => {
       status: "Pending", // ✅ Default status set to Pending
     });
 
+    console.log(newApplication);
     // Save in MongoDB
     const savedApplication = await newApplication.save();
 
@@ -250,27 +250,51 @@ app.post("/api/applications", async (req, res) => {
   }
 });
 
-app.post("/dashboard/applicationData/:email", async (req, res) => {
+app.get("/api/applicationsData/", async (req, res) => {
   try {
-    const { name, startDate, endDate, status, comments } = req.body;
+    const { name, startDate, endDate, status } = req.body;
     // Validate required fields
-    if (!name || !startDate || !endDate || !status) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-    const newApp = new ApplicationTableSchema({
-      name,
-      startDate,
-      endDate,
-      status,
-      comments,
-      applicationID,
+    // if (!applicationData. || !startDate || !endDate || !status) {
+    //   return res.status(400).json({ message: "Missing required fields" });
+    // }
+    const newApp = new ApplicationSchema({
+      name: name,
+      startDate: startDate,
+      endDate: endDate,
+      status: status,
     });
+    console.log("yes it is working ");
     console.log(newApp);
     const savedApp = await newApp.save();
     res.status(201).json(savedApp);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.get("/dashboard/applicationData/:email", async (req, res) => {
+  try {
+    const userEmail = req.params.email;
+    const applicationData = await ApplicationSchema.find({ email: userEmail });
+
+    if (!applicationData) {
+      return res
+        .status(404)
+        .json({ message: "No applications found for this user" });
+    }
+    console.log("applicationData " + applicationData);
+    const response = applicationData.map((app) => ({
+      name: app.applicationID,
+      startDate: app.startDate,
+      endDate: app.endDate,
+      status: app.status,
+    }));
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching application data:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
 

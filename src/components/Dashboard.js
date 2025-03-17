@@ -131,7 +131,7 @@ const Dashboard = memo(function Dashboard() {
               applications.map((app, index) => (
                 <tr key={app._id || index}>
                   <td>{index + 1}</td>
-                  <td>{app.applicationID}</td>
+                  <td>{app.name}</td>
                   <td>{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td>
                   <td>{app.endDate ? app.endDate.slice(0, 10) : "N/A"}</td>
                   <td>{app.status}</td>

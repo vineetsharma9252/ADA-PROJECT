@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./HomePageCSS.css";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import BackgroundForADA from "../assets/background_for_ada.jpg";
 
 const HomePage = memo(function HomePage(props) {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const HomePage = memo(function HomePage(props) {
         {/* Hero Section */}
         <section
           className="hero bg-[oklch(0.871_0.15_154.449)] text-white text-center d-flex align-items-center justify-content-center"
-          style={{ minHeight: "50vh" }}
+          style={{ minHeight: "50vh", backgroundImage: BackgroundForADA }}
         >
           <div className="container mt-20 ">
             <h1 className="display-4 display-md-3 mt-20 display-lg-2">

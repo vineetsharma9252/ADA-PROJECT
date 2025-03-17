@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import "./SchemePage.css";
+import { schemes } from "./content";
 
 const SchemePage = () => {
   const navigate = useNavigate();
@@ -9,107 +10,6 @@ const SchemePage = () => {
   const [filter, setFilter] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedScheme, setSelectedScheme] = useState(null);
-
-  const schemes = [
-    {
-      title: "ADA Research Grant",
-      description: "Financial assistance for researchers.",
-      status: "Open",
-      eligibility: "Researchers with a valid research proposal.",
-      benefits: "Up to $50,000 in funding.",
-    },
-    {
-      title: "ADA Entrepreneurship Support",
-      description: "Funding and mentorship for startups.",
-      status: "Application in Progress",
-      eligibility: "Startups less than 3 years old.",
-      benefits: "Mentorship and up to $100,000 in funding.",
-    },
-    {
-      title: "ADA Education Scholarship",
-      description: "Scholarships for students.",
-      status: "Closed",
-      eligibility: "Students with a minimum GPA of 3.5.",
-      benefits: "Full tuition coverage.",
-    },
-    {
-      title: "ADA Women Empowerment Program",
-      description: "Skill development and funding for women.",
-      status: "Open",
-      eligibility: "Women entrepreneurs and professionals.",
-      benefits: "Skill development workshops and funding.",
-    },
-    {
-      title: "ADA Health Initiative",
-      description: "Support for health-related projects.",
-      status: "Open",
-      eligibility: "Health professionals and organizations.",
-      benefits: "Funding and resources for health projects.",
-    },
-    {
-      title: "ADA Environmental Grant",
-      description: "Funding for environmental conservation projects.",
-      status: "Application in Progress",
-      eligibility: "Environmental NGOs and activists.",
-      benefits: "Up to $75,000 in funding.",
-    },
-    {
-      title: "ADA Technology Innovation Fund",
-      description: "Grants for tech innovation.",
-      status: "Closed",
-      eligibility: "Tech startups and innovators.",
-      benefits: "Funding and access to tech resources.",
-    },
-    {
-      title: "ADA Community Development Program",
-      description: "Support for community development initiatives.",
-      status: "Open",
-      eligibility: "Community leaders and organizations.",
-      benefits: "Funding and support for community projects.",
-    },
-    {
-      title: "ADA Arts and Culture Grant",
-      description: "Funding for arts and culture projects.",
-      status: "Application in Progress",
-      eligibility: "Artists and cultural organizations.",
-      benefits: "Up to $30,000 in funding.",
-    },
-    {
-      title: "ADA Sports Scholarship",
-      description: "Scholarships for athletes.",
-      status: "Closed",
-      eligibility: "Athletes with a proven track record.",
-      benefits: "Full scholarship and training support.",
-    },
-    {
-      title: "ADA Rural Development Scheme",
-      description: "Support for rural development projects.",
-      status: "Open",
-      eligibility: "Rural communities and organizations.",
-      benefits: "Funding and resources for rural development.",
-    },
-    {
-      title: "ADA Youth Empowerment Program",
-      description: "Funding and mentorship for youth.",
-      status: "Application in Progress",
-      eligibility: "Youth aged 18-25.",
-      benefits: "Mentorship and up to $20,000 in funding.",
-    },
-    {
-      title: "ADA Senior Citizen Support",
-      description: "Assistance for senior citizens.",
-      status: "Closed",
-      eligibility: "Senior citizens aged 60 and above.",
-      benefits: "Financial assistance and healthcare support.",
-    },
-    {
-      title: "ADA Disaster Relief Fund",
-      description: "Support for disaster relief efforts.",
-      status: "Open",
-      eligibility: "Organizations involved in disaster relief.",
-      benefits: "Funding and resources for disaster relief.",
-    },
-  ];
 
   const filteredSchemes = schemes.filter(
     (scheme) =>
@@ -141,7 +41,7 @@ const SchemePage = () => {
 
   const message = `
     <p><strong>Please read the following instructions carefully before proceeding:</strong></p>
-    <ol>
+    <ol className="text-left">
       <li>Ensure you have scanned copies of all mandatory documents.</li>
       <li>Your profile must be fully updated.</li>
       <li>Double-check your eligibility criteria for this scheme.</li>

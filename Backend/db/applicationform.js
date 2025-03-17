@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Family Member Schema
 const FamilyMemberSchema = new mongoose.Schema({
@@ -8,30 +8,34 @@ const FamilyMemberSchema = new mongoose.Schema({
 });
 
 // Main Application Schema
-const ApplicationSchema = new mongoose.Schema({
-  firstName: String,
-  middleName: String,
-  lastName: String,
-  email:String , 
-  incomeGroup: String,
-  plot: String,
-  category: String,
-  familyMembers: [FamilyMemberSchema],
-  
-  // ✅ Add applicationID field (Unique)
-  applicationID: {
-    type: String,
-    unique: true,
-    required: true
+const ApplicationSchema = new mongoose.Schema(
+  {
+    firstName: String,
+    middleName: String,
+    lastName: String,
+    email: String,
+    incomeGroup: String,
+    plot: String,
+    category: String,
+    familyMembers: [FamilyMemberSchema],
+    schemeID: String,
+    startDate: String,
+    endDate: String,
+
+    // ✅ Add applicationID field (Unique)
+    applicationID: {
+      type: String,
+      required: true,
+    },
+
+    // ✅ Add status field with default value 'Pending'
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Rejected"],
+      default: "Pending",
+    },
   },
-  
-  // ✅ Add status field with default value 'Pending'
-  status: {
-    type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending'
-  }
+  { timestamps: true }
+); // ✅ Optional: Adds createdAt and updatedAt automatically
 
-}, { timestamps: true }); // ✅ Optional: Adds createdAt and updatedAt automatically
-
-module.exports = mongoose.model('application', ApplicationSchema);
+module.exports = mongoose.model("application", ApplicationSchema);

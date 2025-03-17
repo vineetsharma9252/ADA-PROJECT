@@ -3,12 +3,16 @@ import DOMPurify from "dompurify"; // Prevents XSS attacks
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./ApplicationForm.css";
+import { schemes } from "./content";
 
 export default function ApplicationForm() {
   const navigate = useNavigate();
   const { schemeName } = useParams();
   const decodedSchemeName = decodeURIComponent(schemeName);
-
+  const [schemeID, setSchemeID] = useState(null);
+  const [startDate, setstartDate] = useState(null);
+  const [endDate, setendDate] = useState(null);
+  const [schemeName_2, setschemeName_2] = useState(null);
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -21,6 +25,19 @@ export default function ApplicationForm() {
   });
 
   const email = localStorage.getItem("email");
+
+  // Fetch schemeID from schemeName
+  useEffect(() => {
+    const scheme = schemes.find((s) => s.title === decodedSchemeName);
+    console.log("Decoded Scheme Name:", decodedSchemeName);
+    console.log("Schemes Array:", scheme);
+    if (scheme) {
+      setSchemeID(scheme.schemeID);
+      setstartDate(scheme.startDate);
+      setendDate(scheme.endDate);
+      setschemeName_2(scheme.title);
+    }
+  }, [decodedSchemeName]);
 
   // Fetch user data from User Collection for prefill
   useEffect(() => {
@@ -102,7 +119,14 @@ export default function ApplicationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const finalData = { ...formData, familyMembers };
+    const finalData = {
+      ...formData,
+      familyMembers,
+      schemeID,
+      startDate,
+      endDate,
+      schemeName_2,
+    };
     const token = localStorage.getItem("token");
 
     try {

@@ -250,7 +250,7 @@ app.post("/api/applications", async (req, res) => {
   }
 });
 
-app.post("/dashboard", async (req, res) => {
+app.post("/dashboard/applicationData/:email", async (req, res) => {
   try {
     const { name, startDate, endDate, status, comments } = req.body;
     // Validate required fields
@@ -278,7 +278,6 @@ app.get("/dashboard/:email", async (req, res) => {
   try {
     // 👇 Get the user's email from the query parameters
     const userEmail = req.params.email;
-    // const userEmail = "vineet@gmail.com";
     // Check if email is provided
     if (!userEmail) {
       return res.status(400).json({ message: "Email is required" });

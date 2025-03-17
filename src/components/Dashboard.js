@@ -25,7 +25,9 @@ const Dashboard = memo(function Dashboard() {
         setCounts(countsData);
 
         const applicationsResponse = await fetch(
-          "http://localhost:4500/dashboard"
+          `http://localhost:4500/dashboard/applicationData/${localStorage.getItem(
+            "email"
+          )}`
         );
         const applicationsData = await applicationsResponse.json();
         setApplications(applicationsData);

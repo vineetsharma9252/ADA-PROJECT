@@ -11,8 +11,11 @@ import About from "./components/About";
 import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
-import UserProfile from "./components/UserProfile";
-import Footer from "./components/Footer";
+import UserProfile from "./components/UserProfile";  
+
+
+
+// import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
 import ApplicationTableForm from "./components/ApplicationTableForm";

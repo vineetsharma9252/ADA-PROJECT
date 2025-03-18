@@ -53,10 +53,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 // User Registration
 app.post("/create", async (req, res) => {
+  console.log(req.body);
+
   const {
-    captchaToken, // CAPTCHA token from the frontend
+    captchaToken,
     fullName,
     gender,
     father_name,
@@ -76,9 +79,37 @@ app.post("/create", async (req, res) => {
     education,
     disability,
   } = req.body;
-  console.log(captchaToken);
+
   try {
-    // Verify CAPTCHA
+    // --------------------------------------
+    // ✅ 1. Input Validation and Sanitization
+    // --------------------------------------
+    if (
+      !captchaToken ||
+      !validator.isEmail(email) ||
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minNumbers: 1,
+        minUppercase: 1,
+        minSymbols: 1,
+      })
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid input data or weak password" });
+    }
+
+    // Optional: Additional checks (example: Aadhar must be 12 digits)
+    if (
+      !validator.isLength(aadharCard, { min: 12, max: 12 }) ||
+      !validator.isNumeric(aadharCard)
+    ) {
+      return res.status(400).json({ message: "Invalid Aadhar number" });
+    }
+
+    // --------------------------------------
+    // ✅ 2. Verify CAPTCHA
+    // --------------------------------------
     const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretkey}&response=${captchaToken}`;
     const captchaResponse = await axios.post(verificationUrl);
 
@@ -86,53 +117,141 @@ app.post("/create", async (req, res) => {
       return res.status(400).json({ message: "CAPTCHA verification failed" });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    // --------------------------------------
+    // ✅ 3. Check if user already exists
+    // --------------------------------------
+    const existingUser = await User.findOne({
+      email: email.toLowerCase().trim(),
+    });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // --------------------------------------
+    // ✅ 4. Password Hashing with Salt (stronger)
+    // --------------------------------------
+    const saltRounds = 12; // Increase salt rounds for better security
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create a new user
+    // --------------------------------------
+    // ✅ 5. Create User Document (Sanitize all fields)
+    // --------------------------------------
     const newUser = new User({
-      fullName,
-      gender,
-      father_name,
+      fullName: validator.escape(fullName.trim()),
+      gender: validator.escape(gender.trim()),
+      father_name: validator.escape(father_name.trim()),
       dob,
-      email,
+      email: email.toLowerCase().trim(),
       password: hashedPassword,
-      phone,
-      marital_status,
-      caste,
-      curr_address,
-      perm_address,
-      aadharCard,
-      panCard,
-      voterId,
-      occupation,
-      income,
-      education,
-      disability,
+      phone: validator.escape(phone.trim()),
+      marital_status: validator.escape(marital_status.trim()),
+      caste: validator.escape(caste.trim()),
+      curr_address: validator.escape(curr_address.trim()),
+      perm_address: validator.escape(perm_address.trim()),
+      aadharCard: validator.escape(aadharCard.trim()),
+      panCard: validator.escape(panCard.trim()),
+      voterId: validator.escape(voterId.trim()),
+      occupation: validator.escape(occupation.trim()),
+      income: validator.escape(income.trim()),
+      education: validator.escape(education.trim()),
+      disability: validator.escape(disability.trim()),
     });
 
-    // Save the user to the database
+    // --------------------------------------
+    // ✅ 6. Save to Database
+    // --------------------------------------
     await newUser.save();
 
-    // Generate a JWT token
-    const payload = { fullName, email };
+    // --------------------------------------
+    // ✅ 7. JWT Token Generation (Bearer Token Pattern)
+    // --------------------------------------
+    const payload = {
+      userId: newUser._id,
+      email: newUser.email,
+      fullName: newUser.fullName,
+      phone: newUser.phone,
+    };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
-    // Send success response
-    res.status(201).json({
-      message: "User registered successfully",
-      token,
-    });
+    // --------------------------------------
+    // ✅ 8. Send Token in HTTP-Only Cookie (Optional but Recommended)
+    // --------------------------------------
+    res
+      .status(201)
+      .cookie("token", token, {
+        httpOnly: true, // Cannot be accessed by JavaScript
+        secure: true, // Send only over HTTPS
+        sameSite: "Strict", // CSRF protection
+        maxAge: 60 * 60 * 1000, // 1 hour
+      })
+      .json({
+        message: "User registered successfully",
+        token: `Bearer ${token}`, // Token for frontend usage
+      });
   } catch (error) {
     console.error("Error during registration:", error);
-    res.status(500).json({ message: "Failed to register user" });
+    res
+      .status(500)
+      .json({ message: "Failed to register user", error: error.message });
+  }
+});
+
+// ============================
+// Login Route
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if email and password are provided
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "Invalid email or user not found" });
+    }
+
+    // Validate password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid password" });
+    }
+
+    // Prepare JWT payload
+    const payload = {
+      userId: user._id,
+      email: user.email,
+      fullName: user.fullName,
+      phone: user.phone,
+    };
+
+    // Generate JWT Token
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+
+    // Set JWT in HttpOnly Secure Cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 60 * 60 * 1000,
+    });
+
+    // Send success response WITHOUT token in body
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        email: user.email,
+        fullName: user.fullName,
+        phone: user.phone,
+      },
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Login failed", error: error.message });
   }
 });
 
@@ -204,6 +323,9 @@ app.post("/reset-password", async (req, res) => {
   res.json({ message: "Password reset successful" });
 });
 
+
+
+
 app.get("/api/auth/check", authenticateToken, (req, res) => {
   res.json({ success: true, user: req.user });
 });
@@ -259,51 +381,6 @@ app.get("/user-profile/api/data/:email", async (req, res) => {
   }
 });
 
-// ============================
-// User Login Route
-// ============================
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Invalid email or user not found" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    const payload = {
-      email: user.email,
-      fullName: user.fullName,
-      phone: user.phone,
-      aadharCard: user.aadharCard,
-    };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
-
-    res.status(200).json({
-      message: "Login successful",
-      user: {
-        email: user.email,
-        fullName: user.fullName,
-        phone: user.phone,
-        aadharCard: user.aadharCard,
-      },
-      token,
-    });
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Login failed", error: error.message });
-  }
-});
 
 // ============================
 // Application Form Submission (Protected Route)

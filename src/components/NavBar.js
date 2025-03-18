@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import myImage from "../smjLogo.png";
@@ -7,207 +7,181 @@ import "./NavBar.css";
 const NavBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const userName = localStorage.getItem("fullName") || "Welcome";
-  const token = localStorage.getItem("token");
-  let email = localStorage.getItem("email");
-  // email = email.replace(/"/g, "");
-  const phone = localStorage.getItem("phone");
-  const aadharCard = localStorage.getItem("aadharCard");
+  const [userData, setUserData] = useState({
+    phone: "",
+    email: "",
+    aadhar: "",
+    fullName: "",
+  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Combined useEffect to Fetch User Profile and Aadhar
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Fetch user profile data
+        const profileResponse = await fetch("http://localhost:4500/user-data", {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        // Fetch aadhar data
+        const aadharResponse = await fetch("http://localhost:4500/getAadhar", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!profileResponse.ok || !aadharResponse.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const profileData = await profileResponse.json();
+        const aadharData = await aadharResponse.json();
+
+        setUserData({
+          phone: profileData.phone,
+          email: profileData.email,
+          fullName: profileData.fullName,
+          aadhar: aadharData.aadharCard,
+        });
+
+        setIsLoggedIn(true);
+      } catch (err) {
+        console.error("Failed to fetch user data:", err.message);
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // Toggle Menu (Mobile)
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const handleLogout = () => {
-    localStorage.clear(); // remove all tokens and details
-    alert("Logged out successfully!");
-    navigate("/login");
+
+  // Logout Handler
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:4500/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (response.ok) {
+        alert("Logged out successfully");
+        setUserData({ phone: "", email: "", aadhar: "", fullName: "" });
+        setIsLoggedIn(false);
+        navigate("/login");
+      } else {
+        alert("Logout failed");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
+
+  // Login Handler
   const handleLogin = () => navigate("/login");
 
-  // ✅ Common profile click function
+  // Profile Click Handler
   const handleProfileClick = (e) => {
-    e.preventDefault(); // Prevent default link navigation
-    if (!phone || !aadharCard || phone === "null" || aadharCard === "null") {
+    e.preventDefault();
+    const { phone, aadhar, email } = userData;
+    if (!aadhar || !phone) {
       alert(
         "Please complete your profile (Aadhar Card and Phone number are required)."
       );
-      navigate("/user-profile"); // Redirect to complete profile
+      navigate("/user-profile");
     } else {
-      navigate(`/user-profile/api/data/${email}`); // If completed, go to profile page
+      navigate(`/user-profile/api/data/${email}`);
     }
   };
 
   return (
-    <nav className="shadow-md w-full z-50 top-0 left-0 relative">
-      <div className="max-w-screen-xl mx-auto px-2 relative">
-        {/* ----------- Mobile Layout ------------ */}
-        <div className="md:hidden flex flex-col py-2 relative">
-          <div className="flex items-center justify-start">
-            <Link to="/" className="flex items-center">
-              <img
-                src={myImage}
-                className="h-20 w-20 object-contain"
-                alt="Logo"
-              />
-              <div className="text-white py-4 px-4 text-center">
-                <h1 className="text-1xl font-bold uppercase">
-                  Ajmer Development Authority
-                </h1>
-                <p className="text-sm text-white govText font-normal mt-1">
-                  Government of Rajasthan
-                </p>
-              </div>
-            </Link>
+    <nav className="shadow-md w-full z-50 top-0 left-0 bg-blue-900">
+      <div className="max-w-screen-xl mx-auto px-4 relative">
+        {isLoading ? (
+          <div className="animate-pulse p-4">
+            <div className="h-6 bg-gray-300 rounded w-1/3 mb-2"></div>
+            <div className="h-4 bg-gray-300 rounded w-1/4"></div>
           </div>
+        ) : (
+          <>
+            {/* ------- Mobile Layout -------- */}
+            <div className="md:hidden flex flex-col py-2 relative">
+              <div className="flex items-center justify-between">
+                <Link to="/" className="flex items-center">
+                  <img
+                    src={myImage}
+                    className="h-16 w-16 object-contain"
+                    alt="Logo"
+                  />
+                  <div className="text-white ml-2">
+                    <h1 className="text-lg font-bold uppercase">
+                      Ajmer Development Authority
+                    </h1>
+                    <p className="text-xs">Government of Rajasthan</p>
+                  </div>
+                </Link>
 
-          {/* Profile Name, Login & Hamburger Menu */}
-          <div className="w-full flex items-center justify-between mt-2 px-2 relative">
-            {token && (
-              <Link to="/user-profile" onClick={handleProfileClick}>
-                {/* Profile Name */}
-                <div className="flex items-center space-x-1">
-                  <FaRegUser className="w-5 h-5 text-white" />
-                  <span className="text-white font-medium">{userName}</span>
+                <div className="flex items-center space-x-2">
+                  {isLoggedIn && (
+                    <Link
+                      to="/user-profile"
+                      onClick={handleProfileClick}
+                      className="text-white"
+                    >
+                      <FaRegUser className="w-6 h-6" />
+                    </Link>
+                  )}
+                  <button onClick={toggleMenu} className="w-8 h-8 text-white">
+                    {isMenuOpen ? (
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    ) : (
+                      <svg fill="none" viewBox="0 0 17 14" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
+                      </svg>
+                    )}
+                  </button>
                 </div>
-              </Link>
-            )}
-            <div className="flex items-center space-x-2">
-              {token ? (
-                <button
-                  onClick={handleLogout}
-                  className="py-1 px-2 text-sm logOutBtn text-white rounded hover:bg-red-100"
-                >
-                  Log out
-                </button>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="py-1 px-3 text-sm text-white rounded hover:bg-blue-100"
-                >
-                  Log in
-                </button>
+              </div>
+
+              {isMenuOpen && (
+                <div className="mt-2 bg-white rounded-lg shadow-md">
+                  <ul className="flex flex-col">
+                    <li><Link to="/" onClick={() => setIsMenuOpen(false)} className="block py-2 px-4 hover:bg-gray-200">Home</Link></li>
+                    <li><Link to="/about" onClick={() => setIsMenuOpen(false)} className="block py-2 px-4 hover:bg-gray-200">About</Link></li>
+                    <li>{isLoggedIn ? <button onClick={handleLogout} className="block w-full text-left py-2 px-4 hover:bg-red-100">Logout</button> : <button onClick={handleLogin} className="block w-full text-left py-2 px-4 hover:bg-blue-100">Login</button>}</li>
+                  </ul>
+                </div>
               )}
-
-              {/* Hamburger Button */}
-              <button
-                onClick={toggleMenu}
-                type="button"
-                className="px-1.5 w-9 h-9 text-gray-600 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200"
-              >
-                {isMenuOpen ? (
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 17 14">
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 1h15M1 7h15M1 13h15"
-                    />
-                  </svg>
-                )}
-              </button>
             </div>
 
-            {/* Dropdown Menu */}
-            {isMenuOpen && (
-              <div className="absolute right-2 top-14 w-80 bg-white shadow-lg rounded-lg py-2 z-50">
-                <ul className="flex flex-col space-y-2">
-                  <li>
-                    <Link
-                      to="/"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block py-2 px-2 text-white hover:bg-blue-100"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/about"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block py-2 px-2 text-white hover:bg-blue-100"
-                    >
-                      About
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ----------- Desktop Layout ------------ */}
-        <div className="hidden md:flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
-            <img src={myImage} className="h-20 w-20" alt="Logo" />
-            <div className="text-black py-4 px-6 text-center">
-              <h1 className="text-2xl font-bold text-white uppercase">
-                Ajmer Development Authority
-              </h1>
-              <p className="text-sm govText text-white font-normal mt-1">
-                Government of Rajasthan
-              </p>
-            </div>
-          </Link>
-
-          <div className="flex items-center space-x-6">
-            {token && (
-              <Link to="/user-profile" onClick={handleProfileClick}>
-                {/* Profile Name */}
-                <div className="flex items-center space-x-1">
-                  <FaRegUser className="w-5 h-5 text-white" />
-                  <span className="text-white font-medium">{userName}</span>
+            {/* ------- Desktop Layout -------- */}
+            <div className="hidden md:flex justify-between items-center py-3">
+              <Link to="/" className="flex items-center space-x-3">
+                <img src={myImage} className="h-20 w-20" alt="Logo" />
+                <div className="text-white">
+                  <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
+                  <p className="text-sm">Government of Rajasthan</p>
                 </div>
               </Link>
-            )}
 
-            {/* Navigation Links */}
-            <ul className="font-medium flex items-center space-x-2">
-              <li>
-                <Link to="/" className="py-2 px-4 text-white hover:bg-blue-200">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="py-2 px-4 text-white hover:bg-gray-200"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                {token ? (
-                  <button
-                    onClick={handleLogout}
-                    className="py-2 px-4 logOutBtn text-white rounded hover:bg-red-100"
-                  >
-                    Log out
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleLogin}
-                    className="py-2 px-4 text-white rounded hover:bg-blue-100"
-                  >
-                    Log in
-                  </button>
-                )}
-              </li>
-            </ul>
-          </div>
-        </div>
+              <div className="flex items-center space-x-6">
+                <ul className="flex space-x-4">
+                  <li><Link to="/" className="py-2 px-4 text-white hover:bg-blue-800 rounded-lg">Home</Link></li>
+                  <li><Link to="/about" className="py-2 px-4 text-white hover:bg-blue-800 rounded-lg">About</Link></li>
+                </ul>
+                {isLoggedIn && <Link to="/user-profile" onClick={handleProfileClick} className="flex items-center space-x-1 text-white"><FaRegUser className="w-5 h-5" /><span>{userData.fullName}</span></Link>}
+                {isLoggedIn ? <button onClick={handleLogout} className="py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg">Logout</button> : <button onClick={handleLogin} className="py-1 px-3 bg-green-600 hover:bg-green-700 text-white rounded-lg">Login</button>}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </nav>
   );

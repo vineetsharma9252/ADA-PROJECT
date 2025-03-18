@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
   income: { type: String },
   education: { type: String },
   disability: { type: String }, // Typo fixed: disability
-});
+
+  resetToken: { type: String }, // 🔑 for password reset
+  resetTokenExpiration: { type: Date }, // ⏰ expiration time
+},
+{ timestamps: true }
+);
 
 module.exports = mongoose.model("users", userSchema);

@@ -100,7 +100,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="shadow-md w-full z-50 top-0 left-0 bg-blue-900">
+    <nav className="shadow-md w-full z-50 top-0 left-0 bg-green-700">
       <div className="max-w-screen-xl mx-auto px-4 relative">
         {isLoading ? (
           <div className="animate-pulse p-4">

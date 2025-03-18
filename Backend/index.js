@@ -255,6 +255,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//logout
+app.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true, // Only over HTTPS (production)
+    sameSite: "Strict",
+  });
+  res.json({ message: "Logged out successfully" });
+});
+
+
 // ✅ Forgot password route
 app.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -323,8 +334,38 @@ app.post("/reset-password", async (req, res) => {
   res.json({ message: "Password reset successful" });
 });
 
+app.get("/user-data", authenticateToken, async (req, res) => {
+  try {
+    const { fullName, email, phone } = req.user;
+    res.json({ fullName, email, phone });
+  } catch (error) {
+    console.error("Error fetching phone number:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
+app.get("/getAadhar", authenticateToken, async (req, res) => {
+  try {
+    // ✅ Fetch user by ID (from decoded JWT)
+    const user = await User.findById(req.user.userId);
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ✅ Mask Aadhaar before sending (recommended)
+    const maskedAadhar = "XXXX-XXXX-" + user.aadharCard.slice(-4);
+
+    // ✅ Send response
+    res.status(200).json({
+      aadharCard: maskedAadhar,
+      message: "Aadhaar fetched successfully",
+    });
+  } catch (error) {
+    console.error("Error fetching Aadhaar:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 app.get("/api/auth/check", authenticateToken, (req, res) => {
   res.json({ success: true, user: req.user });

@@ -1,14 +1,11 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+require('dotenv').config(); // Load .env
 
-const secretKey = process.env.JWT_SECRET_KEY;
+const secretKey = process.env.JWT_SECRET_KEY; // ✅ Correct name
 
-// Authentication Middleware
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
- // Bearer Token
-    const tokkkken = authHeader && authHeader.split(' ')[1];  
-    const token = authHeader; 
+  const token = req.cookies.token; // ✅ Correct way to access cookies
+
   if (!token) {
     return res.status(401).json({ message: 'Access Denied. No token provided.' });
   }
@@ -18,8 +15,8 @@ const authenticateToken = (req, res, next) => {
       return res.status(403).json({ message: 'Invalid Token. Access Forbidden.' });
     }
 
-    req.user = user; // Attach user info to request
-    next(); // Proceed to next middleware or route
+    req.user = user;
+    next();
   });
 };
 

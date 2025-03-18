@@ -73,7 +73,7 @@ function App() {
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />
         {/* ✅ Corrected Route with useParams */}
-        <Route path="/user-profile/api/data/:email" element={<UserPage />} />
+        <Route path="/user-page" element={<UserPage />} />
         <Route path="/atf" element={<ApplicationTableForm />} />
         <Route path="/projects" element={<ProjectPage />} />
       </Routes>

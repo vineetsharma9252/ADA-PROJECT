@@ -95,7 +95,8 @@ const NavBar = () => {
       );
       navigate("/user-profile");
     } else {
-      navigate(`/user-profile/api/data/${email}`);
+      sessionStorage.setItem("userEmail", email); // Store email
+      navigate("/user-page", { state: { email } });
     }
   };
 
@@ -138,12 +139,30 @@ const NavBar = () => {
                   )}
                   <button onClick={toggleMenu} className="w-8 h-8 text-white">
                     {isMenuOpen ? (
-                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     ) : (
-                      <svg fill="none" viewBox="0 0 17 14" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
+                      <svg
+                        fill="none"
+                        viewBox="0 0 17 14"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M1 1h15M1 7h15M1 13h15"
+                        />
                       </svg>
                     )}
                   </button>
@@ -153,9 +172,41 @@ const NavBar = () => {
               {isMenuOpen && (
                 <div className="mt-2 bg-white rounded-lg shadow-md">
                   <ul className="flex flex-col">
-                    <li><Link to="/" onClick={() => setIsMenuOpen(false)} className="block py-2 px-4 hover:bg-gray-200">Home</Link></li>
-                    <li><Link to="/about" onClick={() => setIsMenuOpen(false)} className="block py-2 px-4 hover:bg-gray-200">About</Link></li>
-                    <li>{isLoggedIn ? <button onClick={handleLogout} className="block w-full text-left py-2 px-4 hover:bg-red-100">Logout</button> : <button onClick={handleLogin} className="block w-full text-left py-2 px-4 hover:bg-blue-100">Login</button>}</li>
+                    <li>
+                      <Link
+                        to="/"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block py-2 px-4 hover:bg-gray-200"
+                      >
+                        Home
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/about"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block py-2 px-4 hover:bg-gray-200"
+                      >
+                        About
+                      </Link>
+                    </li>
+                    <li>
+                      {isLoggedIn ? (
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full text-left py-2 px-4 hover:bg-red-100"
+                        >
+                          Logout
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleLogin}
+                          className="block w-full text-left py-2 px-4 hover:bg-blue-100"
+                        >
+                          Login
+                        </button>
+                      )}
+                    </li>
                   </ul>
                 </div>
               )}
@@ -166,20 +217,58 @@ const NavBar = () => {
               <Link to="/" className="flex items-center space-x-3">
                 <img src={myImage} className="h-20 w-20" alt="Logo" />
                 <div className="text-white">
-                  <h1 className="text-2xl font-bold uppercase">Ajmer Development Authority</h1>
+                  <h1 className="text-2xl font-bold uppercase">
+                    Ajmer Development Authority
+                  </h1>
                   <p className="text-sm">Government of Rajasthan</p>
                 </div>
               </Link>
 
               <div className="flex items-center space-x-6">
                 <ul className="flex space-x-4">
-                  <li><Link to="/" className="py-2 px-4 text-white hover:bg-green-300 rounded-lg">Home</Link></li>
-                  <li><Link to="/about" className="py-2 px-4 text-white hover:bg-green-300 rounded-lg">About</Link></li>
+                  <li>
+                    <Link
+                      to="/"
+                      className="py-2 px-4 text-white hover:bg-green-300 rounded-lg"
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/about"
+                      className="py-2 px-4 text-white hover:bg-green-300 rounded-lg"
+                    >
+                      About
+                    </Link>
+                  </li>
                 </ul>
-                {isLoggedIn && <Link to="/user-profile" onClick={handleProfileClick} className="flex items-center space-x-1 text-white"><FaRegUser className="w-5 h-5" /><span>{userData.fullName}</span></Link>}
-              
-              
-                {isLoggedIn ? <button onClick={handleLogout} className="py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg">Logout</button> : <button onClick={handleLogin} className="py-1 px-3 bg-green-600 bg-red-400 text-white rounded-lg">Login</button>}
+                {isLoggedIn && (
+                  <Link
+                    to="/user-profile"
+                    onClick={handleProfileClick}
+                    className="flex items-center space-x-1 text-white"
+                  >
+                    <FaRegUser className="w-5 h-5" />
+                    <span>{userData.fullName}</span>
+                  </Link>
+                )}
+
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className="py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleLogin}
+                    className="py-1 px-3 bg-green-600 bg-red-400 text-white rounded-lg"
+                  >
+                    Login
+                  </button>
+                )}
               </div>
             </div>
           </>

@@ -7,7 +7,6 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
-const ApplicationTableSchema = require("./db/ApplicationTableSchema");
 const bodyParser = require("body-parser");
 const ApplicationSchema = require("./db/applicationform");
 const { v4: uuidv4 } = require("uuid");
@@ -104,7 +103,6 @@ app.post("/create", async (req, res) => {
       education,
       disability,
     });
-
     // Save the user to the database
     await newUser.save();
 

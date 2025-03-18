@@ -173,11 +173,13 @@ const NavBar = () => {
 
               <div className="flex items-center space-x-6">
                 <ul className="flex space-x-4">
-                  <li><Link to="/" className="py-2 px-4 text-white hover:bg-blue-800 rounded-lg">Home</Link></li>
-                  <li><Link to="/about" className="py-2 px-4 text-white hover:bg-blue-800 rounded-lg">About</Link></li>
+                  <li><Link to="/" className="py-2 px-4 text-white hover:bg-green-300 rounded-lg">Home</Link></li>
+                  <li><Link to="/about" className="py-2 px-4 text-white hover:bg-green-300 rounded-lg">About</Link></li>
                 </ul>
                 {isLoggedIn && <Link to="/user-profile" onClick={handleProfileClick} className="flex items-center space-x-1 text-white"><FaRegUser className="w-5 h-5" /><span>{userData.fullName}</span></Link>}
-                {isLoggedIn ? <button onClick={handleLogout} className="py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg">Logout</button> : <button onClick={handleLogin} className="py-1 px-3 bg-green-600 hover:bg-green-700 text-white rounded-lg">Login</button>}
+              
+              
+                {isLoggedIn ? <button onClick={handleLogout} className="py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg">Logout</button> : <button onClick={handleLogin} className="py-1 px-3 bg-green-600 bg-red-400 text-white rounded-lg">Login</button>}
               </div>
             </div>
           </>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import "./RegisterForm.css";
 
 const RegisterForm = () => {
@@ -29,52 +30,45 @@ const RegisterForm = () => {
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
   const [captchaVerified, setCaptchaVerified] = useState(false);
-  const sitekey = "6Ldh4vUqAAAAAHz0JNVnVR9b9Yk2XMO3v_c9vaoi";
 
+  // Add reCAPTCHA site key here (correct one)
+  const sitekey = "6LerCfYqAAAAAI7UbOn7tylVu9_sjtSQeAQtEOCR";
+
+  // Add Google reCAPTCHA script dynamically
   useEffect(() => {
-    window.onCaptchaSuccess = onCaptchaSuccess;
-    window.onCaptchaExpired = onCaptchaExpired;
+    const script = document.createElement("script");
+    script.src = "https://www.google.com/recaptcha/api.js";
+    script.async = true;
+    document.body.appendChild(script);
   }, []);
 
+  // Captcha Callbacks
+  useEffect(() => {
+    window.onCaptchaSuccess = () => setCaptchaVerified(true);
+    window.onCaptchaExpired = () => setCaptchaVerified(false);
+  }, []);
+
+  // Validate individual fields
   const validateField = (name, value) => {
     let message = "";
 
     switch (name) {
       case "fullName":
-        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
-          message = "Full Name should contain only letters.";
-        }
+        if (!/^[A-Za-z\s]+$/.test(value.trim())) message = "Only letters allowed.";
         break;
-
       case "email":
-        if (!/\S+@\S+\.\S+/.test(value.trim())) {
-          message = "Invalid email address.";
-        }
+        if (!/\S+@\S+\.\S+/.test(value.trim())) message = "Invalid email address.";
         break;
-
       case "password":
-        if (
-          !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@%_])[A-Za-z\d@%_]{6,}$/.test(
-            value.trim()
-          )
-        ) {
-          message =
-            "Password must be at least 6 characters and include uppercase, lowercase, number, and (@, %, _).";
-        }
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@%_])[A-Za-z\d@%_]{6,}$/.test(value.trim()))
+          message = "Password must have uppercase, lowercase, number, and (@, %, _).";
         break;
-
       case "phone":
-        if (!/^\d{10}$/.test(value.trim())) {
-          message = "Phone number must be 10 digits.";
-        }
+        if (!/^\d{10}$/.test(value.trim())) message = "Phone must be 10 digits.";
         break;
-
       case "aadharCard":
-        if (!/^\d{12}$/.test(value.trim())) {
-          message = "Aadhar number must be 12 digits.";
-        }
+        if (!/^\d{12}$/.test(value.trim())) message = "Aadhar must be 12 digits.";
         break;
-
       default:
         break;
     }
@@ -82,86 +76,99 @@ const RegisterForm = () => {
     setErrors((prev) => ({ ...prev, [name]: message }));
   };
 
+  // Handle form field change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     validateField(name, value);
   };
 
-  const onCaptchaSuccess = () => {
-    setCaptchaVerified(true);
-  };
-
-  const onCaptchaExpired = () => {
-    setCaptchaVerified(false);
-  };
-
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Clear any previous error messages
+    setErrors({});
+    
+    // Check if CAPTCHA is verified
     if (!captchaVerified) {
-      alert("Please verify that you are not a robot.");
+      alert("Please verify CAPTCHA.");
       return;
     }
-
-    const requiredFields = [
-      "fullName",
-      "email",
-      "password",
-      "aadharCard",
-      "phone",
-    ];
-
-    let isValid = true;
+  
+    // Validate required fields
+    const requiredFields = ["fullName", "email", "password", "aadharCard", "phone"];
+    let formIsValid = true;
+    const newErrors = {};
+  
     requiredFields.forEach((field) => {
-      validateField(field, formData[field]);
-      if (formData[field].trim() === "" || errors[field]) {
-        isValid = false;
+      if (!formData[field] || formData[field].trim() === "") {
+        newErrors[field] = "This field is required";
+        formIsValid = false;
+      } else if (errors[field]) {
+        formIsValid = false;
       }
     });
-
-    if (!isValid) {
-      alert("Please correct the errors in the form.");
+  
+    // If form is invalid, show errors and return
+    if (!formIsValid) {
+      setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
+      alert("Fix form errors before submitting.");
       return;
     }
-
+  
+    // Get the reCAPTCHA token
     const captchaToken = window.grecaptcha.getResponse();
-
+  
+    if (!captchaToken) {
+      alert("Please complete the CAPTCHA verification.");
+      return;
+    }
+  
     try {
-      let response = await fetch("http://localhost:4500/create", {
+      // Show loading message (Optional)
+      console.log("Submitting form...");
+  
+      // Send form data to backend
+      const response = await fetch("http://localhost:4500/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, captchaToken }),
       });
-
+  
+      // Check backend response
       if (response.ok) {
-        response = await response.json();
-        localStorage.setItem("user", JSON.stringify(response.result));
-        alert("Form submitted successfully!");
+        const data = await response.json();
+        console.log("Success Response:", data);
+  
+        // Store user data and reset form
+        localStorage.setItem("user", JSON.stringify(data.result));
+        alert("Registration successful!");
+  
+        // Reset form and CAPTCHA
         setFormData(initialFormState);
-        setErrors({});
         window.grecaptcha.reset();
+        setCaptchaVerified(false);
+  
+        // Navigate to login page
         navigate("/login");
       } else {
         const errorData = await response.json();
-        console.error("Error submitting the form:", errorData.message);
-        alert("Failed to submit the form");
+        console.error("Backend Error:", errorData);
+        alert(errorData.message || "Registration failed due to server error.");
       }
     } catch (error) {
-      console.error("Error submitting the form:", error);
-      alert("Failed to submit the form");
+      console.error("Network or Submission error:", error);
+      alert("Failed to submit form. Please try again later.");
     }
   };
+  
 
   return (
     <div className="flex min-h-full flex-col justify-center mainBody px-6 py-7 lg:px-8 my-2 w-full">
       <div className="sm:mx-auto sm:w-full sm:max-w-full">
-        <h2 className="relative inline-block w-[65%] text-center py-2 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+        <h2 className="relative inline-block w-[65%] text-center py-2 text-black text-2xl font-bold">
           Create your account
         </h2>
       </div>
@@ -170,159 +177,59 @@ const RegisterForm = () => {
         onSubmit={handleSubmit}
         className="bg-white regFormCont mx-auto px-6 py-8 mt-5 w-full max-w-[90%] space-y-6 sm:max-w-[80%]"
       >
-        {/* Form Fields */}
-        {/* Full Name */}
-        <div className="space-y-2">
-          <label
-            htmlFor="fullName"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Full Name
-          </label>
-          <input
-            type="text"
-            name="fullName"
-            id="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            placeholder="Enter Full Name"
-            className="block w-full rounded-md border px-4 py-2"
-            aria-invalid={!!errors.fullName}
-            aria-describedby="fullNameError"
-          />
-          {errors.fullName && (
-            <p
-              id="fullNameError"
-              className="text-red-500 text-left text-xs mt-1"
-            >
-              {errors.fullName}
-            </p>
-          )}
-        </div>
+        {/** Full Name */}
+        <InputField
+          label="Full Name"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          error={errors.fullName}
+        />
 
-        {/* Email */}
-        <div className="space-y-2">
-          <label
-            htmlFor="email"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="Enter your email"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
-            aria-invalid={!!errors.email}
-            aria-describedby="emailError"
-          />
-          {errors.email && (
-            <p id="emailError" className="text-red-500 text-left text-sm">
-              {errors.email}
-            </p>
-          )}
-        </div>
+        {/** Email */}
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
 
-        {/* Password */}
-        <div className="space-y-2">
-          <label
-            htmlFor="password"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Enter your password"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
-            aria-invalid={!!errors.password}
-            aria-describedby="passwordError"
-          />
-          {errors.password && (
-            <p id="passwordError" className="text-red-500 text-left text-sm">
-              {errors.password}
-            </p>
-          )}
-        </div>
+        {/** Password */}
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+        />
 
-        {/* Phone Number */}
-        <div className="space-y-2">
-          <label
-            htmlFor="phone"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Phone Number
-          </label>
-          <input
-            type="text"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            placeholder="Enter your phone number"
-            maxLength="10"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
-            aria-invalid={!!errors.phone}
-            aria-describedby="phoneError"
-          />
-          {errors.phone && (
-            <p id="phoneError" className="text-red-500 text-left text-sm">
-              {errors.phone}
-            </p>
-          )}
-        </div>
+        {/** Phone Number */}
+        <InputField
+          label="Phone Number"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          error={errors.phone}
+          maxLength="10"
+        />
 
-        {/* Aadhar Number */}
-        <div className="space-y-2">
-          <label
-            htmlFor="aadharCard"
-            className="block text-left text-sm font-medium text-gray-700"
-          >
-            Aadhar Number
-          </label>
-          <input
-            type="text"
-            name="aadharCard"
-            id="aadharCard"
-            value={formData.aadharCard}
-            onChange={handleChange}
-            required
-            placeholder="Enter your Aadhar number"
-            maxLength="12"
-            className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
-            aria-invalid={!!errors.aadharCard}
-            aria-describedby="aadharCardError"
-          />
-          {errors.aadharCard && (
-            <p id="aadharCardError" className="text-red-500 text-left text-sm">
-              {errors.aadharCard}
-            </p>
-          )}
-        </div>
+        {/** Aadhar Card */}
+        <InputField
+          label="Aadhar Number"
+          name="aadharCard"
+          value={formData.aadharCard}
+          onChange={handleChange}
+          error={errors.aadharCard}
+          maxLength="12"
+        />
 
-        {/* CAPTCHA */}
+        {/** CAPTCHA */}
+        <div className="g-recaptcha" data-sitekey={sitekey} data-callback="onCaptchaSuccess" data-expired-callback="onCaptchaExpired"></div>
 
-        {/* <ReCaptcha sitekey="6LerCfYqAAAAAI7UbOn7tylVu9_sjtSQeAQtEOCR" /> */}
-
-        <div>
-          <div
-            className="g-recaptcha"
-            data-sitekey="6LerCfYqAAAAAI7UbOn7tylVu9_sjtSQeAQtEOCR"
-            data-callback="onCaptchaSuccess"
-            data-expired-callback="onCaptchaExpired"
-          ></div>
-        </div>
-        {/* Buttons */}
+        {/** Buttons */}
         <div className="space-y-4 text-center w-full">
           <button
             type="submit"
@@ -330,11 +237,9 @@ const RegisterForm = () => {
           >
             Register
           </button>
-
           <div className="flex items-center justify-center">
             <span className="text-gray-500">or</span>
           </div>
-
           <Link
             to="/login"
             className="block w-full text-center rounded-md bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
@@ -346,5 +251,31 @@ const RegisterForm = () => {
     </div>
   );
 };
+
+// Reusable InputField Component
+const InputField = ({ label, name, value, onChange, error, type = "text", maxLength }) => (
+  <div className="space-y-2">
+    <label htmlFor={name} className="block text-left text-sm font-medium text-gray-700">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      id={name}
+      value={value}
+      onChange={onChange}
+      placeholder={`Enter ${label}`}
+      className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2"
+      aria-invalid={!!error}
+      aria-describedby={`${name}Error`}
+      maxLength={maxLength}
+    />
+    {error && (
+      <p id={`${name}Error`} className="text-red-500 text-left text-xs mt-1">
+        {error}
+      </p>
+    )}
+  </div>
+);
 
 export default RegisterForm;

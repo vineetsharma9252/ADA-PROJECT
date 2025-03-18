@@ -1,94 +1,59 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2'; // ✅ Import SweetAlert2
+import { useNavigate } from 'react-router-dom'; // ✅ For redirection
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ useNavigate hook for redirecting
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
-
-    if (!email) {
-      setError('Email is required');
-      return;
-    }
-
     try {
-      const response = await fetch('http://localhost:4500/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+      const response = await axios.post('http://localhost:4500/forgot-password', { email });
+      setMessage(response.data.message);
+
+      // ✅ SweetAlert2 Success Alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Check Your Email',
+        text: 'Password reset link has been sent to your email.',
+        showConfirmButton: false,
+        timer: 2500, // Auto close after 2.5 seconds
       });
 
-      const data = await response.json();
+      // ✅ Redirect to home page after alert closes
+      setTimeout(() => {
+        navigate('/');
+      }, 2500);
 
-      if (response.ok) {
-        setMessage(data.message);
-        // Optionally navigate to another page after successful request
-        // navigate('/login');
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      console.error('Error:', err);
-      setError('Failed to send reset email. Please try again later.');
+    } catch (error) {
+      setMessage(error.response?.data?.message || 'Something went wrong');
     }
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Forgot Password
-        </h2>
-      </div>
-
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-left text-gray-900">
-              Email address
-            </label>
-            <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          {message && <p className="text-green-500 text-sm">{message}</p>}
-
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Send Reset Link
-            </button>
-
-            <Link
-                to="/login"
-                className="mt-2 flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Back to Login
-              </Link>
-
-          </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-6 border-green shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4 text-center">Forgot Password</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 mb-4 border rounded"
+            required
+          />
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-500"
+          >
+            Send Reset Link
+          </button>
         </form>
+        {message && <p className="mt-4 text-center text-red-600">{message}</p>}
       </div>
     </div>
   );

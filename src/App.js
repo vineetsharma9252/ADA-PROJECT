@@ -11,8 +11,9 @@ import About from "./components/About";
 import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
-import UserProfile from "./components/UserProfile";
-import Footer from "./components/Footer";
+import UserProfile from "./components/UserProfile";  
+import ResetPassword from "./components/ResetPassword";
+// import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
 import ApplicationTableForm from "./components/ApplicationTableForm";
@@ -67,6 +68,7 @@ function App() {
           }
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/schemes" element={<SchemePage />} />
         <Route path="/user-profile" element={<UserProfile />} />

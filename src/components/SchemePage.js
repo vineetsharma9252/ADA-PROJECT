@@ -10,19 +10,33 @@ const SchemePage = () => {
   const [filter, setFilter] = useState("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedScheme, setSelectedScheme] = useState(null);
-
+  const [token, setToken] = useState(null);
   const filteredSchemes = schemes.filter(
     (scheme) =>
       (filter === "All" || scheme.status === filter) &&
       scheme.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+      // ✅ Fetch token from cookies
+const fetchToken = async () => {
+  try{
+    const response = await fetch("http://localhost:4500/auth/token", {
+credentials: "include",
+    });
+    const data = await response.json();
+    setToken(data.token);
+  }catch (error) {
+    console.error("Error fetching token:", error);
+    return null ;
+  }
+}
+
   const handleApplyClick = (schemeTitle) => {
-    const token = localStorage.getItem("token");
+  const token = fetchToken();
 
     if (!token) {
-      alert("Please login to apply for this scheme.");
-      navigate("/login");
+      alert("You need to log in to apply for this scheme.");
+      navigate("/login"); // 🔹 Redirect user to login
       return;
     }
 

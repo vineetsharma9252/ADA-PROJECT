@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { Building2, Landmark, TreePine, Home, User, List } from "lucide-react"; // Added icons
 import PropTypes from "prop-types";
 import "./HomePageCSS.css";
@@ -9,17 +9,47 @@ import BackgroundForADA from "../assets/background_for_ada.jpg";
 const HomePage = memo(function HomePage(props) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
+  const [email, setEmail] = useState("");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const emailResponse = await fetch("http://localhost:4500/user-data", {
+          method: "GET",
+          credentials: "include", // ✅ This sends cookies with the request
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!emailResponse.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+  
+        const emailData = await emailResponse.json();
+        console.log(emailData);
+        setEmail(emailData.email);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  
   // Function to handle menu toggle
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   // Function to handle navigation
-  const handleNavigation = (route) => {
-    navigate(route);
+  const handleNavigation = (route, state) => {
+    navigate(route, { state });
     setIsMenuOpen(false); // Close the menu after navigation
   };
+
+  console.log(email); // Moved inside the functional component
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -37,20 +67,14 @@ const HomePage = memo(function HomePage(props) {
             </button>
             {/* Profile */}
             <button
-              onClick={() =>
-                handleNavigation(
-                  `/user-profile/api/data/${localStorage.getItem("email")}`
-                )
-              }
+             onClick={() => handleNavigation(`/user-profile`, { email })}
               className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
             >
               <User size={20} />
             </button>
             {/* Dashboard */}
             <button
-              onClick={() =>
-                handleNavigation(`/dashboard/${localStorage.getItem("email")}`)
-              }
+              onClick={() => handleNavigation(`/dashboard`, { email })}
               className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
             >
               <Home size={20} />
@@ -71,7 +95,10 @@ const HomePage = memo(function HomePage(props) {
         {/* Hero Section */}
         <section
           className="hero bg-[oklch(0.871_0.15_154.449)] text-white text-center d-flex align-items-center justify-content-center"
-          style={{ minHeight: "50vh", backgroundImage: BackgroundForADA }}
+          style={{
+            minHeight: "50vh",
+            backgroundImage: `url(${BackgroundForADA})`,
+          }}
         >
           <div className="container mt-20 ">
             <h1 className="display-4 display-md-3 mt-20 display-lg-2">
@@ -223,6 +250,7 @@ const HomePage = memo(function HomePage(props) {
       </div>
 
       {/* Footer - Fixed at Bottom */}
+      {/* Uncomment the footer if you need it */}
       {/* <Footer className="mt-auto" /> */}
     </div>
   );

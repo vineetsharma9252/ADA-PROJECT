@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 function UserPage() {
-  const { email } = useParams();
-  const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editedData, setEditedData] = useState({});
+  
+const location = useLocation();
+const email = location.state?.email;
+  
+
 
   // Fetch user data
   useEffect(() => {
+   
     fetch(`http://localhost:4500/user-profile/api/data/${email}`)
       .then((response) => {
         if (!response.ok) {

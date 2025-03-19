@@ -2,6 +2,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const axios = require("axios");
 const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const connectDB = require("./db/db");
@@ -9,6 +10,7 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
+const ApplicationSchema = require("./db/ApplicationTableSchema");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const PasswordResetToken = require("./db/PasswordResetToken");
@@ -18,8 +20,8 @@ const authenticateToken = require("./middleware/auth");
 const app = express();
 const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
 
-// const applicationID = "APP-" + Date.now();
-// const applicationID = "APP-" + uuidv4();
+
+const applicationID = "APP-" + uuidv4();
 
 // Connect to MongoDB
 connectDB();
@@ -421,140 +423,125 @@ app.get("/user-profile/api/data/:email", async (req, res) => {
   }
 });
 
+//for getting a token
+app.get("/auth/token", (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "No token found" });
+  res.json({ token });
+});
 
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-// app.post("/api/applications", async (req, res) => {
-//   try {
-//     const applicationData = req.body;
+app.post("/api/applications", authenticateToken, async (req, res) => {
+  try {
+    const applicationData = req.body;
 
-//     const appID = applicationID; // ✅ Unique Application ID
+    const appID = applicationID; // ✅ Unique Application ID
 
-//     // Merge applicationID with applicationData
-//     const newApplication = new Application({
-//       ...applicationData, // spreading all user data
-//       applicationID: appID, // ✅ adding generated Application ID
-//       status: "Pending", // ✅ Default status set to Pending
-//     });
+    // Merge applicationID with applicationData
+    const newApplication = new Application({
+      ...applicationData, // spreading all user data
+      applicationID: appID, // ✅ adding generated Application ID
+      status: "Pending", // ✅ Default status set to Pending
+    });
 
-//     console.log(newApplication);
-//     // Save in MongoDB
-//     const savedApplication = await newApplication.save();
+    console.log(newApplication);
+    // Save in MongoDB
+    const savedApplication = await newApplication.save();
 
-//     res.status(201).json({
-//       message: "Application received successfully.",
-//       application: savedApplication,
-//     });
-//   } catch (error) {
-//     console.error("Error saving application:", error);
-//     res.status(500).json({
-//       message: "Error saving application",
-//       error: error.message,
-//     });
-//   }
-// });
+    res.status(201).json({
+      message: "Application received successfully.",
+      application: savedApplication,
+    });
+  } catch (error) {
+    console.error("Error saving application:", error);
+    res.status(500).json({
+      message: "Error saving application",
+      error: error.message,
+    });
+  }
+});
 
-// app.get("/dashboard/applicationData/:email", async (req, res) => {
-//   try {
-//     const userEmail = req.params.email;
-//     const applicationData = await ApplicationSchema.find({ email: userEmail });
+app.get("/dashboard/applicationData/:email",authenticateToken,async (req, res) => {
+  try {
+    const userEmail = req.params.email.trim();
+    console.log("Requested email:", userEmail);
+    const applicationData = await ApplicationSchema.find({ 
+      email: { $regex: new RegExp("^" + userEmail + "$", "i") } // Case-insensitive match
+    });
+    
+    console.log("Fetched applicationData:", applicationData);
+  
+  
+    if (!applicationData || applicationData.length === 0) {
+      return res.status(404).json({ message: "No applications found for this user" });
+    }
+    console.log("applicationData " + applicationData);
+    const response = applicationData.map((app) => ({
+      name: app.applicationID,
+      startDate: app.startDate,
+      endDate: app.endDate,
+      status: app.status,
+    }));
 
-//     if (!applicationData) {
-//       return res
-//         .status(404)
-//         .json({ message: "No applications found for this user" });
-//     }
-//     console.log("applicationData " + applicationData);
-//     const response = applicationData.map((app) => ({
-//       name: app.applicationID,
-//       startDate: app.startDate,
-//       endDate: app.endDate,
-//       status: app.status,
-//     }));
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching application data:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+});
 
-//     res.status(200).json(response);
-//   } catch (error) {
-//     console.error("Error fetching application data:", error);
-//     res.status(500).json({ message: "Server Error", error: error.message });
-//   }
-// });
+app.get("/dashboard/:email", authenticateToken,async (req, res) => {
+  try {
+    // 👇 Get the user's email from the query parameters
+    const userEmail = req.params.email;
+    // Check if email is provided
+    if (!userEmail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    console.log(userEmail);
+    // Fetch counts for the user's applications
+    const totalApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
+    }); // ✅ All applications for the user
 
-// app.get("/dashboard/:email", async (req, res) => {
-//   try {
-//     // 👇 Get the user's email from the query parameters
-//     const userEmail = req.params.email;
-//     // Check if email is provided
-//     if (!userEmail) {
-//       return res.status(400).json({ message: "Email is required" });
-//     }
-//     console.log(userEmail);
-//     // Fetch counts for the user's applications
-//     const totalApplications = await ApplicationSchema.countDocuments({
-//       email: userEmail,
-//     }); // ✅ All applications for the user
+    const pendingApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
+      status: "Pending",
+    }); // ✅ Pending applications for the user
 
-//     const pendingApplications = await ApplicationSchema.countDocuments({
-//       email: userEmail,
-//       status: "Pending",
-//     }); // ✅ Pending applications for the user
+    const approvedApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
+      status: "Approved",
+    });
 
-//     const approvedApplications = await ApplicationSchema.countDocuments({
-//       email: userEmail,
-//       status: "Approved",
-//     });
+    const rejectedApplications = await ApplicationSchema.countDocuments({
+      email: userEmail,
+      status: "Rejected",
+    });
 
-//     const rejectedApplications = await ApplicationSchema.countDocuments({
-//       email: userEmail,
-//       status: "Rejected",
-//     });
+    // Log the counts for debugging
+    console.log({
+      total: totalApplications,
+      pending: pendingApplications,
+      approved: approvedApplications,
+      rejected: rejectedApplications,
+    });
 
-//     // Log the counts for debugging
-//     console.log({
-//       total: totalApplications,
-//       pending: pendingApplications,
-//       approved: approvedApplications,
-//       rejected: rejectedApplications,
-//     });
+    // Send the response
+    res.json({
+      total: totalApplications,
+      pending: pendingApplications,
+      approved: approvedApplications,
+      rejected: rejectedApplications,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
 
-//     // Send the response
-//     res.json({
-//       total: totalApplications,
-//       pending: pendingApplications,
-//       approved: approvedApplications,
-//       rejected: rejectedApplications,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// });
-
-
-// app.post("/create", async (req, res) => {
-//   const { captchaToken, ...formData } = req.body;
-
-//   // Verify CAPTCHA
-//   const secretKey = process.env.CAP_SECRET_KEY;
-//   const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
-
-//   try {
-//     const response = await axios.post(verificationUrl);
-//     if (!response.data.success) {
-//       return res.status(400).json({ message: "CAPTCHA verification failed" });
-//     }
-
-//     // Proceed with form submission
-//     // Your existing logic for saving form data
-//   } catch (error) {
-//     console.error("Error verifying CAPTCHA:", error);
-//     res.status(500).json({ message: "Failed to verify CAPTCHA" });
-//   }
-// });
-
-// ============================
-// Server Listen
-// ============================
 
 
 

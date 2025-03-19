@@ -21,6 +21,7 @@ const ApplicationSchema = new mongoose.Schema(
     schemeID: String,
     startDate: String,
     endDate: String,
+    comments: { type: String, default: "No comments available" },
 
     // ✅ Add applicationID field (Unique)
     applicationID: {

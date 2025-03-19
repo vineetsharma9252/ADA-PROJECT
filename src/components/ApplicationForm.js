@@ -24,7 +24,30 @@ export default function ApplicationForm() {
     paymentAmount: "",
   });
 
-  const email = localStorage.getItem("email");
+
+
+//Fetch email 
+useEffect(() => {
+  const fetchEmailData = async () => {
+    try {
+      const response = await fetch("http://localhost:4500/user-data");
+      if (response.ok) {
+        const emailData = await response.json();
+        // Assuming your response has an 'email' property
+        setFormData((prev) => ({
+          ...prev,
+          email: emailData.email || "",  // Update formData with the fetched email
+        }));
+      } else {
+        console.error("Failed to fetch user data");
+      }
+    } catch (error) {
+      console.error("Error fetching email data:", error);
+    }
+  };
+
+  fetchEmailData();
+}, []);
 
   // Fetch schemeID from schemeName
   useEffect(() => {
@@ -41,7 +64,7 @@ export default function ApplicationForm() {
 
   // Fetch user data from User Collection for prefill
   useEffect(() => {
-    fetch(`http://localhost:4500/user-profile/api/data/${email}`)
+    fetch(`http://localhost:4500/user-profile/api/data/${formData.email}`)
       .then((res) => res.json())
       .then((data) => {
         setFormData((prev) => ({
@@ -51,7 +74,7 @@ export default function ApplicationForm() {
         }));
       })
       .catch((err) => console.error(err));
-  }, [email]);
+  }, [formData.email]);
 
   const [familyMembers, setFamilyMembers] = useState([]);
   const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });

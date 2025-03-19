@@ -1,0 +1,34 @@
+[ 
+ {
+    name: "John Doe",
+    startDate: "2025-03-01",
+    endDate: "2025-03-10",
+    status: "Pending",
+    comments: "Application under review",
+    applicationID: "APP12345",
+  },
+  {
+    name: "Alice Smith",
+    startDate: "2025-02-20",
+    endDate: "2025-02-25",
+    status: "Approved",
+    comments: "Approved for processing",
+    applicationID: "APP67890",
+  },
+  {
+    name: "Bob Johnson",
+    startDate: "2025-03-05",
+    endDate: "2025-03-15",
+    status: "Rejected",
+    comments: "Missing documents",
+    applicationID: "APP11122",
+  },
+  {
+    name: "Sarah Williams",
+    startDate: "2025-02-25",
+    endDate: "2025-03-05",
+    status: "Pending",
+    comments: "Awaiting final approval",
+    applicationID: "APP33344",
+  },
+]

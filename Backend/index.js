@@ -467,22 +467,27 @@ app.get("/dashboard/applicationData/:email",authenticateToken,async (req, res) =
   try {
     const userEmail = req.params.email.trim();
     console.log("Requested email:", userEmail);
-    const applicationData = await ApplicationSchema.find({ 
+
+    const applicationData = await Application.find({ 
       email: { $regex: new RegExp("^" + userEmail + "$", "i") } // Case-insensitive match
     });
     
-    console.log("Fetched applicationData:", applicationData);
+    // console.log("Fetched applicationData:", applicationData);
   
   
     if (!applicationData || applicationData.length === 0) {
       return res.status(404).json({ message: "No applications found for this user" });
     }
-    console.log("applicationData " + applicationData);
+
+    console.log("applicationData commmetns" + applicationData.comments);
+
     const response = applicationData.map((app) => ({
       name: app.applicationID,
       startDate: app.startDate,
       endDate: app.endDate,
       status: app.status,
+      comments: app.comments || "No comments available"
+      
     }));
 
     res.status(200).json(response);
@@ -500,27 +505,27 @@ app.get("/dashboard/:email", authenticateToken,async (req, res) => {
     if (!userEmail) {
       return res.status(400).json({ message: "Email is required" });
     }
-    console.log(userEmail);
+
     // Fetch counts for the user's applications
-    const totalApplications = await ApplicationSchema.countDocuments({
+    const totalApplications = await Application.countDocuments({
       email: userEmail,
     }); // ✅ All applications for the user
 
-    const pendingApplications = await ApplicationSchema.countDocuments({
+    const pendingApplications = await Application.countDocuments({
       email: userEmail,
       status: "Pending",
     }); // ✅ Pending applications for the user
 
-    const approvedApplications = await ApplicationSchema.countDocuments({
+    const approvedApplications = await Application.countDocuments({
       email: userEmail,
       status: "Approved",
     });
 
-    const rejectedApplications = await ApplicationSchema.countDocuments({
+    const rejectedApplications = await Application.countDocuments({
       email: userEmail,
       status: "Rejected",
     });
-
+ 
     // Log the counts for debugging
     console.log({
       total: totalApplications,

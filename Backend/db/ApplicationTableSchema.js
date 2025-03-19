@@ -5,7 +5,7 @@ const ApplicationSchema = new mongoose.Schema({
   startDate: { type: String, required: true }, 
   endDate: { type: String, required: true },
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
-  comments: { type: String, default: '' },
+  comments: { type: String, default: "" }, // ✅ Ensure comments field exists
   applicationID: {
     type: String,  // Random unique ID generate kar sakte ho
     unique: true

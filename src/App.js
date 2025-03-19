@@ -16,7 +16,7 @@ import ResetPassword from "./components/ResetPassword";
 // import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
-import ApplicationTableForm from "./components/ApplicationTableForm";
+
 import ProjectPage from "./components/ProjectPage";
 
 function App() {
@@ -74,7 +74,7 @@ function App() {
         <Route path="/user-profile" element={<UserProfile />} />
         {/* ✅ Corrected Route with useParams */}
         <Route path="/user-page" element={<UserPage />} />
-        <Route path="/atf" element={<ApplicationTableForm />} />
+    
         <Route path="/projects" element={<ProjectPage />} />
       </Routes>
     </div>

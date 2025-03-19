@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // 👈 Import useNavigate
 import "./DashboardCSS.css";
 import { ClipLoader } from "react-spinners";
 
@@ -14,20 +14,25 @@ const Dashboard = memo(function Dashboard() {
     rejected: 0,
   });
 
-  // Fetch data on component mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+  
+const location = useLocation();
+const email = location.state?.email;
+
+
+
+// Fetch data on component mount
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+
         const countsResponse = await fetch(
-          `http://localhost:4500/dashboard/${localStorage.getItem("email")}`
+          `http://localhost:4500/dashboard/${email}`
         );
         const countsData = await countsResponse.json();
         setCounts(countsData);
 
         const applicationsResponse = await fetch(
-          `http://localhost:4500/dashboard/applicationData/${localStorage.getItem(
-            "email"
-          )}`
+          `http://localhost:4500/dashboard/applicationData/${email}`
         );
         const applicationsData = await applicationsResponse.json();
         setApplications(applicationsData);
@@ -38,8 +43,11 @@ const Dashboard = memo(function Dashboard() {
       }
     };
 
+    
+  if (email) { // Ensure email is available before fetching
     fetchData();
-  }, []);
+  }
+  }, [email]);
 
   // Show loading spinner if data is still being fetched
   if (loading) {

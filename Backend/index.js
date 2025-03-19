@@ -423,11 +423,17 @@ app.get("/user-profile/api/data/:email", async (req, res) => {
   }
 });
 
+//for getting a token
+app.get("/auth/token", (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "No token found" });
+  res.json({ token });
+});
 
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.post("/api/applications", async (req, res) => {
+app.post("/api/applications", authenticateToken, async (req, res) => {
   try {
     const applicationData = req.body;
 
@@ -457,15 +463,19 @@ app.post("/api/applications", async (req, res) => {
   }
 });
 
-app.get("/dashboard/applicationData/:email", async (req, res) => {
+app.get("/dashboard/applicationData/:email",authenticateToken,async (req, res) => {
   try {
-    const userEmail = req.params.email;
-    const applicationData = await ApplicationSchema.find({ email: userEmail });
-
-    if (!applicationData) {
-      return res
-        .status(404)
-        .json({ message: "No applications found for this user" });
+    const userEmail = req.params.email.trim();
+    console.log("Requested email:", userEmail);
+    const applicationData = await ApplicationSchema.find({ 
+      email: { $regex: new RegExp("^" + userEmail + "$", "i") } // Case-insensitive match
+    });
+    
+    console.log("Fetched applicationData:", applicationData);
+  
+  
+    if (!applicationData || applicationData.length === 0) {
+      return res.status(404).json({ message: "No applications found for this user" });
     }
     console.log("applicationData " + applicationData);
     const response = applicationData.map((app) => ({
@@ -482,7 +492,7 @@ app.get("/dashboard/applicationData/:email", async (req, res) => {
   }
 });
 
-app.get("/dashboard/:email", async (req, res) => {
+app.get("/dashboard/:email", authenticateToken,async (req, res) => {
   try {
     // 👇 Get the user's email from the query parameters
     const userEmail = req.params.email;
@@ -532,31 +542,6 @@ app.get("/dashboard/:email", async (req, res) => {
   }
 });
 
-
-// app.post("/create", async (req, res) => {
-//   const { captchaToken, ...formData } = req.body;
-
-//   // Verify CAPTCHA
-//   const secretKey = process.env.CAP_SECRET_KEY;
-//   const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
-
-//   try {
-//     const response = await axios.post(verificationUrl);
-//     if (!response.data.success) {
-//       return res.status(400).json({ message: "CAPTCHA verification failed" });
-//     }
-
-//     // Proceed with form submission
-//     // Your existing logic for saving form data
-//   } catch (error) {
-//     console.error("Error verifying CAPTCHA:", error);
-//     res.status(500).json({ message: "Failed to verify CAPTCHA" });
-//   }
-// });
-
-// ============================
-// Server Listen
-// ============================
 
 
 

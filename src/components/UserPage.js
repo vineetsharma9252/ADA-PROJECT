@@ -54,7 +54,7 @@ const email = location.state?.email;
       })
       .then((data) => {
         alert("Profile updated successfully!");
-        setUserData(editedData);
+        setUserData(s => ({ ...s, ...editedData }));
         setEditMode(false);
       })
       .catch((err) => alert("Error updating profile: " + err.message));

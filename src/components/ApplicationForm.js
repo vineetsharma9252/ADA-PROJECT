@@ -17,37 +17,36 @@ export default function ApplicationForm() {
     firstName: "",
     middleName: "",
     lastName: "",
-    email: localStorage.getItem("email") || "", // 👈 Add email field
+    email: "", // 👈 Add email field
     incomeGroup: "Under 500,000",
     plot: "", // Ensure plot is initialized
     category: "",
     paymentAmount: "",
   });
 
-
-
-//Fetch email 
-useEffect(() => {
-  const fetchEmailData = async () => {
-    try {
-      const response = await fetch("http://localhost:4500/user-data");
-      if (response.ok) {
-        const emailData = await response.json();
-        // Assuming your response has an 'email' property
-        setFormData((prev) => ({
-          ...prev,
-          email: emailData.email || "",  // Update formData with the fetched email
-        }));
-      } else {
-        console.error("Failed to fetch user data");
+  console.log(formData.email);
+  //Fetch email
+  useEffect(() => {
+    const fetchEmailData = async () => {
+      try {
+        const response = await fetch("http://localhost:4500/user-data");
+        if (response.ok) {
+          const emailData = await response.json();
+          // Assuming your response has an 'email' property
+          setFormData((prev) => ({
+            ...prev,
+            email: emailData.email || "", // Update formData with the fetched email
+          }));
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Error fetching email data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching email data:", error);
-    }
-  };
+    };
 
-  fetchEmailData();
-}, []);
+    fetchEmailData();
+  }, []);
 
   // Fetch schemeID from schemeName
   useEffect(() => {
@@ -142,6 +141,8 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Final data object to send
     const finalData = {
       ...formData,
       familyMembers,
@@ -150,20 +151,24 @@ useEffect(() => {
       endDate,
       schemeName_2,
     };
-    const token = localStorage.getItem("token");
-
+  
+    console.log("Final Data before sending:", finalData);
+  
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "credentials": "include",
         },
         body: JSON.stringify(finalData),
       });
-
+  
+      console.log("Response Status:", response.status); // Debugging
       const responseData = await response.json();
-
+      console.log("Response Data:", responseData); // Debugging
+  
+      // Handle Unauthorized (401) error
       if (response.status === 401) {
         Swal.fire({
           icon: "warning",
@@ -175,44 +180,52 @@ useEffect(() => {
         });
         return;
       }
-
+  
+      // Check if request was successful
       if (response.ok) {
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: "Application submitted successfully!",
         });
-        navigate(`/dashboard/${localStorage.getItem("email")}`);
-
-        // Reset Form
+  
+        navigate("/dashboard");
+  
+        // Reset Form, keeping the email
         setFormData({
           firstName: "",
           middleName: "",
           lastName: "",
-          email: localStorage.getItem("email"), // 👈 Reset email field
+          email: formData.email, // Retaining email
           incomeGroup: "Under 500,000",
           plot: "",
           category: "",
           paymentAmount: "",
         });
+  
+        // Reset family members data
         setFamilyMembers([]);
         setMember({ name: "", mobile: "", aadhar: "" });
+  
       } else {
+        // Show error message from backend
         Swal.fire({
           icon: "error",
           title: "Failed!",
           text: responseData.message || "Unknown error",
         });
       }
+  
     } catch (error) {
-      console.error("Error while submitting:", error);
+      console.error("Error while submitting:", error.message);
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: "An error occurred while submitting the application.",
+        text: `An error occurred: ${error.message}`,
       });
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -264,7 +277,7 @@ useEffect(() => {
             onChange={handleChange}
             type="email"
             placeholder="Email"
-            disabled // 👈 Disable the field if you don't want users to edit it
+            // disabled // 👈 Disable the field if you don't want users to edit it
           />
         </div>
 

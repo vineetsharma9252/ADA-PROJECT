@@ -10,7 +10,7 @@ const FamilyMemberSchema = new mongoose.Schema({
 // Main Application Schema
 const ApplicationSchema = new mongoose.Schema(
   {
-    firstName: String,
+    firstName: String  ,
     middleName: String,
     lastName: String,
     email: String,

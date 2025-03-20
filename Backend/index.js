@@ -392,10 +392,15 @@ app.put("/user-profile-update/:email", async (req, res) => {
 
     // ✅ Loop over each field, if field value is not empty, update it
     for (let key in updatedData) {
-      if (updatedData[key] && updatedData[key].trim() !== "") {
-        user[key] = updatedData[key]; // Update only non-empty fields
+      if (
+        updatedData[key] !== null && 
+        updatedData[key] !== undefined && 
+        (typeof updatedData[key] !== "string" || updatedData[key].trim() !== "")
+      ) {
+        user[key] = updatedData[key]; // Update only valid fields
       }
     }
+    
 
     await user.save(); // Save updated user
 
@@ -433,11 +438,11 @@ app.get("/auth/token", (req, res) => {
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.post("/api/applications", authenticateToken, async (req, res) => {
+app.get("/api/applications", authenticateToken, async (req, res) => {
   try {
     const applicationData = req.body;
-
-    const appID = applicationID; // ✅ Unique Application ID
+console.log(applicationData);
+    const appID = "APP-" + uuidv4();; // ✅ Unique Application ID
 
     // Merge applicationID with applicationData
     const newApplication = new Application({

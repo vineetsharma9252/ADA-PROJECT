@@ -17,6 +17,7 @@ const ApplicationSchema = new mongoose.Schema(
     incomeGroup: String,
     plot: String,
     category: String,
+    
     familyMembers: [FamilyMemberSchema],
     schemeID: String,
     startDate: String,

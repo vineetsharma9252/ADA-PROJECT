@@ -46,9 +46,9 @@ function App() {
         <Route
           path="/application-form"
           element={
-            <ProtectedRoute>
+         //   <ProtectedRoute>
               <ApplicationForm />
-            </ProtectedRoute>
+       //     </ProtectedRoute>
           }
         />
         <Route

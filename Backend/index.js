@@ -438,35 +438,53 @@ app.get("/auth/token", (req, res) => {
 // ============================
 // Application Form Submission (Protected Route)
 // ============================
-app.get("/api/applications", authenticateToken, async (req, res) => {
+
+app.post("/api/applications",  async (req, res) => {
   try {
-    const applicationData = req.body;
-console.log(applicationData);
-    const appID = "APP-" + uuidv4();; // ✅ Unique Application ID
+    // Destructure necessary fields from the request body
+    const { applicationData } = req.body;
+
+    // Perform validation here if necessary
+    if (!applicationData ) {
+      return res.status(400).json({
+        message: "Application data  are required.",
+      });
+    }
+
+    console.log("Received Application Data:", applicationData);
+
+
+    // Generate a unique Application ID
+    const appID = "APP-" + uuidv4();
 
     // Merge applicationID with applicationData
     const newApplication = new Application({
       ...applicationData, // spreading all user data
-      applicationID: appID, // ✅ adding generated Application ID
-      status: "Pending", // ✅ Default status set to Pending
+      applicationID: appID, // adding generated Application ID
+      status: "Pending", // Default status set to Pending
     });
 
-    console.log(newApplication);
+    console.log("New Application Object:", newApplication);
+
     // Save in MongoDB
     const savedApplication = await newApplication.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Application received successfully.",
       application: savedApplication,
     });
   } catch (error) {
     console.error("Error saving application:", error);
+
+    // Check for specific error types if necessary (e.g., validation, MongoDB, etc.)
     res.status(500).json({
       message: "Error saving application",
       error: error.message,
     });
   }
 });
+
+
 
 app.get("/dashboard/applicationData/:email",authenticateToken,async (req, res) => {
   try {

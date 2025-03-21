@@ -17,7 +17,8 @@ const ApplicationSchema = new mongoose.Schema(
     incomeGroup: String,
     plot: String,
     category: String,
-    
+    paymentAmount: String ,
+
     familyMembers: [FamilyMemberSchema],
     schemeID: String,
     startDate: String,
@@ -27,7 +28,6 @@ const ApplicationSchema = new mongoose.Schema(
     // ✅ Add applicationID field (Unique)
     applicationID: {
       type: String,
-      required: true,
     },
 
     // ✅ Add status field with default value 'Pending'

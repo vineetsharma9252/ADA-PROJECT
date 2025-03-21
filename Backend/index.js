@@ -10,7 +10,7 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
-const ApplicationSchema = require("./db/ApplicationTableSchema");
+
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const PasswordResetToken = require("./db/PasswordResetToken");
@@ -21,7 +21,7 @@ const app = express();
 const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
 
 
-const applicationID = "APP-" + uuidv4();
+// const applicationID = "APP-" + uuidv4();
 
 // Connect to MongoDB
 connectDB();
@@ -228,6 +228,7 @@ app.post("/login", async (req, res) => {
       email: user.email,
       fullName: user.fullName,
       phone: user.phone,
+      father_name: user.father_name,
     };
 
     // Generate JWT Token
@@ -248,6 +249,7 @@ app.post("/login", async (req, res) => {
         email: user.email,
         fullName: user.fullName,
         phone: user.phone,
+        father_name: user.father_name,
       },
     });
   } catch (error) {
@@ -257,7 +259,7 @@ app.post("/login", async (req, res) => {
 });
 
 //logout
-app.post("/logout", (req, res) => {
+app.post("/logout", authenticateToken,(req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: true, // Only over HTTPS (production)
@@ -337,8 +339,8 @@ app.post("/reset-password", async (req, res) => {
 
 app.get("/user-data", authenticateToken, async (req, res) => {
   try {
-    const { fullName, email, phone } = req.user;
-    res.json({ fullName, email, phone });
+    const { fullName, email, phone, father_name } = req.user;
+    res.json({ fullName, email, phone, father_name });
   } catch (error) {
     console.error("Error fetching phone number:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -378,7 +380,7 @@ app.get("/api/auth/check", authenticateToken, (req, res) => {
 // ============================
 // Update User Profile Route
 // ============================
-app.put("/user-profile-update/:email", async (req, res) => {
+app.put("/user-profile-update/:email", authenticateToken,async (req, res) => {
   const email = req.params.email;
   const updatedData = req.body;
 
@@ -414,7 +416,7 @@ app.put("/user-profile-update/:email", async (req, res) => {
 // ============================
 // Get User Data by Email Route
 // ============================
-app.get("/user-profile/api/data/:email", async (req, res) => {
+app.get("/user-profile/api/data/:email", authenticateToken,async (req, res) => {
   try {
     const email = req.params.email;
     const data = await User.findOne({ email: email });
@@ -429,7 +431,7 @@ app.get("/user-profile/api/data/:email", async (req, res) => {
 });
 
 //for getting a token
-app.get("/auth/token", (req, res) => {
+app.get("/auth/token", authenticateToken, (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ message: "No token found" });
   res.json({ token });
@@ -439,19 +441,20 @@ app.get("/auth/token", (req, res) => {
 // Application Form Submission (Protected Route)
 // ============================
 
-app.post("/api/applications",  async (req, res) => {
+app.post("/api/applications",  authenticateToken,async (req, res) => {
   try {
     // Destructure necessary fields from the request body
-    const { applicationData } = req.body;
+    console.log(req.body);
+
+    const { firstName, middleName, lastName, email, incomeGroup, plot, category, paymentAmount, familyMembers, schemeID, startDate, endDate, comments } = req.body;
 
     // Perform validation here if necessary
-    if (!applicationData ) {
+    if ( !firstName, !middleName, !lastName, !email, !incomeGroup, !plot, !category, !paymentAmount, !familyMembers, !schemeID, !startDate, !endDate) {
+      
       return res.status(400).json({
         message: "Application data  are required.",
       });
     }
-
-    console.log("Received Application Data:", applicationData);
 
 
     // Generate a unique Application ID
@@ -459,12 +462,24 @@ app.post("/api/applications",  async (req, res) => {
 
     // Merge applicationID with applicationData
     const newApplication = new Application({
-      ...applicationData, // spreading all user data
+      firstName,
+      middleName,
+      lastName,
+      email,
+      incomeGroup,
+      plot,
+      category,
+      paymentAmount,
+      familyMembers,
+      schemeID,
+      startDate,
+      endDate,
+      comments,
       applicationID: appID, // adding generated Application ID
       status: "Pending", // Default status set to Pending
     });
 
-    console.log("New Application Object:", newApplication);
+    // console.log("New Application Object:", newApplication);
 
     // Save in MongoDB
     const savedApplication = await newApplication.save();

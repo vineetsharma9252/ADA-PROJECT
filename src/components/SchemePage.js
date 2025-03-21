@@ -122,11 +122,11 @@ credentials: "include",
                         {scheme.status}
                       </span>
                     </p>
-                    <p>
-                      <strong>Eligibility:</strong> {scheme.eligibility}
+                    <p className="text-left" >
+                      <strong >Eligibility:</strong> {scheme.eligibility}
                     </p>
-                    <p>
-                      <strong>Benefits:</strong> {scheme.benefits}
+                    <p className="text-left" >
+                      <strong  >Benefits:</strong> {scheme.benefits}
                     </p>
                     <center>
                       {scheme.status === "Closed" ? (

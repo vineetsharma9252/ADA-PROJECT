@@ -12,6 +12,7 @@ const NavBar = () => {
     email: "",
     aadhar: "",
     fullName: "",
+    father_name: "",
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +33,7 @@ const NavBar = () => {
           method: "GET",
           credentials: "include",
         });
+       
 
         if (!profileResponse.ok || !aadharResponse.ok) {
           throw new Error("Failed to fetch user data");
@@ -45,6 +47,7 @@ const NavBar = () => {
           email: profileData.email,
           fullName: profileData.fullName,
           aadhar: aadharData.aadharCard,
+          father_name: profileData.father_name,
         });
 
         setIsLoggedIn(true);
@@ -88,14 +91,13 @@ const NavBar = () => {
   // Profile Click Handler
   const handleProfileClick = (e) => {
     e.preventDefault();
-    const { phone, aadhar, email } = userData;
-    if (!aadhar || !phone) {
+    const {email, father_name } = userData;
+    if  ( father_name === "" && !father_name)  {
       alert(
-        "Please complete your profile (Aadhar Card and Phone number are required)."
+        "Please complete your profile first."
       );
       navigate("/user-profile");
     } else {
-      sessionStorage.setItem("userEmail", email); // Store email
       navigate("/user-page", { state: { email } });
     }
   };
@@ -130,7 +132,7 @@ const NavBar = () => {
                 <div className="flex items-center space-x-2">
                   {isLoggedIn && (
                     <Link
-                      to="/user-profile"
+                    
                       onClick={handleProfileClick}
                       className="text-white"
                     >
@@ -245,7 +247,7 @@ const NavBar = () => {
                 </ul>
                 {isLoggedIn && (
                   <Link
-                    to="/user-profile"
+                  
                     onClick={handleProfileClick}
                     className="flex items-center space-x-1 text-white"
                   >

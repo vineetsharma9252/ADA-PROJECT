@@ -16,7 +16,9 @@ const email = location.state?.email;
   // Fetch user data
   useEffect(() => {
    
-    fetch(`http://localhost:4500/user-profile/api/data/${email}`)
+    fetch(`http://localhost:4500/user-profile/api/data/${email}`, {
+      credentials: "include",
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("User not found");
@@ -47,6 +49,7 @@ const email = location.state?.email;
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editedData),
+   
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to update");

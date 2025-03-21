@@ -49,6 +49,7 @@ const email = location.state?.email;
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editedData),
+      credentials: "include",
    
     })
       .then((res) => {

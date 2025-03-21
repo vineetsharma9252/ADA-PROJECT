@@ -21,11 +21,11 @@ const HomePage = memo(function HomePage(props) {
             "Content-Type": "application/json",
           },
         });
-  
+
         if (!emailResponse.ok) {
           throw new Error("Failed to fetch user data");
         }
-  
+
         const emailData = await emailResponse.json();
         console.log(emailData);
         setEmail(emailData.email);
@@ -33,11 +33,10 @@ const HomePage = memo(function HomePage(props) {
         console.error("Error fetching data:", err);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
+
   // Function to handle menu toggle
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -67,7 +66,7 @@ const HomePage = memo(function HomePage(props) {
             </button>
             {/* Profile */}
             <button
-             onClick={() => handleNavigation(`/user-profile`, { email })}
+              onClick={() => handleNavigation(`/user-profile`, { email })}
               className="bg-[oklch(0.627_0.194_149.214)] text-white p-3 rounded-full shadow-lg hover:bg-[oklch(0.627_0.194_149.214)] transition-transform transform hover:scale-110 flex items-center justify-center"
             >
               <User size={20} />
@@ -92,12 +91,14 @@ const HomePage = memo(function HomePage(props) {
       </div>
 
       <div className="flex-grow-1">
-        {/* Hero Section */}
         <section
           className="hero bg-[oklch(0.871_0.15_154.449)] text-white text-center d-flex align-items-center justify-content-center"
           style={{
             minHeight: "50vh",
             backgroundImage: `url(${BackgroundForADA})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
           }}
         >
           <div className="container mt-20 ">

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import UserPage from "./UserPage";
 import { Link, useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
@@ -29,18 +28,28 @@ const UserProfile = () => {
     occupation: "",
     income: "",
     education: "",
-    disablity: "",
+    disability: "",
   });
 
-  // useEffect(() => {
-  //   setUser((prevUser) => ({
-  //     ...prevUser,
-  //     fullName: localStorage.getItem("fullName") || "",
-  //     email: localStorage.getItem("email_token") || "",
-  //     phone: localStorage.getItem("phone_token") || "",
-  //     aadharCard: localStorage.getItem("aadharCard_token") || "",
-  //   }));
-  // }, []);
+  const [fieldErrors, setFieldErrors] = useState({
+    fullName: "",
+    gender: "",
+    father_name: "",
+    dob: "",
+    email: "",
+    phone: "",
+    perm_address: "",
+    curr_address: "",
+    aadharCard: "",
+    panCard: "",
+    voterId: "",
+    occupation: "",
+    income: "",
+    education: "",
+    caste: "",
+    disability: "",
+    marital_status: "",
+  });
 
   const handleAddress = (e) => {
     const isSame = e.target.value === "yes";
@@ -54,30 +63,160 @@ const UserProfile = () => {
   };
 
   const handleChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
+    const { name, value } = e.target;
+    let error = "";
+
+    // Custom validation for each field
+    switch (name) {
+      case "fullName":
+        if (!value.trim()) error = "Full Name is required";
+        break;
+      case "gender":
+        if (!value) error = "Gender is required";
+        break;
+      case "father_name":
+        if (!value.trim()) error = "Father's Name is required";
+        break;
+      case "dob":
+        if (!value) error = "Date of Birth is required";
+        break;
+      case "email":
+        if (!/\S+@\S+\.\S+/.test(value)) error = "Email is invalid";
+        break;
+      case "phone":
+        if (!/^\d{10}$/.test(value)) error = "Phone number must be 10 digits";
+        break;
+      case "perm_address":
+        if (!value.trim()) error = "Permanent Address is required";
+        break;
+      case "curr_address":
+        if (!value.trim()) error = "Current Address is required";
+        break;
+      case "aadharCard":
+        if (!/^\d{12}$/.test(value)) error = "Aadhaar number must be 12 digits";
+        break;
+      case "panCard":
+        if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value))
+          error = "PAN number is invalid";
+        break;
+      case "voterId":
+        if (!value.trim()) error = "Voter ID is required";
+        break;
+      case "occupation":
+        if (!value.trim()) error = "Occupation is required";
+        break;
+      case "income":
+        if (!value) error = "Income group is required";
+        break;
+      case "education":
+        if (!value.trim()) error = "Highest Education is required";
+        break;
+      case "caste":
+        if (!value) error = "Caste is required";
+        break;
+      case "disability":
+        if (!value) error = "Disability status is required";
+        break;
+      case "marital_status":
+        if (!value) error = "Marital status is required";
+        break;
+      default:
+        break;
+    }
+
+    // Update the user state
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+
+    // Update the field-specific errors
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
+
+  const nextStep = () => {
+    const errors = Object.values(fieldErrors).filter((error) => error !== "");
+    if (errors.length === 0) {
+      setStep((prev) => prev + 1);
+      setFieldErrors({
+        fullName: "",
+        gender: "",
+        father_name: "",
+        dob: "",
+        email: "",
+        phone: "",
+        perm_address: "",
+        curr_address: "",
+        aadharCard: "",
+        panCard: "",
+        voterId: "",
+        occupation: "",
+        income: "",
+        education: "",
+        caste: "",
+        disability: "",
+        marital_status: "",
+      });
+    } else {
+      alert("Please fix the errors before proceeding.");
+    }
+  };
+
+  const prevStep = () => {
+    setStep((prev) => prev - 1);
+    setFieldErrors({
+      fullName: "",
+      gender: "",
+      father_name: "",
+      dob: "",
+      email: "",
+      phone: "",
+      perm_address: "",
+      curr_address: "",
+      aadharCard: "",
+      panCard: "",
+      voterId: "",
+      occupation: "",
+      income: "",
+      education: "",
+      caste: "",
+      disability: "",
+      marital_status: "",
     });
   };
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const validateInputs = () => {
+    const errors = Object.values(fieldErrors).filter((error) => error !== "");
+    return errors.length === 0
+      ? null
+      : "Please fix the errors before submitting.";
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
+      setLoading(false);
+      return;
+    }
+
     try {
-      const email = user.email || localStorage.getItem("email"); // Take from form or localStorage
-     
+      const email = user.email || localStorage.getItem("email");
+
       const response = await fetch(
         `http://localhost:4500/user-profile-update/${email}`,
         {
-          method: "PUT", // ✅ PUT for update
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(user), // Send updated fields
+          body: JSON.stringify(user),
         }
       );
 
@@ -90,7 +229,7 @@ const UserProfile = () => {
       setError("");
       alert("Profile Updated Successfully!");
       setIsUserCreated(true);
-      navigate(`/user-profile/api/data/${email}`); // Navigate to next step
+      navigate(`/user-profile/api/data/${email}`);
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("Error submitting form. Please try again.");
@@ -127,11 +266,15 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="fullName"
-                value={localStorage.getItem("fullName")}
+                value={user.fullName}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.fullName && (
+                <p className="text-red-500 text-sm">{fieldErrors.fullName}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 Gender
               </label>
@@ -146,6 +289,10 @@ const UserProfile = () => {
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
+              {fieldErrors.gender && (
+                <p className="text-red-500 text-sm">{fieldErrors.gender}</p>
+              )}
+
               <label
                 htmlFor="dob"
                 className="block text-sm font-medium text-left my-3"
@@ -160,6 +307,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.dob && (
+                <p className="text-red-500 text-sm">{fieldErrors.dob}</p>
+              )}
+
               <label
                 htmlFor="dob"
                 className="block text-sm font-medium text-left my-3"
@@ -174,6 +325,12 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.father_name && (
+                <p className="text-red-500 text-sm">
+                  {fieldErrors.father_name}
+                </p>
+              )}
+
               <button
                 onClick={nextStep}
                 type="button"
@@ -198,6 +355,12 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded text-left"
                 required
               />
+              {fieldErrors.perm_address && (
+                <p className="text-red-500 text-sm">
+                  {fieldErrors.perm_address}
+                </p>
+              )}
+
               <label
                 htmlFor=""
                 className="block text-sm font-medium text-left my-3"
@@ -241,6 +404,11 @@ const UserProfile = () => {
                 required
                 readOnly={isCurrentPermanent}
               />
+              {fieldErrors.curr_address && (
+                <p className="text-red-500 text-sm">
+                  {fieldErrors.curr_address}
+                </p>
+              )}
 
               <label className="block text-sm font-medium text-left my-2">
                 Phone Number
@@ -253,6 +421,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.phone && (
+                <p className="text-red-500 text-sm">{fieldErrors.phone}</p>
+              )}
+
               <label className="block text-sm font-medium text-left">
                 Email Address
               </label>
@@ -264,6 +436,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.email && (
+                <p className="text-red-500 text-sm">{fieldErrors.email}</p>
+              )}
+
               <button
                 onClick={prevStep}
                 type="button"
@@ -301,6 +477,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.aadharCard && (
+                <p className="text-red-500 text-sm">{fieldErrors.aadharCard}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 PAN number
               </label>
@@ -312,6 +492,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.panCard && (
+                <p className="text-red-500 text-sm">{fieldErrors.panCard}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 Voter ID
               </label>
@@ -323,6 +507,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded "
                 required
               />
+              {fieldErrors.voterId && (
+                <p className="text-red-500 text-sm">{fieldErrors.voterId}</p>
+              )}
+
               <div
                 className="text-center"
                 style={{
@@ -362,6 +550,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.occupation && (
+                <p className="text-red-500 text-sm">{fieldErrors.occupation}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 Income Group
               </label>
@@ -381,6 +573,10 @@ const UserProfile = () => {
                   <option value="10000000">10L+</option>
                 </select>
               </div>
+              {fieldErrors.income && (
+                <p className="text-red-500 text-sm">{fieldErrors.income}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 Highest Education
               </label>
@@ -392,6 +588,10 @@ const UserProfile = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />
+              {fieldErrors.education && (
+                <p className="text-red-500 text-sm">{fieldErrors.education}</p>
+              )}
+
               <div
                 className="text-center"
                 style={{
@@ -424,13 +624,22 @@ const UserProfile = () => {
                 Caste{" "}
               </label>
               <div className="text-left">
-                <select name="caste" value={user.caste} onChange={handleChange} required >
+                <select
+                  name="caste"
+                  value={user.caste}
+                  onChange={handleChange}
+                  required
+                >
                   <option value="general">General</option>
                   <option value="obc">OBC</option>
                   <option value="sc">SC</option>
                   <option value="st">ST</option>
                 </select>
               </div>
+              {fieldErrors.caste && (
+                <p className="text-red-500 text-sm">{fieldErrors.caste}</p>
+              )}
+
               <label className="block text-sm font-medium text-left my-3">
                 Disable
               </label>
@@ -474,6 +683,10 @@ const UserProfile = () => {
                   No
                 </label>
               </div>
+              {fieldErrors.disability && (
+                <p className="text-red-500 text-sm">{fieldErrors.disability}</p>
+              )}
+
               <br />
               <label
                 htmlFor="marital_status"
@@ -522,6 +735,12 @@ const UserProfile = () => {
                   Unmarried
                 </label>
               </div>
+              {fieldErrors.marital_status && (
+                <p className="text-red-500 text-sm">
+                  {fieldErrors.marital_status}
+                </p>
+              )}
+
               <br />
               <div
                 className="text-center"

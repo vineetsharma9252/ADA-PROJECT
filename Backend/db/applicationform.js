@@ -10,22 +10,24 @@ const FamilyMemberSchema = new mongoose.Schema({
 // Main Application Schema
 const ApplicationSchema = new mongoose.Schema(
   {
-    firstName: String,
+    firstName: String  ,
     middleName: String,
     lastName: String,
     email: String,
     incomeGroup: String,
     plot: String,
     category: String,
+    paymentAmount: String ,
+
     familyMembers: [FamilyMemberSchema],
     schemeID: String,
     startDate: String,
     endDate: String,
+    comments: { type: String, default: "No comments available" },
 
     // ✅ Add applicationID field (Unique)
     applicationID: {
       type: String,
-      required: true,
     },
 
     // ✅ Add status field with default value 'Pending'

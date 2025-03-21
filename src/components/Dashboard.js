@@ -14,28 +14,33 @@ const Dashboard = memo(function Dashboard() {
     rejected: 0,
   });
 
-  
-const location = useLocation();
-const email = location.state?.email;
+  const location = useLocation();
+  const email = location.state?.email;
 
-
-
-// Fetch data on component mount
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const countsResponse = await fetch(
-          `http://localhost:4500/dashboard/${email}`
+          `http://localhost:4500/dashboard/${email}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const countsData = await countsResponse.json();
         setCounts(countsData);
 
         const applicationsResponse = await fetch(
-          `http://localhost:4500/dashboard/applicationData/${email}`
+          `http://localhost:4500/dashboard/applicationData/${email}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const applicationsData = await applicationsResponse.json();
         setApplications(applicationsData);
+        console.log(applicationsData);
       } catch (err) {
         console.error(err);
       } finally {
@@ -43,10 +48,10 @@ useEffect(() => {
       }
     };
 
-    
-  if (email) { // Ensure email is available before fetching
-    fetchData();
-  }
+    if (email) {
+      // Ensure email is available before fetching
+      fetchData();
+    }
   }, [email]);
 
   // Show loading spinner if data is still being fetched
@@ -123,38 +128,39 @@ useEffect(() => {
       <hr />
       <br />
       <div className="table-responsive">
-        <table className="table table-bordered table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>#</th>
-              <th>Application ID</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Status</th>
-              <th>Department Comments</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.length > 0 ? (
-              applications.map((app, index) => (
-                <tr key={app._id || index}>
-                  <td>{index + 1}</td>
-                  <td>{app.name}</td>
-                  <td>{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td>
-                  <td>{app.endDate ? app.endDate.slice(0, 10) : "N/A"}</td>
-                  <td>{app.status}</td>
-                  <td>{app.comments ? app.comments : "N/A"}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center">
-                  No applications found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+
+      <table className="w-full border-collapse border border-gray-300">
+  <thead className="bg-green-700 text-white">
+    <tr>
+      <th className="p-3">#</th>
+      <th className="p-3">Application ID</th>
+      <th className="p-3">Start Date</th>
+      <th className="p-3">End Date</th>
+      <th className="p-3">Status</th>
+      <th className="p-3">Department Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    {applications.length > 0 ? (
+      applications.map((app, index) => (
+        <tr key={app._id || index}>
+          <td className="border p-2">{index + 1}</td>
+          <td className="border p-2">{app.name}</td>
+          <td className="border p-2">{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td>
+          <td className="border p-2">{app.endDate ? app.endDate.slice(0, 10) : "N/A"}</td>
+          <td className="border p-2">{app.status}</td>
+          <td className="border p-2">{app.comments ? app.comments : "N/A"}</td>
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan="6" className="text-center p-3">No applications found.</td>
+      </tr>
+    )}
+  </tbody>
+</table>
+
+
       </div>
     </div>
   );

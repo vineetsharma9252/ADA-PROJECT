@@ -17,14 +17,50 @@ export default function ApplicationForm() {
     firstName: "",
     middleName: "",
     lastName: "",
-    email: localStorage.getItem("email") || "", // 👈 Add email field
+    email: "",
     incomeGroup: "Under 500,000",
-    plot: "", // Ensure plot is initialized
+    plot: "",
     category: "",
     paymentAmount: "",
+    noOfDependentFamilyMembers: "",
   });
 
-  const email = localStorage.getItem("email");
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
+
+  // Fetch email
+  useEffect(() => {
+    const fetchEmailData = async () => {
+      try {
+        const response = await fetch("http://localhost:4500/user-data", {
+          credentials: "include", // Include cookies
+        });
+
+        if (!response.ok) {
+          console.error("Failed to fetch user data. Status:", response.status);
+          const errorData = await response.text(); // Parse response as text
+          console.error("Error details:", errorData);
+          return;
+        }
+
+        const userData = await response.json();
+        console.log("User data received:", userData);
+
+        if (userData && userData.email) {
+          setFormData((prev) => ({
+            ...prev,
+            email: userData.email,
+          }));
+        } else {
+          console.error("Email not found in response");
+        }
+      } catch (error) {
+        console.error("Error fetching email data:", error.message);
+      }
+    };
+
+    fetchEmailData();
+  }, []);
 
   // Fetch schemeID from schemeName
   useEffect(() => {
@@ -41,20 +77,24 @@ export default function ApplicationForm() {
 
   // Fetch user data from User Collection for prefill
   useEffect(() => {
-    fetch(`http://localhost:4500/user-profile/api/data/${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setFormData((prev) => ({
-          ...prev,
-          incomeGroup: data.income || "",
-          category: (data.caste || "").toLowerCase(),
-        }));
-      })
-      .catch((err) => console.error(err));
-  }, [email]);
-
-  const [familyMembers, setFamilyMembers] = useState([]);
-  const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
+    if (formData.email) {
+      fetch(`http://localhost:4500/user-profile/api/data/${formData.email}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch user profile data");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setFormData((prev) => ({
+            ...prev,
+            incomeGroup: data.income || "",
+            category: (data.caste || "").toLowerCase(),
+          }));
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [formData.email]);
 
   // Utility functions for validation
   const isValidName = (name) => /^[A-Z\s]+$/.test(name);
@@ -81,6 +121,12 @@ export default function ApplicationForm() {
   };
 
   const handleAddMember = () => {
+    if (familyMembers.length >= formData.noOfDependentFamilyMembers) {
+      alert(
+        "You can't add more members than the specified dependent family members."
+      );
+      return;
+    }
     if (!member.name || !member.mobile || !member.aadhar) {
       alert("All fields are required for family members.");
       return;
@@ -119,28 +165,34 @@ export default function ApplicationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Final data object to send
     const finalData = {
-      ...formData,
+      ...formData, // Include all form data
       familyMembers,
       schemeID,
       startDate,
       endDate,
       schemeName_2,
     };
-    const token = localStorage.getItem("token");
+
+    console.log("Final Data before sending:", finalData);
 
     try {
       const response = await fetch("http://localhost:4500/api/applications", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include", // Include cookies
         body: JSON.stringify(finalData),
       });
 
+      console.log("Response Status:", response.status);
       const responseData = await response.json();
+      console.log("Response Data:", responseData);
 
+      // Handle Unauthorized (401) error
       if (response.status === 401) {
         Swal.fire({
           icon: "warning",
@@ -153,28 +205,33 @@ export default function ApplicationForm() {
         return;
       }
 
+      // Check if request was successful
       if (response.ok) {
         Swal.fire({
           icon: "success",
           title: "Success!",
           text: "Application submitted successfully!",
         });
-        navigate(`/dashboard/${localStorage.getItem("email")}`);
 
-        // Reset Form
+        navigate(`/dashboard`, { state: { email: formData.email } } );
+
+        // Reset Form, keeping the email
         setFormData({
           firstName: "",
           middleName: "",
           lastName: "",
-          email: localStorage.getItem("email"), // 👈 Reset email field
+          email: formData.email, // Retaining email
           incomeGroup: "Under 500,000",
           plot: "",
           category: "",
           paymentAmount: "",
         });
+
+        // Reset family members data
         setFamilyMembers([]);
         setMember({ name: "", mobile: "", aadhar: "" });
       } else {
+        // Show error message from backend
         Swal.fire({
           icon: "error",
           title: "Failed!",
@@ -182,11 +239,11 @@ export default function ApplicationForm() {
         });
       }
     } catch (error) {
-      console.error("Error while submitting:", error);
+      console.error("Error while submitting:", error.message);
       Swal.fire({
         icon: "error",
         title: "Error!",
-        text: "An error occurred while submitting the application.",
+        text: `An error occurred: ${error.message}`,
       });
     }
   };
@@ -241,7 +298,7 @@ export default function ApplicationForm() {
             onChange={handleChange}
             type="email"
             placeholder="Email"
-            disabled // 👈 Disable the field if you don't want users to edit it
+            // disabled // 👈 Disable the field if you don't want users to edit it
           />
         </div>
 
@@ -295,59 +352,75 @@ export default function ApplicationForm() {
             </select>
           </div>
         ))}
-
-        <div className="mb-6">
-          <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Dependent Family Members
-          </h3>
-          <div className="mb-3">
-            {["name", "mobile", "aadhar"].map((field) => (
-              <input
-                key={field}
-                className="block w-full inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
-                type="text"
-                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                value={member[field]}
-                onChange={(e) =>
-                  setMember({
-                    ...member,
-                    [field]: e.target.value.toUpperCase(),
-                  })
-                }
-              />
-            ))}
-            <button
-              type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              onClick={handleAddMember}
-            >
-              Add Family Member
-            </button>
-          </div>
-          {familyMembers.length > 0 && (
-            <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2">
-              {familyMembers.map((m, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center mb-2 p-2 border-b"
-                >
-                  <div>
-                    <strong>Name:</strong> {m.name} <br />
-                    <strong>Mobile:</strong> {m.mobile} <br />
-                    <strong>Aadhar:</strong> {m.aadhar}
-                  </div>
-                  <button
-                    type="button"
-                    className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                    onClick={() => handleDeleteMember(index)}
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className="mb-4">
+          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            No. of Dependent Family Member
+          </label>
+          <input
+            className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
+            name="noOfDependentFamilyMembers"
+            value={formData.noOfDependentFamilyMembers}
+            onChange={handleChange}
+            type="number"
+            placeholder="No. of Dependent Family Members"
+            required
+            // disabled // 👈 Disable the field if you don't want users to edit it
+          />
         </div>
+          <div className="mb-6">
+            <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+              Dependent Family Members
+            </h3>
+            <div className="mb-3 mt-3">
+              {["name", "mobile", "aadhar"].map((field) => (
+                <input
+                  key={field}
+                  className="block w-full  inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
+                  type="text"
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={member[field]}
+                  onChange={(e) =>
+                    setMember({
+                      ...member,
+                      [field]: e.target.value.toUpperCase(),
+                    })
+                  }
+                />
+              ))}
+              <button
+                type="button"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={handleAddMember}
+              >
+                Add Family Member
+              </button>
+            </div>
+
+            {familyMembers.length > 0 && (
+              <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2">
+                {familyMembers.map((m, index) => (
+                  <li
+                    key={index}
+                    className="flex justify-between items-center mb-2 p-2 border-b"
+                  >
+                    <div>
+                      <strong>Name:</strong> {m.name} <br />
+                      <strong>Mobile:</strong> {m.mobile} <br />
+                      <strong>Aadhar:</strong> {m.aadhar}
+                    </div>
+                    <button
+                      type="button"
+                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                      onClick={() => handleDeleteMember(index)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+      
 
         <button
           type="submit"

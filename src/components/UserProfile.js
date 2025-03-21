@@ -15,7 +15,7 @@ const UserProfile = () => {
     gender: "",
     father_name: "",
     dob: "",
-    email: "",
+    email:  "",
     password: "",
     phone: "",
     marital_status: "",
@@ -31,25 +31,47 @@ const UserProfile = () => {
     disability: "",
   });
 
-  const [fieldErrors, setFieldErrors] = useState({
-    fullName: "",
-    gender: "",
-    father_name: "",
-    dob: "",
-    email: "",
-    phone: "",
-    perm_address: "",
-    curr_address: "",
-    aadharCard: "",
-    panCard: "",
-    voterId: "",
-    occupation: "",
-    income: "",
-    education: "",
-    caste: "",
-    disability: "",
-    marital_status: "",
-  });
+console.log(user.email);
+console.log(user.phone);
+console.log(user.aadharCard);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Fetch user profile data
+        const profileResponse = await fetch("http://localhost:4500/user-data", {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        // Fetch aadhar data
+        const aadharResponse = await fetch("http://localhost:4500/getAadhar", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!profileResponse.ok || !aadharResponse.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const profileData = await profileResponse.json();
+        const aadharData = await aadharResponse.json();
+
+        setUser((prevUser) => ({
+          ...prevUser,
+          phone: profileData.phone || prevUser.phone,
+          email: profileData.email || prevUser.email,
+          fullName: profileData.fullName || prevUser.fullName,
+          aadharCard: aadharData.aadharCard || prevUser.aadharCard,
+        }));
+      } catch (err) {
+        console.error("Failed to fetch user data:", err.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleAddress = (e) => {
     const isSame = e.target.value === "yes";
@@ -199,18 +221,9 @@ const UserProfile = () => {
     e.preventDefault();
     setLoading(true);
 
-    const validationError = validateInputs();
-    if (validationError) {
-      setError(validationError);
-      setLoading(false);
-      return;
-    }
-
     try {
-      const email = user.email || localStorage.getItem("email");
-
       const response = await fetch(
-        `http://localhost:4500/user-profile-update/${email}`,
+        `http://localhost:4500/user-profile-update/${user.email}`,
         {
           method: "PUT",
           headers: {
@@ -229,7 +242,7 @@ const UserProfile = () => {
       setError("");
       alert("Profile Updated Successfully!");
       setIsUserCreated(true);
-      navigate(`/user-profile/api/data/${email}`);
+      navigate(`/user-page`, { state: { email: user.email } });
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("Error submitting form. Please try again.");
@@ -239,7 +252,7 @@ const UserProfile = () => {
     }
   };
 
-  const totalSteps = 5;
+  const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
@@ -266,7 +279,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="fullName"
-                value={user.fullName}
+                value={user.fullName} 
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded"
                 required

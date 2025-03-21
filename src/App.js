@@ -11,12 +11,12 @@ import About from "./components/About";
 import HomePage from "./components/HomePage";
 import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
-import UserProfile from "./components/UserProfile";  
+import UserProfile from "./components/UserProfile";
 import ResetPassword from "./components/ResetPassword";
 // import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
-import ApplicationTableForm from "./components/ApplicationTableForm";
+
 import ProjectPage from "./components/ProjectPage";
 
 function App() {
@@ -46,9 +46,9 @@ function App() {
         <Route
           path="/application-form"
           element={
-            <ProtectedRoute>
-              <ApplicationForm />
-            </ProtectedRoute>
+            //   <ProtectedRoute>
+            <ApplicationForm />
+            //     </ProtectedRoute>
           }
         />
         <Route
@@ -70,11 +70,15 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<HomePage />} />
-        <Route path="/schemes" element={<SchemePage />} />
-        <Route path="/user-profile" element={<UserProfile />} />
-        {/* ✅ Corrected Route with useParams */}
-        <Route path="/user-page" element={<UserPage />} />
-        <Route path="/atf" element={<ApplicationTableForm />} />
+       
+          <Route path="/schemes" element={  <ProtectedRoute> <SchemePage /> </ProtectedRoute> } />
+        
+        
+          <Route path="/user-profile" element={ <ProtectedRoute> <UserProfile /> </ProtectedRoute> } />
+     
+          {/* ✅ Corrected Route with useParams */}
+          <Route path="/user-page" element={ <ProtectedRoute> <UserPage />   </ProtectedRoute> } />
+      
         <Route path="/projects" element={<ProjectPage />} />
       </Routes>
     </div>

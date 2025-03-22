@@ -27,6 +27,7 @@ export default function ApplicationForm() {
 
   const [familyMembers, setFamilyMembers] = useState([]);
   const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
+  const [isFamilyMembersSet, setIsFamilyMembersSet] = useState(false); // Track if number of family members is set
 
   // Fetch email
   useEffect(() => {
@@ -114,6 +115,14 @@ export default function ApplicationForm() {
       if (!isValidName(sanitizedValue) && sanitizedValue !== "") {
         alert("Only alphabets and spaces are allowed in Name fields.");
         return;
+      }
+    }
+
+    if (name === "noOfDependentFamilyMembers") {
+      if (value >= 0) {
+        setIsFamilyMembersSet(true); // Enable family member section
+      } else {
+        setIsFamilyMembersSet(false); // Disable family member section
       }
     }
 
@@ -213,7 +222,7 @@ export default function ApplicationForm() {
           text: "Application submitted successfully!",
         });
 
-        navigate(`/dashboard`, { state: { email: formData.email } } );
+        navigate(`/dashboard`, { state: { email: formData.email } });
 
         // Reset Form, keeping the email
         setFormData({
@@ -361,12 +370,15 @@ export default function ApplicationForm() {
             name="noOfDependentFamilyMembers"
             value={formData.noOfDependentFamilyMembers}
             onChange={handleChange}
+            min={0}
             type="number"
             placeholder="No. of Dependent Family Members"
             required
-            // disabled // 👈 Disable the field if you don't want users to edit it
           />
         </div>
+
+        {/* Conditionally render family member section */}
+        {isFamilyMembersSet && (
           <div className="mb-6">
             <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               Dependent Family Members
@@ -391,6 +403,7 @@ export default function ApplicationForm() {
                 type="button"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 onClick={handleAddMember}
+                disabled={!isFamilyMembersSet} // Disable if no family members are set
               >
                 Add Family Member
               </button>
@@ -420,7 +433,7 @@ export default function ApplicationForm() {
               </ul>
             )}
           </div>
-      
+        )}
 
         <button
           type="submit"

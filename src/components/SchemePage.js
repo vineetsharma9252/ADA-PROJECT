@@ -78,16 +78,19 @@ const SchemePage = () => {
             different domains.
           </p>
           <br />
-          <div className="search-filter-bar flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+          <div className="search-filter-bar flex flex-row gap-2 sm:gap-4 w-full">
+            {/* Search Input (Takes 70% of the space) */}
             <input
               type="text"
               placeholder="Search for schemes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input inputGreenBorder flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
+              className="search-input inputGreenBorder flex-[3] px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
             />
+
+            {/* Filter Dropdown (Takes 30% of the space) */}
             <select
-              className="filter-select flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
+              className="filter-select flex-[1] px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
               onChange={(e) => setFilter(e.target.value)}
             >
               <option value="All">All</option>

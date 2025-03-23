@@ -13,11 +13,12 @@ import Dashboard from "./components/Dashboard";
 import SchemePage from "./components/SchemePage";
 import UserProfile from "./components/UserProfile";
 import ResetPassword from "./components/ResetPassword";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 import UserPage from "./components/UserPage";
 import { LogIn } from "lucide-react";
 
 import ProjectPage from "./components/ProjectPage";
+import FAQPage from "./components/FAQ";
 
 function App() {
   const token = localStorage.getItem("token"); // ✅ Consistent lowercase
@@ -70,17 +71,38 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/home" element={<HomePage />} />
-       
-          <Route path="/schemes" element={  <ProtectedRoute> <SchemePage /> </ProtectedRoute> } />
-        
-        
-          <Route path="/user-profile" element={ <ProtectedRoute> <UserProfile /> </ProtectedRoute> } />
-     
-          {/* ✅ Corrected Route with useParams */}
-          <Route path="/user-page" element={ <ProtectedRoute> <UserPage />   </ProtectedRoute> } />
-      
+        <Route
+          path="/schemes"
+          element={
+            <ProtectedRoute>
+              {" "}
+              <SchemePage />{" "}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user-profile"
+          element={
+            <ProtectedRoute>
+              {" "}
+              <UserProfile />{" "}
+            </ProtectedRoute>
+          }
+        />
+        {/* ✅ Corrected Route with useParams */}
+        <Route
+          path="/user-page"
+          element={
+            <ProtectedRoute>
+              {" "}
+              <UserPage />{" "}
+            </ProtectedRoute>
+          }
+        />
         <Route path="/projects" element={<ProjectPage />} />
+        <Route path="/faq" element={<FAQPage />} />
       </Routes>
+      <Footer></Footer>
     </div>
   );
 }

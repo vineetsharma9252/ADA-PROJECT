@@ -71,7 +71,7 @@ const Dashboard = memo(function Dashboard() {
         {/* 👈 Align button to the left */}
         <button
           onClick={() => navigate("/schemes")} // 👈 Navigate to Schemes Page
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4"
+          className="bg-violet-900 text-white px-4 py-2 rounded hover:bg-violet-600 mb-4"
         >
           Back to Schemes
         </button>
@@ -128,39 +128,44 @@ const Dashboard = memo(function Dashboard() {
       <hr />
       <br />
       <div className="table-responsive">
-
-      <table className="w-full border-collapse border border-gray-300">
-  <thead className="bg-green-700 text-white">
-    <tr>
-      <th className="p-3">#</th>
-      <th className="p-3">Application ID</th>
-      <th className="p-3">Start Date</th>
-      <th className="p-3">End Date</th>
-      <th className="p-3">Status</th>
-      <th className="p-3">Department Comments</th>
-    </tr>
-  </thead>
-  <tbody>
-    {applications.length > 0 ? (
-      applications.map((app, index) => (
-        <tr key={app._id || index}>
-          <td className="border p-2">{index + 1}</td>
-          <td className="border p-2">{app.name}</td>
-          <td className="border p-2">{app.startDate ? app.startDate.slice(0, 10) : "N/A"}</td>
-          <td className="border p-2">{app.endDate ? app.endDate.slice(0, 10) : "N/A"}</td>
-          <td className="border p-2">{app.status}</td>
-          <td className="border p-2">{app.comments ? app.comments : "N/A"}</td>
-        </tr>
-      ))
-    ) : (
-      <tr>
-        <td colSpan="6" className="text-center p-3">No applications found.</td>
-      </tr>
-    )}
-  </tbody>
-</table>
-
-
+        <table className="w-full border-collapse border border-gray-300">
+          <thead className="bg-violet-700 text-white">
+            <tr>
+              <th className="p-3">#</th>
+              <th className="p-3">Application ID</th>
+              <th className="p-3">Start Date</th>
+              <th className="p-3">End Date</th>
+              <th className="p-3">Status</th>
+              <th className="p-3">Department Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {applications.length > 0 ? (
+              applications.map((app, index) => (
+                <tr key={app._id || index}>
+                  <td className="border p-2">{index + 1}</td>
+                  <td className="border p-2">{app.name}</td>
+                  <td className="border p-2">
+                    {app.startDate ? app.startDate.slice(0, 10) : "N/A"}
+                  </td>
+                  <td className="border p-2">
+                    {app.endDate ? app.endDate.slice(0, 10) : "N/A"}
+                  </td>
+                  <td className="border p-2">{app.status}</td>
+                  <td className="border p-2">
+                    {app.comments ? app.comments : "N/A"}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center p-3">
+                  No applications found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

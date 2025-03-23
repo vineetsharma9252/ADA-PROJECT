@@ -8,6 +8,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [isCurrentPermanent, setIsCurrentPermanent] = useState(false);
   const [isUserCreated, setIsUserCreated] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [user, setUser] = useState({
@@ -15,7 +16,7 @@ const UserProfile = () => {
     gender: "",
     father_name: "",
     dob: "",
-    email:  "",
+    email: "",
     password: "",
     phone: "",
     marital_status: "",
@@ -31,9 +32,9 @@ const UserProfile = () => {
     disability: "",
   });
 
-console.log(user.email);
-console.log(user.phone);
-console.log(user.aadharCard);
+  console.log(user.email);
+  console.log(user.phone);
+  console.log(user.aadharCard);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -256,9 +257,9 @@ console.log(user.aadharCard);
   const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-cream">
       <div
-        className="w-full max-w-2xl p-8 shadow-lg bg-white rounded-lg relative"
+        className="w-full max-w-2xl p-8 shadow-lg bg-dark-violet rounded-lg relative"
         style={{
           height: "650px",
         }}
@@ -270,33 +271,35 @@ console.log(user.aadharCard);
           ></div>
         </div>
 
-        <h2 className="text-2xl font-bold text-left mb-4">User Profile</h2>
+        <h2 className="text-2xl font-bold text-left mb-4 text-cream">
+          User Profile
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {step === 1 && (
             <div>
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Full Name
               </label>
               <input
                 type="text"
                 name="fullName"
-                value={user.fullName} 
+                value={user.fullName}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.fullName && (
                 <p className="text-red-500 text-sm">{fieldErrors.fullName}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Gender
               </label>
               <select
                 name="gender"
                 value={user.gender}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               >
                 <option value="">Select Gender</option>
@@ -309,7 +312,7 @@ console.log(user.aadharCard);
 
               <label
                 htmlFor="dob"
-                className="block text-sm font-medium text-left my-3"
+                className="block text-sm font-medium text-left my-3 text-cream"
               >
                 DoB
               </label>
@@ -318,7 +321,7 @@ console.log(user.aadharCard);
                 name="dob"
                 value={user.dob}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.dob && (
@@ -327,7 +330,7 @@ console.log(user.aadharCard);
 
               <label
                 htmlFor="dob"
-                className="block text-sm font-medium text-left my-3"
+                className="block text-sm font-medium text-left my-3 text-cream"
               >
                 Father's Name
               </label>
@@ -336,7 +339,7 @@ console.log(user.aadharCard);
                 name="father_name"
                 value={user.father_name}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.father_name && (
@@ -357,8 +360,8 @@ console.log(user.aadharCard);
 
           {step === 2 && (
             <div>
-              <div className="text-left">Contact Details</div>
-              <label className="block text-sm font-medium text-left my-3">
+              <div className="text-left text-cream">Contact Details</div>
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Permanent Address
               </label>
               <input
@@ -366,7 +369,7 @@ console.log(user.aadharCard);
                 name="perm_address"
                 value={user.perm_address}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-left"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.perm_address && (
@@ -377,12 +380,12 @@ console.log(user.aadharCard);
 
               <label
                 htmlFor=""
-                className="block text-sm font-medium text-left my-3"
+                className="block text-sm font-medium text-left my-3 text-cream"
               >
                 <br />
                 Is Current Address Same as Permanent Address?
               </label>
-              <div className="block text-sm font-medium text-left my-3">
+              <div className="block text-sm font-medium text-left my-3 text-cream">
                 <label>
                   <input
                     type="radio"
@@ -406,7 +409,7 @@ console.log(user.aadharCard);
                   No
                 </label>
               </div>
-              <label className="block text-sm font-medium text-left my-2">
+              <label className="block text-sm font-medium text-left my-2 text-cream">
                 Current Address
               </label>
               <input
@@ -414,7 +417,7 @@ console.log(user.aadharCard);
                 name="curr_address"
                 value={user.curr_address}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
                 readOnly={isCurrentPermanent}
               />
@@ -424,7 +427,7 @@ console.log(user.aadharCard);
                 </p>
               )}
 
-              <label className="block text-sm font-medium text-left my-2">
+              <label className="block text-sm font-medium text-left my-2 text-cream">
                 Phone Number
               </label>
               <input
@@ -432,14 +435,14 @@ console.log(user.aadharCard);
                 name="phone"
                 value={user.phone}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.phone && (
                 <p className="text-red-500 text-sm">{fieldErrors.phone}</p>
               )}
 
-              <label className="block text-sm font-medium text-left">
+              <label className="block text-sm font-medium text-left text-cream">
                 Email Address
               </label>
               <input
@@ -447,7 +450,7 @@ console.log(user.aadharCard);
                 name="email"
                 value={user.email}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.email && (
@@ -475,12 +478,12 @@ console.log(user.aadharCard);
             <div>
               <label
                 htmlFor=""
-                className="block text-sm font-medium text-left my-3"
+                className="block text-sm font-medium text-left my-3 text-cream"
               >
                 {" "}
                 Identity Proofs{" "}
               </label>
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Aadhaar Number
               </label>
               <input
@@ -488,14 +491,14 @@ console.log(user.aadharCard);
                 name="aadharCard"
                 value={user.aadharCard}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.aadharCard && (
                 <p className="text-red-500 text-sm">{fieldErrors.aadharCard}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 PAN number
               </label>
               <input
@@ -503,14 +506,14 @@ console.log(user.aadharCard);
                 name="panCard"
                 value={user.panCard}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.panCard && (
                 <p className="text-red-500 text-sm">{fieldErrors.panCard}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Voter ID
               </label>
               <input
@@ -518,7 +521,7 @@ console.log(user.aadharCard);
                 name="voterId"
                 value={user.voterId}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded "
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.voterId && (
@@ -553,7 +556,7 @@ console.log(user.aadharCard);
 
           {step === 4 && (
             <div>
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Occupation
               </label>
               <input
@@ -561,14 +564,14 @@ console.log(user.aadharCard);
                 name="occupation"
                 value={user.occupation}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.occupation && (
                 <p className="text-red-500 text-sm">{fieldErrors.occupation}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Income Group
               </label>
               <div className="text-left">
@@ -576,7 +579,7 @@ console.log(user.aadharCard);
                   name="income"
                   value={user.income}
                   onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                   required
                 >
                   <option value="">Select Income Range</option>
@@ -591,7 +594,7 @@ console.log(user.aadharCard);
                 <p className="text-red-500 text-sm">{fieldErrors.income}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Highest Education
               </label>
               <input
@@ -599,7 +602,7 @@ console.log(user.aadharCard);
                 name="education"
                 value={user.education}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
+                className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                 required
               />
               {fieldErrors.education && (
@@ -634,7 +637,7 @@ console.log(user.aadharCard);
 
           {step === 5 && (
             <div>
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Caste{" "}
               </label>
               <div className="text-left">
@@ -642,6 +645,7 @@ console.log(user.aadharCard);
                   name="caste"
                   value={user.caste}
                   onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
                   required
                 >
                   <option value="general">General</option>
@@ -654,7 +658,7 @@ console.log(user.aadharCard);
                 <p className="text-red-500 text-sm">{fieldErrors.caste}</p>
               )}
 
-              <label className="block text-sm font-medium text-left my-3">
+              <label className="block text-sm font-medium text-left my-3 text-cream">
                 Disable
               </label>
               <div className="text-left">
@@ -704,7 +708,7 @@ console.log(user.aadharCard);
               <br />
               <label
                 htmlFor="marital_status"
-                className="block text-sm font-medium text-left "
+                className="block text-sm font-medium text-left text-cream"
                 style={{
                   fontSize: "20px",
                 }}

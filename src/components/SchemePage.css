@@ -5,7 +5,7 @@
   }
 
   .greenBorder {
-    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
+    border: 2px solid darkviolet; /* Dark violet color */
     padding: 0 1rem 0 1rem;
   }
 .inputGreenBorder:hover {

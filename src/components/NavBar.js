@@ -33,7 +33,6 @@ const NavBar = () => {
           method: "GET",
           credentials: "include",
         });
-       
 
         if (!profileResponse.ok || !aadharResponse.ok) {
           throw new Error("Failed to fetch user data");
@@ -91,11 +90,9 @@ const NavBar = () => {
   // Profile Click Handler
   const handleProfileClick = (e) => {
     e.preventDefault();
-    const {email, father_name } = userData;
-    if  ( father_name === "" && !father_name)  {
-      alert(
-        "Please complete your profile first."
-      );
+    const { email, father_name } = userData;
+    if (father_name === "" && !father_name) {
+      alert("Please complete your profile first.");
       navigate("/user-profile");
     } else {
       navigate("/user-page", { state: { email } });
@@ -103,7 +100,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="shadow-md w-full z-50 top-0 left-0 bg-green-700">
+    <nav className="shadow-md w-full z-50 top-0 left-0 bg-[#4b0082]">
       <div className="max-w-screen-xl mx-auto px-4 relative">
         {isLoading ? (
           <div className="animate-pulse p-4">
@@ -132,7 +129,6 @@ const NavBar = () => {
                 <div className="flex items-center space-x-2">
                   {isLoggedIn && (
                     <Link
-                    
                       onClick={handleProfileClick}
                       className="text-white"
                     >
@@ -172,13 +168,13 @@ const NavBar = () => {
               </div>
 
               {isMenuOpen && (
-                <div className="mt-2 bg-white rounded-lg shadow-md">
+                <div className="mt-2 bg-[#f5f5dc] rounded-lg shadow-md">
                   <ul className="flex flex-col">
                     <li>
                       <Link
                         to="/"
                         onClick={() => setIsMenuOpen(false)}
-                        className="block py-2 px-4 hover:bg-gray-200"
+                        className="block py-2 px-4 hover:bg-[#4b0082] hover:text-white"
                       >
                         Home
                       </Link>
@@ -187,7 +183,7 @@ const NavBar = () => {
                       <Link
                         to="/about"
                         onClick={() => setIsMenuOpen(false)}
-                        className="block py-2 px-4 hover:bg-gray-200"
+                        className="block py-2 px-4 hover:bg-[#4b0082] hover:text-white"
                       >
                         About
                       </Link>
@@ -196,14 +192,14 @@ const NavBar = () => {
                       {isLoggedIn ? (
                         <button
                           onClick={handleLogout}
-                          className="block w-full text-left py-2 px-4 hover:bg-red-100"
+                          className="block w-full text-left py-2 px-4 hover:bg-red-600 hover:text-white"
                         >
                           Logout
                         </button>
                       ) : (
                         <button
                           onClick={handleLogin}
-                          className="block w-full text-left py-2 px-4 hover:bg-blue-100"
+                          className="block w-full text-left py-2 px-4 hover:bg-green-600 hover:text-white"
                         >
                           Login
                         </button>
@@ -231,7 +227,7 @@ const NavBar = () => {
                   <li>
                     <Link
                       to="/"
-                      className="py-2 px-4 text-white hover:bg-green-300 rounded-lg"
+                      className="py-2 px-4 text-white hover:bg-[#6a1b9a] rounded-lg"
                     >
                       Home
                     </Link>
@@ -239,7 +235,7 @@ const NavBar = () => {
                   <li>
                     <Link
                       to="/about"
-                      className="py-2 px-4 text-white hover:bg-green-300 rounded-lg"
+                      className="py-2 px-4 text-white hover:bg-[#6a1b9a] rounded-lg"
                     >
                       About
                     </Link>
@@ -247,7 +243,6 @@ const NavBar = () => {
                 </ul>
                 {isLoggedIn && (
                   <Link
-                  
                     onClick={handleProfileClick}
                     className="flex items-center space-x-1 text-white"
                   >
@@ -266,7 +261,7 @@ const NavBar = () => {
                 ) : (
                   <button
                     onClick={handleLogin}
-                    className="py-1 px-3 bg-green-600 bg-red-400 text-white rounded-lg"
+                    className="py-1 px-3 bg-green-600 hover:bg-green-700 text-white rounded-lg"
                   >
                     Login
                   </button>

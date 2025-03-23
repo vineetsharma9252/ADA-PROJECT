@@ -1,20 +1,31 @@
-
+/* Global Styles */
 nav {
-  background-color: oklch(0.527 0.154 150.069);
+  background-color: #4b0082; /* Dark violet */
 }
 
- @media (max-width:640px) {
-   .govText{
+/* Mobile Menu Styles */
+@media (max-width: 640px) {
+  .govText {
     text-align: center;
-   } 
-   .profileName {
+  }
+  .profileName {
     display: block;
-   }    
-   .logOutBtn {
+  }
+  .logOutBtn {
     display: inline-block;
     margin: auto;
-  
-   }
- }
+  }
+}
 
- 
+/* Hover Effects */
+.hover\:bg-\[\#6a1b9a\]:hover {
+  background-color: #6a1b9a; /* Lighter violet */
+}
+
+.hover\:bg-red-600:hover {
+  background-color: #dc2626; /* Red for logout */
+}
+
+.hover\:bg-green-600:hover {
+  background-color: #16a34a; /* Green for login */
+}

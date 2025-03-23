@@ -1,14 +1,15 @@
 import React from "react";
 import { Building2, Globe2, Landmark, Users, ShieldCheck, Leaf, Home, Briefcase, MessageSquareQuote } from "lucide-react";
 import Footer from './Footer';
+import FAQ from "./FAQ" ;
 
 const AboutUsPage = () => {
   return (
     <div className="container mx-auto px-4 py-10 space-y-12">
       {/* Header Section */}
       <section>
-        <h1 className="text-4xl font-bold text-center text-green-800 uppercase tracking-wide">About Ajmer Development Authority</h1>
-        <p className="text-center text-gray-700 mt-4 max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold text-center text-[#4b0082] uppercase tracking-wide">About Ajmer Development Authority</h1>
+        <p className="text-left text-gray-700 mt-4 max-w-3xl mx-auto">
           The Ajmer Development Authority (ADA) is dedicated to planned and sustainable urban development, enhancing the quality of life for residents and preserving Ajmer’s rich cultural heritage.
         </p>
       </section>
@@ -30,29 +31,29 @@ const AboutUsPage = () => {
       </section>
 
       {/* Vision & Mission Section */}
-      <section className="space-y-10">
-        <div>
-          <h2 className="text-3xl font-semibold text-ascent-700 border-b-4 border-green-800 inline-block uppercase pb-2">Our Vision</h2>
-          <p className="mt-4 text-gray-700 leading-relaxed">
-            To create a vibrant, sustainable, and inclusive Ajmer that harmoniously integrates urban development, heritage conservation, and environmental stewardship, enhancing the quality of life for all residents.
-          </p>
-        </div>
-        <div>
-          <h2 className="text-3xl font-semibold text-ascent-700 border-b-4 border-green-800 inline-block uppercase pb-2">Our Mission</h2>
-          <p className="mt-4 text-gray-700 leading-relaxed">
-            To promote and manage planned urban development in Ajmer through efficient infrastructure, affordable housing, and community facilities, ensuring active participation from residents, safeguarding environmental resources, and preserving the city’s cultural heritage.
-          </p>
-        </div>
-      </section>
+        <section className="space-y-10">
+          <div>
+            <h2 className="text-3xl font-semibold text-ascent-700 border-b-4 border-green-800 inline-block uppercase pb-2 tracking-wider">Our Vision</h2>
+            <p className="mt-4 text-left text-gray-700 leading-relaxed">
+          To create a vibrant, sustainable, and inclusive Ajmer that harmoniously integrates urban development, heritage conservation, and environmental stewardship, enhancing the quality of life for all residents.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-3xl font-semibold text-ascent-700 border-b-4 border-green-800 inline-block uppercase pb-2 tracking-wider">Our Mission</h2>
+            <p className="mt-4 text-left text-gray-700 leading-relaxed">
+          To promote and manage planned urban development in Ajmer through efficient infrastructure, affordable housing, and community facilities, ensuring active participation from residents, safeguarding environmental resources, and preserving the city’s cultural heritage.
+            </p>
+          </div>
+        </section>
 
-      {/* Commissioners Note */}
+        {/* Commissioners Note */}
       <section>
         <h2 className="text-3xl font-semibold text-ascent-700 border-b-4 border-green-800 inline-block uppercase pb-2">Our Administration</h2>
-        <p className="mt-4 text-gray-700 leading-relaxed">
+        <p className="mt-4 text-left text-gray-700 leading-relaxed">
           The Commissioner or Chief Executive Officer (CEO) of the Ajmer Development Authority oversees all administrative and developmental activities. For the latest updates on commissioners and administrative heads, please visit our official portal.
         </p>
       </section>
-      
+      <FAQ/>
     </div>
   );
 };
@@ -104,6 +105,8 @@ const objectives = [
     icon: <Landmark size={36} className="text-green-800" />,
   },
 ];
+
+
 
 
 export default AboutUsPage;

@@ -17,22 +17,22 @@ const SchemePage = () => {
       scheme.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-      // ✅ Fetch token from cookies
-const fetchToken = async () => {
-  try{
-    const response = await fetch("http://localhost:4500/auth/token", {
-credentials: "include",
-    });
-    const data = await response.json();
-    setToken(data.token);
-  }catch (error) {
-    console.error("Error fetching token:", error);
-    return null ;
-  }
-}
+  // ✅ Fetch token from cookies
+  const fetchToken = async () => {
+    try {
+      const response = await fetch("http://localhost:4500/auth/token", {
+        credentials: "include",
+      });
+      const data = await response.json();
+      setToken(data.token);
+    } catch (error) {
+      console.error("Error fetching token:", error);
+      return null;
+    }
+  };
 
   const handleApplyClick = (schemeTitle) => {
-  const token = fetchToken();
+    const token = fetchToken();
 
     if (!token) {
       alert("You need to log in to apply for this scheme.");
@@ -68,7 +68,7 @@ credentials: "include",
   return (
     <>
       <div className={`container w-full mt-5 ${isModalOpen ? "blur" : ""}`}>
-        <div className="greenBorder">
+        <div className="w-full ">
           <h2 className="relative inline-block w-[20%] text-center mt-6 py-2 mb-2 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
             ADA Schemes
           </h2>
@@ -122,11 +122,11 @@ credentials: "include",
                         {scheme.status}
                       </span>
                     </p>
-                    <p className="text-left" >
-                      <strong >Eligibility:</strong> {scheme.eligibility}
+                    <p className="text-left">
+                      <strong>Eligibility:</strong> {scheme.eligibility}
                     </p>
-                    <p className="text-left" >
-                      <strong  >Benefits:</strong> {scheme.benefits}
+                    <p className="text-left">
+                      <strong>Benefits:</strong> {scheme.benefits}
                     </p>
                     <center>
                       {scheme.status === "Closed" ? (

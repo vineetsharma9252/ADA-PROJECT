@@ -1,14 +1,15 @@
 /* General Footer Styling */
 #footerArea {
-  background-color: #003366; /* Ascent Color */
+  background-color: #4f007a; /* Ascent Color */
   color: white;
   font-size: 14px;
 }
 
 .footer-heading {
-  color: #00cc66; /* Green Color */
+  color: #000000; /* Green Color */
   font-weight: bold;
   margin-bottom: 1rem;
+  font-size:20px;
 }
 
 .footer-visitor-info p {

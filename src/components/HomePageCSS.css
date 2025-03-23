@@ -1,62 +1,64 @@
+/* Global Styles */
+body {
+  background-color: #f5f5dc; /* Creamy background */
+  color: #4b0082; /* Dark violet text */
+}
+
+/* Custom Button Styles */
 .custom-btn {
-    background-color: oklch(0.627 0.194 149.214);
-    color: white; /* Text color ko readable banane ke liye */
-    border: none; /* Optional: agar border nahi chahiye to */
-    transition: background-color 0.3s ease;
-  }
-  
-  .custom-btn:hover {
-    background-color: oklch(0.792 0.209 151.711);
-    color: white; /* Hover ke time bhi text visible rahe */
-  }
-  
-  /* Highlight Cards Styling */
+  background-color: #4b0082; /* Dark violet */
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #6a1b9a; /* Lighter violet on hover */
+  color: white;
+}
+
+/* Highlight Cards Styling */
 .custom-card {
-    background-color: transparent; /* Match section background */
-    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
-    color: black; /* Text color */
-    border-radius: 12px;
-    padding: 20px;
-    transition: transform 0.3s ease;
-  }
-  
-  .custom-card:hover {
-    transform: translateY(-5px);
-    background-color: oklch(0.792 0.209 151.711); /* Slight hover effect if needed */
-  }
-  
-  .custom-card .card-title, 
-  .custom-card .card-text {
-    color: white; /* Ensure all inside text is white */
-  }
-  
-  .highlights {
-    border: 2px solid oklch(0.792 0.209 151.711); /* Accent color */
-    /* border-radius: 12px; */
-    margin: 0 5px 0 5px;
-  }
+  background-color: transparent;
+  border: 2px solid #4b0082; /* Dark violet border */
+  color: black;
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
 
+.custom-card:hover {
+  transform: translateY(-5px);
+  background-color: rgba(75, 0, 130, 0.1); /* Light violet hover effect */
+}
 
-/* About section */
+.custom-card .card-title,
+.custom-card .card-text {
+  color: black; /* Ensure text is readable */
+}
 
-/* Common green color used */
-:root {
-    --theme-green: oklch(0.792 0.209 151.711);;
-  }
-  
-  /* About Section Card Styling (Similar to Highlights) */
-  .about-card {
-    border: 2px solid var(--theme-green);
-    padding: 20px;
-   
-    color: white;
-    background-color: transparent;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  /* Ensure heading matches */
-  .about h2 {
-    color: white;
-  }
+/* Highlights Section */
+.highlights {
+  border: 2px solid #4b0082; /* Dark violet border */
+  margin: 0 5px 0 5px;
+}
 
-  
+/* About Section */
+.about-card {
+  border: 2px solid #4b0082; /* Dark violet border */
+  padding: 20px;
+  color: black;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about h2 {
+  color: black; /* Dark violet text */
+}
+
+/* Projects Section */
+.projects {
+  border-top: 2px solid #4b0082; /* Dark violet border */
+  border-bottom: 2px solid #4b0082;
+}

@@ -4,20 +4,19 @@ const mongoose = require("mongoose");
 const FamilyMemberSchema = new mongoose.Schema({
   name: String,
   mobile: String,
-  aadhar: String,
+  dob: String,
 });
 
 // Main Application Schema
 const ApplicationSchema = new mongoose.Schema(
   {
-    firstName: String  ,
+    firstName: String,
     middleName: String,
     lastName: String,
     email: String,
     incomeGroup: String,
-    plot: String,
     category: String,
-    paymentAmount: String ,
+    paymentAmount: String,
 
     familyMembers: [FamilyMemberSchema],
     schemeID: String,

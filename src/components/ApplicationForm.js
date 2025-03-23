@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./ApplicationForm.css";
 import { schemes } from "./content";
+import Preview from "./Preview"; // Import the Preview component
 
 export default function ApplicationForm() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function ApplicationForm() {
   });
 
   const [familyMembers, setFamilyMembers] = useState([]);
-  const [member, setMember] = useState({ name: "", mobile: "", aadhar: "" });
-  const [isFamilyMembersSet, setIsFamilyMembersSet] = useState(false); // Track if number of family members is set
+  const [member, setMember] = useState({ name: "", mobile: "", dob: "" });
+  const [isPreview, setIsPreview] = useState(false); // State to toggle preview
 
   // Fetch email
   useEffect(() => {
@@ -120,9 +121,9 @@ export default function ApplicationForm() {
 
     if (name === "noOfDependentFamilyMembers") {
       if (value >= 0) {
-        setIsFamilyMembersSet(true); // Enable family member section
+        setFamilyMembers(true); // Enable family member section
       } else {
-        setIsFamilyMembersSet(false); // Disable family member section
+        setFamilyMembers(false); // Disable family member section
       }
     }
 
@@ -165,16 +166,22 @@ export default function ApplicationForm() {
       },
     ]);
 
-    setMember({ name: "", mobile: "", aadhar: "" });
+    setMember({ name: "", mobile: "", dob: "" });
   };
 
   const handleDeleteMember = (index) => {
     setFamilyMembers(familyMembers.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handlePreview = () => {
+    setIsPreview(true);
+  };
 
+  const handleEdit = () => {
+    setIsPreview(false);
+  };
+
+  const handleSubmit = async () => {
     // Final data object to send
     const finalData = {
       ...formData, // Include all form data
@@ -258,77 +265,108 @@ export default function ApplicationForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md">
-        <h2 className="relative inline-block w-[40%] text-center mt-5 py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
-          Application Form for {decodedSchemeName}
-        </h2>
-      </div>
+    <>
+      {isPreview ? (
+        <Preview
+          formData={formData}
+          familyMembers={familyMembers}
+          onEdit={handleEdit}
+          onSubmit={handleSubmit}
+        />
+      ) : (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+          <div className="w-full h-20 appHeading text-center bg-gray-200 py-4 shadow-md">
+            <h2 className="relative inline-block w-[40%] text-center mt-5 py-2 mb-5 text-black text-2xl font-bold after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-[oklch(0.627_0.194_149.214)] after:transition-all after:duration-500 hover:after:w-full">
+              Application Form for {decodedSchemeName}
+            </h2>
+          </div>
 
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/schemes")}
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4 self-start ml-4 hover:bg-green-600"
-      >
-        Back to Schemes
-      </button>
+          {/* Back Button */}
+          <button
+            onClick={() => navigate("/schemes")}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4 self-start ml-4 hover:bg-green-600"
+          >
+            Back to Schemes
+          </button>
 
-      <form
-        onSubmit={handleSubmit}
-        className="application-form-border px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[95%] mobile-mt"
-      >
-        <div className="flex flex-wrap -mx-3 mb-6">
-          {["firstName", "middleName", "lastName"].map((field, index) => (
-            <div key={index} className="w-full md:w-1/2 px-3 mb-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handlePreview();
+            }}
+            className="application-form-border px-8 pt-6 pb-8 mb-4 mt-5 w-full max-w-[95%] mobile-mt"
+          >
+            <div className="flex flex-wrap -mx-3 mb-6">
+              <div className="w-full md:w-1/2 px-3 mb-6">
+                <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  First Name
+                </label>
+                <input
+                  className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight uppercase"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="First Name"
+                />
+              </div>
+              <div className="w-full md:w-1/2 px-3 mb-6">
+                <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Middle Name
+                </label>
+                <input
+                  className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight uppercase"
+                  name="middleName"
+                  value={formData.middleName}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Middle Name"
+                />
+              </div>
+              <div className="w-full md:w-1/2 px-3 mb-6">
+                <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Last Name
+                </label>
+                <input
+                  className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight uppercase"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder="Last Name"
+                />
+              </div>
+            </div>
+
+            {/* Add Email Field */}
+            <div className="mb-4">
               <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                {field.replace(/([A-Z])/g, " $1").trim()}
+                Email
               </label>
               <input
-                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight uppercase"
-                name={field}
-                value={formData[field]}
+                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
-                type="text"
-                placeholder={field}
+                type="email"
+                placeholder="Email"
+                // disabled // 👈 Disable the field if you don't want users to edit it
               />
             </div>
-          ))}
-        </div>
 
-        {/* Add Email Field */}
-        <div className="mb-4">
-          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Email
-          </label>
-          <input
-            className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            type="email"
-            placeholder="Email"
-            // disabled // 👈 Disable the field if you don't want users to edit it
-          />
-        </div>
-
-        {["incomeGroup", "plot", "category"].map((field, index) => (
-          <div key={index} className="mb-4">
-            <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              {field.replace(/([A-Z])/g, " $1").trim()}
-            </label>
-            <select
-              className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 focus:outline-none"
-              name={field}
-              value={formData[field] || ""}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select {field.replace(/([A-Z])/g, " $1").trim()}
-              </option>
-
-              {field === "incomeGroup" &&
-                [
+            <div className="mb-4">
+              <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Income Group
+              </label>
+              <select
+                className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 focus:outline-none"
+                name="incomeGroup"
+                value={formData.incomeGroup || ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Income Group</option>
+                {[
                   { value: "Under 100,000", label: "Below 1 Lakh" },
                   { value: "100,000 - 200,000", label: "1L - 2L" },
                   { value: "200,000 - 500,000", label: "2L - 5L" },
@@ -339,16 +377,42 @@ export default function ApplicationForm() {
                     {option.label}
                   </option>
                 ))}
-
-              {field === "plot" &&
-                ["Plot A", "Plot B", "Plot C"].map((option) => (
+              </select>
+            </div>
+{/* 
+            <div className="mb-4">
+              <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Plot
+              </label>
+              <select
+                className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 focus:outline-none"
+                name="plot"
+                value={formData.plot || ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Plot</option>
+                {["Plot A", "Plot B", "Plot C"].map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
+              </select>
+            </div> */}
 
-              {field === "category" &&
-                [
+            <div className="mb-4">
+              <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Category
+              </label>
+              <select
+                className="block w-full bg-gray-200 border text-gray-700 py-3 px-4 focus:outline-none"
+                name="category"
+                value={formData.category || ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                {[
                   { value: "general", label: "GENERAL" },
                   { value: "obc", label: "OBC" },
                   { value: "sc", label: "SC" },
@@ -358,90 +422,110 @@ export default function ApplicationForm() {
                     {option.label}
                   </option>
                 ))}
-            </select>
-          </div>
-        ))}
-        <div className="mb-4">
-          <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            No. of Dependent Family Member
-          </label>
-          <input
-            className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
-            name="noOfDependentFamilyMembers"
-            value={formData.noOfDependentFamilyMembers}
-            onChange={handleChange}
-            min={0}
-            type="number"
-            placeholder="No. of Dependent Family Members"
-            required
-          />
-        </div>
+              </select>
+            </div>
 
-        {/* Conditionally render family member section */}
-        {isFamilyMembersSet && (
-          <div className="mb-6">
-            <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              Dependent Family Members
-            </h3>
-            <div className="mb-3 mt-3">
-              {["name", "mobile", "aadhar"].map((field) => (
+            <div className="mb-4">
+              <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                No. of Dependent Family Member
+              </label>
+              <input
+                className="appearance-none inputGreenBorder block w-full bg-gray-200 text-gray-700 py-3 px-4 leading-tight"
+                name="noOfDependentFamilyMembers"
+                value={formData.noOfDependentFamilyMembers}
+                onChange={handleChange}
+                type="number"
+                placeholder="No. of Dependent Family Members"
+                required
+                // disabled // 👈 Disable the field if you don't want users to edit it
+              />
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Dependent Family Members
+              </h3>
+              <div className="mb-3 mt-3">
                 <input
-                  key={field}
                   className="block w-full  inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
                   type="text"
-                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                  value={member[field]}
+                  placeholder="Name"
+                  value={member.name}
                   onChange={(e) =>
                     setMember({
                       ...member,
-                      [field]: e.target.value.toUpperCase(),
+                      name: e.target.value.toUpperCase(),
                     })
                   }
                 />
-              ))}
-              <button
-                type="button"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={handleAddMember}
-                disabled={!isFamilyMembersSet} // Disable if no family members are set
-              >
-                Add Family Member
-              </button>
+                <input
+                  className="block w-full  inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
+                  type="text"
+                  placeholder="Mobile"
+                  value={member.mobile}
+                  onChange={(e) =>
+                    setMember({
+                      ...member,
+                      mobile: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  className="block w-full  inputGreenBorder bg-gray-200 text-gray-700 py-2 px-3 mb-2 uppercase"
+                  type="date"
+                  placeholder="DoB"
+                  value={member.dob}
+                  onChange={(e) =>
+                    setMember({
+                      ...member,
+                      dob: e.target.value,
+                    })
+                  }
+                  onKeyDown={(e) => e.preventDefault()}
+                />
+                <button
+                  type="button"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={handleAddMember}
+                >
+                  Add Family Member
+                </button>
+              </div>
+
+              {familyMembers.length > 0 && (
+                <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2">
+                  {familyMembers.map((m, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center mb-2 p-2 border-b"
+                    >
+                      <div>
+                        <strong>Name:</strong> {m.name} <br />
+                        <strong>Mobile:</strong> {m.mobile} <br />
+                        <strong>DoB:</strong> {m.dob}
+                      </div>
+                      <button
+                        type="button"
+                        className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                        onClick={() => handleDeleteMember(index)}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
-            {familyMembers.length > 0 && (
-              <ul className="text-left list-none block w-full bg-gray-200 border text-gray-700 py-2 px-3 rounded mb-2">
-                {familyMembers.map((m, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center mb-2 p-2 border-b"
-                  >
-                    <div>
-                      <strong>Name:</strong> {m.name} <br />
-                      <strong>Mobile:</strong> {m.mobile} <br />
-                      <strong>Aadhar:</strong> {m.aadhar}
-                    </div>
-                    <button
-                      type="button"
-                      className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                      onClick={() => handleDeleteMember(index)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          className="bg-green-500 float-right text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          Submit Application
-        </button>
-      </form>
-    </div>
+            <button
+              type="submit"
+              className="bg-purple-500 float-right text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Preview Application
+            </button>
+          </form>
+        </div>
+      )}
+    </>
   );
 }

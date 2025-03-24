@@ -10,6 +10,8 @@ const User = require("./db/UserSchema");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const Application = require("./db/applicationform");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
@@ -20,11 +22,19 @@ const authenticateToken = require("./middleware/auth");
 const app = express();
 const secretkey = "6LerCfYqAAAAAHMOQ8xQF1xHs7Lx3_udMXyEUOpQ";
 
-
 // const applicationID = "APP-" + uuidv4();
 
 // Connect to MongoDB
 connectDB();
+
+app.use(helmet());
+
+// Rate Limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
 // Middleware
 app.use(express.json());
@@ -53,7 +63,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // ✅ App password
   },
 });
-
 
 // User Registration
 app.post("/create", async (req, res) => {
@@ -259,7 +268,7 @@ app.post("/login", async (req, res) => {
 });
 
 //logout
-app.post("/logout", authenticateToken,(req, res) => {
+app.post("/logout", authenticateToken, (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: true, // Only over HTTPS (production)
@@ -267,7 +276,6 @@ app.post("/logout", authenticateToken,(req, res) => {
   });
   res.json({ message: "Logged out successfully" });
 });
-
 
 // ✅ Forgot password route
 app.post("/forgot-password", async (req, res) => {
@@ -314,7 +322,6 @@ app.post("/forgot-password", async (req, res) => {
 
 app.post("/reset-password", async (req, res) => {
   const { token, password } = req.body;
-
 
   const resetToken = await PasswordResetToken.findOne({ token });
 
@@ -374,13 +381,10 @@ app.get("/api/auth/check", authenticateToken, (req, res) => {
   res.json({ success: true, user: req.user });
 });
 
-
-
-
 // ============================
 // Update User Profile Route
 // ============================
-app.put("/user-profile-update/:email", authenticateToken,async (req, res) => {
+app.put("/user-profile-update/:email", authenticateToken, async (req, res) => {
   const email = req.params.email;
   const updatedData = req.body;
 
@@ -395,14 +399,13 @@ app.put("/user-profile-update/:email", authenticateToken,async (req, res) => {
     // ✅ Loop over each field, if field value is not empty, update it
     for (let key in updatedData) {
       if (
-        updatedData[key] !== null && 
-        updatedData[key] !== undefined && 
+        updatedData[key] !== null &&
+        updatedData[key] !== undefined &&
         (typeof updatedData[key] !== "string" || updatedData[key].trim() !== "")
       ) {
         user[key] = updatedData[key]; // Update only valid fields
       }
     }
-    
 
     await user.save(); // Save updated user
 
@@ -416,19 +419,23 @@ app.put("/user-profile-update/:email", authenticateToken,async (req, res) => {
 // ============================
 // Get User Data by Email Route
 // ============================
-app.get("/user-profile/api/data/:email", authenticateToken,async (req, res) => {
-  try {
-    const email = req.params.email;
-    const data = await User.findOne({ email: email });
-    if (!data) {
-      return res.status(404).json({ message: "User not found" });
+app.get(
+  "/user-profile/api/data/:email",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const email = req.params.email;
+      const data = await User.findOne({ email: email });
+      if (!data) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(data);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      res.status(500).json({ message: err.message });
     }
-    res.json(data);
-  } catch (err) {
-    console.error("Error fetching user data:", err);
-    res.status(500).json({ message: err.message });
   }
-});
+);
 
 //for getting a token
 app.get("/auth/token", authenticateToken, (req, res) => {
@@ -441,21 +448,46 @@ app.get("/auth/token", authenticateToken, (req, res) => {
 // Application Form Submission (Protected Route)
 // ============================
 
-app.post("/api/applications",  authenticateToken,async (req, res) => {
+app.post("/api/applications", authenticateToken, async (req, res) => {
   try {
     // Destructure necessary fields from the request body
     console.log(req.body);
 
-    const { firstName, middleName, lastName, email, incomeGroup, plot, category, paymentAmount, familyMembers, schemeID, startDate, endDate, comments } = req.body;
+    const {
+      firstName,
+      middleName,
+      lastName,
+      email,
+      incomeGroup,
+      plot,
+      category,
+      paymentAmount,
+      familyMembers,
+      schemeID,
+      startDate,
+      endDate,
+      comments,
+    } = req.body;
 
     // Perform validation here if necessary
-    if ( !firstName, !middleName, !lastName, !email, !incomeGroup, !plot, !category, !paymentAmount, !familyMembers, !schemeID, !startDate, !endDate) {
-      
+    if (
+      (!firstName,
+      !middleName,
+      !lastName,
+      !email,
+      !incomeGroup,
+      !plot,
+      !category,
+      !paymentAmount,
+      !familyMembers,
+      !schemeID,
+      !startDate,
+      !endDate)
+    ) {
       return res.status(400).json({
         message: "Application data  are required.",
       });
     }
-
 
     // Generate a unique Application ID
     const appID = "APP-" + uuidv4();
@@ -499,43 +531,45 @@ app.post("/api/applications",  authenticateToken,async (req, res) => {
   }
 });
 
+app.get(
+  "/dashboard/applicationData/:email",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userEmail = req.params.email.trim();
+      console.log("Requested email:", userEmail);
 
+      const applicationData = await Application.find({
+        email: { $regex: new RegExp("^" + userEmail + "$", "i") }, // Case-insensitive match
+      });
 
-app.get("/dashboard/applicationData/:email",authenticateToken,async (req, res) => {
-  try {
-    const userEmail = req.params.email.trim();
-    console.log("Requested email:", userEmail);
+      // console.log("Fetched applicationData:", applicationData);
 
-    const applicationData = await Application.find({ 
-      email: { $regex: new RegExp("^" + userEmail + "$", "i") } // Case-insensitive match
-    });
-    
-    // console.log("Fetched applicationData:", applicationData);
-  
-  
-    if (!applicationData || applicationData.length === 0) {
-      return res.status(404).json({ message: "No applications found for this user" });
+      if (!applicationData || applicationData.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "No applications found for this user" });
+      }
+
+      console.log("applicationData commmetns" + applicationData.comments);
+
+      const response = applicationData.map((app) => ({
+        name: app.applicationID,
+        startDate: app.startDate,
+        endDate: app.endDate,
+        status: app.status,
+        comments: app.comments || "No comments available",
+      }));
+
+      res.status(200).json(response);
+    } catch (error) {
+      console.error("Error fetching application data:", error);
+      res.status(500).json({ message: "Server Error", error: error.message });
     }
-
-    console.log("applicationData commmetns" + applicationData.comments);
-
-    const response = applicationData.map((app) => ({
-      name: app.applicationID,
-      startDate: app.startDate,
-      endDate: app.endDate,
-      status: app.status,
-      comments: app.comments || "No comments available"
-      
-    }));
-
-    res.status(200).json(response);
-  } catch (error) {
-    console.error("Error fetching application data:", error);
-    res.status(500).json({ message: "Server Error", error: error.message });
   }
-});
+);
 
-app.get("/dashboard/:email", authenticateToken,async (req, res) => {
+app.get("/dashboard/:email", authenticateToken, async (req, res) => {
   try {
     // 👇 Get the user's email from the query parameters
     const userEmail = req.params.email;
@@ -563,7 +597,7 @@ app.get("/dashboard/:email", authenticateToken,async (req, res) => {
       email: userEmail,
       status: "Rejected",
     });
- 
+
     // Log the counts for debugging
     console.log({
       total: totalApplications,
@@ -584,10 +618,6 @@ app.get("/dashboard/:email", authenticateToken,async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
-
-
-
 
 const PORT = process.env.PORT || 4500;
 app.listen(PORT, () => {

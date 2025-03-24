@@ -93,12 +93,16 @@ const UserProfile = () => {
     switch (name) {
       case "fullName":
         if (!value.trim()) error = "Full Name is required";
+        else if (!/^[A-Za-z\s]+$/.test(value))
+          error = "Full Name should only contain alphabets and spaces";
         break;
       case "gender":
         if (!value) error = "Gender is required";
         break;
       case "father_name":
         if (!value.trim()) error = "Father's Name is required";
+        else if (!/^[A-Za-z\s]+$/.test(value))
+          error = "Father's Name should only contain alphabets and spaces";
         break;
       case "dob":
         if (!value) error = "Date of Birth is required";
@@ -322,6 +326,7 @@ const UserProfile = () => {
                 value={user.dob}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded bg-cream text-dark-violet"
+                onKeyDown={(e) => e.preventDefault()}
                 required
               />
               {fieldErrors.dob && (

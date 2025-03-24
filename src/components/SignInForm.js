@@ -41,8 +41,8 @@ export default function SignInForm() {
         const data = await response.json();
 
         alert("Login successfully!");
-
         navigate("/");
+        window.location.reload();
       } else {
         const errorData = await response.json();
         alert(`Login failed: ${errorData.message}`);

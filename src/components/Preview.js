@@ -70,11 +70,6 @@ const Preview = ({ formData, familyMembers, onEdit, onSubmit, schemeName }) => {
           </div>
           <div>
             <p className="text-gray-700 text-left">
-              <strong>Plot:</strong> {formData.plot}
-            </p>
-          </div>
-          <div>
-            <p className="text-gray-700 text-left">
               <strong>Category:</strong> {formData.category}
             </p>
           </div>

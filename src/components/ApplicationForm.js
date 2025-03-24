@@ -20,7 +20,6 @@ export default function ApplicationForm() {
     lastName: "",
     email: "",
     incomeGroup: "Under 500,000",
-    plot: "",
     category: "",
     paymentAmount: "",
     noOfDependentFamilyMembers: "",
@@ -101,7 +100,7 @@ export default function ApplicationForm() {
   // Utility functions for validation
   const isValidName = (name) => /^[A-Z\s]+$/.test(name);
   const isValidMobile = (mobile) => /^[6-9]\d{9}$/.test(mobile);
-  const isValidAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
+  // const isValidAadhar = (aadhar) => /^\d{12}$/.test(aadhar);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -119,14 +118,6 @@ export default function ApplicationForm() {
       }
     }
 
-    if (name === "noOfDependentFamilyMembers") {
-      if (value >= 0) {
-        setFamilyMembers(true); // Enable family member section
-      } else {
-        setFamilyMembers(false); // Disable family member section
-      }
-    }
-
     setFormData({ ...formData, [name]: sanitizedValue });
   };
 
@@ -137,7 +128,7 @@ export default function ApplicationForm() {
       );
       return;
     }
-    if (!member.name || !member.mobile || !member.aadhar) {
+    if (!member.name || !member.mobile || !member.dob) {
       alert("All fields are required for family members.");
       return;
     }
@@ -152,17 +143,12 @@ export default function ApplicationForm() {
       return;
     }
 
-    if (!isValidAadhar(member.aadhar)) {
-      alert("Aadhar number must be 12 digits.");
-      return;
-    }
-
     setFamilyMembers([
       ...familyMembers,
       {
         name: DOMPurify.sanitize(member.name.toUpperCase()),
         mobile: DOMPurify.sanitize(member.mobile),
-        aadhar: DOMPurify.sanitize(member.aadhar),
+        dob: DOMPurify.sanitize(member.dob),
       },
     ]);
 
@@ -238,14 +224,13 @@ export default function ApplicationForm() {
           lastName: "",
           email: formData.email, // Retaining email
           incomeGroup: "Under 500,000",
-          plot: "",
           category: "",
           paymentAmount: "",
         });
 
         // Reset family members data
         setFamilyMembers([]);
-        setMember({ name: "", mobile: "", aadhar: "" });
+        setMember({ name: "", mobile: "", dob: "" });
       } else {
         // Show error message from backend
         Swal.fire({
@@ -379,7 +364,7 @@ export default function ApplicationForm() {
                 ))}
               </select>
             </div>
-{/* 
+            {/* 
             <div className="mb-4">
               <label className="block text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                 Plot
@@ -452,7 +437,7 @@ export default function ApplicationForm() {
                   placeholder="Name"
                   value={member.name}
                   onChange={(e) =>
-                    setMember({
+                    setFamilyMembers({
                       ...member,
                       name: e.target.value.toUpperCase(),
                     })

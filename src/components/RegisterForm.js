@@ -248,6 +248,7 @@ const RegisterForm = () => {
           </Link>
         </div>
       </form>
+
     </div>
   );
 };

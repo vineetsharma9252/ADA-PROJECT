@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@heroicons/react": "^2.2.0",
     "axios": "^1.8.3",
+    "bcryptjs": "^3.0.2",
     "bearer": "^0.0.20",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

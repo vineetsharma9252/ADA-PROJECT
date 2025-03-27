@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+
 function UserPage() {
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editedData, setEditedData] = useState({});
-  
-const location = useLocation();
-const email = location.state?.email;
-  
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const location = useLocation();
+  const email = location.state?.email;
+  const navigate = useNavigate();
 
   // Fetch user data
   useEffect(() => {
-   
     fetch(`http://localhost:4500/user-profile/api/data/${email}`, {
       credentials: "include",
     })
@@ -38,30 +38,41 @@ const email = location.state?.email;
 
   // Handle Input Change
   const handleChange = (field, value) => {
+    if (field === "email" || field === "phone") {
+      return;
+    }
     setEditedData((prev) => ({ ...prev, [field]: value }));
   };
 
   // Handle Save (via form submit)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // API call to update
-    fetch(`http://localhost:4500/user-profile-update/${email}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editedData),
-      credentials: "include",
-   
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to update");
-        return res.json();
-      })
-      .then((data) => {
-        alert("Profile updated successfully!");
-        setUserData(s => ({ ...s, ...editedData }));
-        setEditMode(false);
-      })
-      .catch((err) => alert("Error updating profile: " + err.message));
+    setIsSubmitting(true);
+    
+    try {
+      // Create a copy of edited data
+      const dataToSave = {...editedData};
+
+      // API call to update
+      const response = await fetch(`http://localhost:4500/user-profile-update/${email}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSave),
+        credentials: "include",
+      });
+
+      if (!response.ok) throw new Error("Failed to update");
+      
+      const data = await response.json();
+      alert("Profile updated successfully! Redirecting to login...");
+      navigate("/login");
+      setUserData((s) => ({ ...s, ...dataToSave }));
+      setEditMode(false);
+    } catch (err) {
+      alert("Error updating profile: " + err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Handle Cancel
@@ -73,7 +84,7 @@ const email = location.state?.email;
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-        <ClipLoader color="#4caf50" size={50} /> {/* Spinner */}
+        <ClipLoader color="#4caf50" size={50} />
       </div>
     );
   if (error)
@@ -99,26 +110,70 @@ const email = location.state?.email;
               {
                 title: "Personal Details",
                 fields: [
-                  "fullName",
-                  "gender",
-                  "dob",
-                  "father_name",
-                  "marital_status",
-                  "caste",
-                  "disability",
+                  {
+                    name: "fullName",
+                    type: "text",
+                    pattern: "[A-Za-z ]+",
+                    title: "Letters and spaces only",
+                  },
+                  { 
+                    name: "gender",
+                    type: "select",
+                    options: ["Male", "Female", "Other"]
+                  },
+                  { name: "dob", type: "date" },
+                  {
+                    name: "father_name",
+                    type: "text",
+                    pattern: "[A-Za-z ]+",
+                    title: "Letters and spaces only",
+                  },
+                  {
+                    name: "marital_status",
+                    type: "select",
+                    options: ["Married", "Unmarried"],
+                  },
+                  {
+                    name: "caste",
+                    type: "select",
+                    options: ["General", "OBC", "SC", "ST", "Others"],
+                  },
+                  {
+                    name: "disability",
+                    type: "select",
+                    options: ["Yes", "No"],
+                  },
                 ],
               },
               {
                 title: "Contact Details",
-                fields: ["email", "phone", "curr_address", "perm_address"],
-              },
-              {
-                title: "Identity Proofs",
-                fields: ["aadharCard", "panCard", "voterId"],
+                fields: [
+                  { name: "email", type: "email", required: true },
+                  {
+                    name: "phone",
+                    type: "tel",
+                    pattern: "[0-9]{10}",
+                    title: "10 digit phone number",
+                  },
+                  { name: "curr_address", type: "text" },
+                  { name: "perm_address", type: "text" },
+                ],
               },
               {
                 title: "Occupation & Income",
-                fields: ["occupation", "income", "education"],
+                fields: [
+                  { 
+                    name: "occupation", 
+                    type: "select",
+                    options: ["Employed", "Self-Employed", "Unemployed", "Student", "Retired"]
+                  },
+                  { name: "income", type: "number", min: 0 },
+                  {
+                    name: "education", 
+                    type: "select",
+                    options: ["Below 10th", "10th Pass", "12th Pass", "Graduate", "Post Graduate", "Doctorate"]
+                  },
+                ],
               },
             ].map((section, index) => (
               <div key={index} className="mb-6">
@@ -127,23 +182,49 @@ const email = location.state?.email;
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {section.fields.map((field, i) => (
                     <div key={i} className="ml-6">
-                      <p className="text-gray-700 font-medium">
-                        {field
+                      <label className="text-gray-700 font-medium">
+                        {field.name
                           .replace(/_/g, " ")
                           .replace(/\b\w/g, (l) => l.toUpperCase())}
                         :
-                      </p>
+                      </label>
                       {editMode ? (
-                        <input
-                          type="text"
-                          value={editedData[field] || ""}
-                          onChange={(e) => handleChange(field, e.target.value)}
-                          className="border p-2 rounded-md bg-white text-gray-900 w-full"
-                          required // <-- Required attribute added
-                        />
+                        field.type === "select" ? (
+                          <select
+                            value={editedData[field.name] || ""}
+                            onChange={(e) =>
+                              handleChange(field.name, e.target.value)
+                            }
+                            className="border p-2 rounded-md bg-white text-gray-900 w-full"
+                          >
+                            <option value="">
+                              Select {field.name.replace(/_/g, " ")}
+                            </option>
+                            {field.options.map((option, idx) => (
+                              <option key={idx} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={field.type || "text"}
+                            value={editedData[field.name] || ""}
+                            onChange={(e) =>
+                              handleChange(field.name, e.target.value)
+                            }
+                            className="border p-2 rounded-md bg-white text-gray-900 w-full"
+                            required={field.required}
+                            pattern={field.pattern}
+                            title={field.title}
+                            min={field.min}
+                            autoComplete="on"
+                            disabled={field.name === "email"}
+                          />
+                        )
                       ) : (
-                        <div className="border p-2 rounded-md bg-gray-50 text-gray-900 uppercase">
-                          {userData[field]}
+                        <div className="border p-2 rounded-md bg-gray-50 text-gray-900">
+                          {userData[field.name]}
                         </div>
                       )}
                     </div>
@@ -154,14 +235,19 @@ const email = location.state?.email;
           </div>
 
           {/* Buttons */}
-          <div>
+          <div className="flex items-center gap-4">
             {editMode ? (
               <>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2 disabled:opacity-50"
+                  disabled={isSubmitting}
                 >
-                  Save
+                  {isSubmitting ? (
+                    <ClipLoader color="#ffffff" size={20} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
                 <button
                   type="button"
@@ -182,7 +268,7 @@ const email = location.state?.email;
             )}
             <Link
               to="/schemes"
-              className="block custom-btn btn btn-light text-decoration-none schemes-apply-button mt-3"
+              className="block bg-green-600 text-white px-4 py-2 rounded text-decoration-none schemes-apply-button mt-0"
             >
               Go to schemes
             </Link>

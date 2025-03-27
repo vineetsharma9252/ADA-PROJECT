@@ -488,7 +488,8 @@ const UserProfile = () => {
                 {" "}
                 Identity Proofs{" "}
               </label>
-              <label className="block text-sm font-medium text-left my-3 text-cream">
+            
+              {/* <label className="block text-sm font-medium text-left my-3 text-cream">
                 Aadhaar Number
               </label>
               <input
@@ -501,7 +502,7 @@ const UserProfile = () => {
               />
               {fieldErrors.aadharCard && (
                 <p className="text-red-500 text-sm">{fieldErrors.aadharCard}</p>
-              )}
+              )} */}
 
               <label className="block text-sm font-medium text-left my-3 text-cream">
                 PAN number

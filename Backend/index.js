@@ -109,13 +109,18 @@ app.post("/create", async (req, res) => {
         .json({ message: "Invalid input data or weak password" });
     }
 
-    // Optional: Additional checks (example: Aadhar must be 12 digits)
+    // Validate Aadhar format (12 digits)
     if (
       !validator.isLength(aadharCard, { min: 12, max: 12 }) ||
       !validator.isNumeric(aadharCard)
     ) {
       return res.status(400).json({ message: "Invalid Aadhar number" });
     }
+
+    // Validate PAN format
+    // if (!validator.matches(panCard, /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)) {
+    //   return res.status(400).json({ message: "Invalid PAN number" });
+    // }
 
     // --------------------------------------
     // ✅ 2. Verify CAPTCHA
@@ -138,13 +143,19 @@ app.post("/create", async (req, res) => {
     }
 
     // --------------------------------------
-    // ✅ 4. Password Hashing with Salt (stronger)
+    // ✅ 4. Password Hashing with Salt
     // --------------------------------------
-    const saltRounds = 12; // Increase salt rounds for better security
+    const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // --------------------------------------
-    // ✅ 5. Create User Document (Sanitize all fields)
+    // ✅ 5. Aadhar Card Hashing (New Security)
+    // --------------------------------------
+    const aadharSaltRounds = 10;
+    const hashedAadhar = await bcrypt.hash(aadharCard, aadharSaltRounds);
+
+    // --------------------------------------
+    // ✅ 6. Create User Document with Hashed Aadhar
     // --------------------------------------
     const newUser = new User({
       fullName: validator.escape(fullName.trim()),
@@ -158,7 +169,7 @@ app.post("/create", async (req, res) => {
       caste: validator.escape(caste.trim()),
       curr_address: validator.escape(curr_address.trim()),
       perm_address: validator.escape(perm_address.trim()),
-      aadharCard: validator.escape(aadharCard.trim()),
+      aadharCard: hashedAadhar, // Store hashed value instead of raw
       panCard: validator.escape(panCard.trim()),
       voterId: validator.escape(voterId.trim()),
       occupation: validator.escape(occupation.trim()),
@@ -168,12 +179,12 @@ app.post("/create", async (req, res) => {
     });
 
     // --------------------------------------
-    // ✅ 6. Save to Database
+    // ✅ 7. Save to Database
     // --------------------------------------
     await newUser.save();
 
     // --------------------------------------
-    // ✅ 7. JWT Token Generation (Bearer Token Pattern)
+    // ✅ 8. JWT Token Generation
     // --------------------------------------
     const payload = {
       userId: newUser._id,
@@ -184,25 +195,52 @@ app.post("/create", async (req, res) => {
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
     // --------------------------------------
-    // ✅ 8. Send Token in HTTP-Only Cookie (Optional but Recommended)
+    // ✅ 9. Send Response
     // --------------------------------------
     res
       .status(201)
       .cookie("token", token, {
-        httpOnly: true, // Cannot be accessed by JavaScript
-        secure: true, // Send only over HTTPS
-        sameSite: "Strict", // CSRF protection
-        maxAge: 60 * 60 * 1000, // 1 hour
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+        maxAge: 60 * 60 * 1000,
       })
       .json({
         message: "User registered successfully",
-        token: `Bearer ${token}`, // Token for frontend usage
+        token: `Bearer ${token}`,
       });
   } catch (error) {
     console.error("Error during registration:", error);
     res
       .status(500)
       .json({ message: "Failed to register user", error: error.message });
+  }
+});
+
+app.post("/verify-aadhar", async (req, res) => {
+  const { email, aadharNumber } = req.body;
+
+  try {
+    // 1. Find user by email
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 2. Verify Aadhar hash
+    const isMatch = await bcrypt.compare(aadharNumber, user.aadharCard);
+    
+    if (!isMatch) {
+      return res.status(400).json({ message: "Aadhar verification failed" });
+    }
+
+    // 3. Update verification status
+    user.aadharVerified = true;
+    await user.save();
+
+    res.json({ message: "Aadhar verified successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Verification failed", error: error.message });
   }
 });
 

@@ -50,7 +50,7 @@ const Preview = ({ formData, familyMembers, onEdit, onSubmit, schemeName }) => {
           </div>
           <div>
             <p className="text-gray-700 text-left">
-              <strong>Middle Name:</strong> {formData.middleName}
+              <strong>Middle Name:</strong> {formData.middleName || "N/A"}
             </p>
           </div>
           <div>
@@ -81,34 +81,38 @@ const Preview = ({ formData, familyMembers, onEdit, onSubmit, schemeName }) => {
           </div>
         </div>
 
-        {/* Family Members Section */}
         <h3 className="text-left uppercase tracking-wide text-gray-700 text-xs font-bold mb-4">
           Dependent Family Members
         </h3>
         {familyMembers.length > 0 ? (
-          <div className="space-y-4">
+          <div
+            className="grid gap-6"
+            style={{
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            }}
+          >
             {familyMembers.map((member, index) => (
               <div
                 key={index}
-                className="p-4 border border-gray-300 rounded-lg bg-gray-50"
+                className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm text-left"
               >
-                <p className="text-gray-700">
+                <p className="text-gray-800 font-medium">
                   <strong>Name:</strong> {member.name}
                 </p>
-                <p className="text-gray-700">
+                <p className="text-gray-800 font-medium">
                   <strong>Mobile:</strong> {member.mobile}
                 </p>
-                <p className="text-gray-700">
-                  <strong>Aadhar:</strong> {member.aadhar}
+                <p className="text-gray-800 font-medium">
+                  <strong>Date of Birth:</strong> {member.dob}
                 </p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">No family members added.</p>
+          <p className="text-gray-600 italic">
+            No family members have been added yet.
+          </p>
         )}
-
-        {/* Action Buttons */}
         <div className="flex justify-between mt-8">
           <button
             onClick={onEdit}

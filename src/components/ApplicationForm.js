@@ -257,6 +257,7 @@ export default function ApplicationForm() {
           familyMembers={familyMembers}
           onEdit={handleEdit}
           onSubmit={handleSubmit}
+          schemeName={decodedSchemeName}
         />
       ) : (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -420,6 +421,7 @@ export default function ApplicationForm() {
                 value={formData.noOfDependentFamilyMembers}
                 onChange={handleChange}
                 type="number"
+                min={0}
                 placeholder="No. of Dependent Family Members"
                 required
                 // disabled // 👈 Disable the field if you don't want users to edit it
@@ -437,7 +439,7 @@ export default function ApplicationForm() {
                   placeholder="Name"
                   value={member.name}
                   onChange={(e) =>
-                    setFamilyMembers({
+                    setMember({
                       ...member,
                       name: e.target.value.toUpperCase(),
                     })
